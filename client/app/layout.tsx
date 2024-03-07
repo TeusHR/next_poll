@@ -1,0 +1,33 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { PropsWithChildren } from "react";
+import Providers from "../providers";
+import "@/assets/styles/index.scss"
+import 'react-toastify/dist/ReactToastify.css';
+
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL as string),
+  title: {
+    default: 'SCINT',
+    template: '%s | SCINT'
+  },
+  keywords: "",
+  category: "Education"
+};
+
+export default function RootLayout({ children, }: PropsWithChildren) {
+  return (
+    <html lang="uk">
+      <body className={inter.className}>
+      <Providers>
+        <main>
+            {children}
+        </main>
+      </Providers>
+      </body>
+    </html>
+  );
+}
