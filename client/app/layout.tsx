@@ -4,12 +4,13 @@ import { PropsWithChildren } from "react";
 import Providers from "../providers";
 import "@/assets/styles/index.scss"
 import 'react-toastify/dist/ReactToastify.css';
+import Layout from "@/components/Layout";
 
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL as string),
+  metadataBase: new URL(`http://localhost:3000`),
   title: {
     default: 'SCINT',
     template: '%s | SCINT'
@@ -23,9 +24,9 @@ export default function RootLayout({ children, }: PropsWithChildren) {
     <html lang="uk">
       <body className={inter.className}>
       <Providers>
-        <main>
-            {children}
-        </main>
+            <Layout>
+                {children}
+            </Layout>
       </Providers>
       </body>
     </html>

@@ -26,7 +26,19 @@ const tailwindConfig: Config = {
             themes: {
                 light: {
                     colors: {
-                        primary: {},
+                        primary: {
+                            DEFAULT: '#2E2C39',
+                            '50': '#2E2C39',
+                            '100': '#393643',
+                            '200': '#43404D',
+                            '300': '#575360',
+                            '400': '#7F7A86',
+                            '500': '#A7A1AC',
+                            '600': '#BBB4BF',
+                            '700': '#C5BEC9',
+                            '800': '#CAC3CE',
+                            '900': '#CFC7D2',
+                        },
                     },
                     layout: {
                         fontSize: {
