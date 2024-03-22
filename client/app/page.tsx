@@ -2,6 +2,7 @@ import Cell from "@/components/Cell";
 import LinkList from "@/components/LinkList";
 import CellItem, {ICellItem} from "@/components/Cell/CellItem";
 import React from "react";
+import Partners from "@/components/Partners";
 
 const cellItemsRow: ICellItem[] = [
     {
@@ -34,6 +35,7 @@ export default function Home() {
                         <CellItem key={index} text={item.text} image={item.image} link={item.link}/>
                     )}
                 </div>
+                <Partners/>
             </div>
         </div>
     );
