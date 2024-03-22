@@ -9,7 +9,7 @@ const Header = ({}) => {
 
     return (
         <>
-            <header className="flex flex-row h-[178px] justify-between items-center p-4 my-4 container mx-auto">
+            <header className="flex flex-row h-[178px] justify-between items-center p-4 my-4 xl:container mx-auto">
                 <div className="flex flex-row gap-4">
                     <Link href="/" className="w-auto h-full">
                         <Image src={'/image/logo.svg'}
