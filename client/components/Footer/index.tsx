@@ -10,7 +10,7 @@ const Footer = ({}) => {
         <div className="h-[300px] bg-[#17161D] w-full">
             <div className="xl:container mx-auto h-full">
                 <div
-                    className="grid grid-cols-4 p-16 px-24 pt-28 pr-[40rem] h-full items-center text-white text-xl md:text-base">
+                    className="flex flex-row gap-20 max-xl:gap-10 max-xl:p-6 p-8 max-xl:pt-28 pt-28 h-full items-center text-white text-xl md:text-base">
                     <Image
                         src={'/image/logoft.png'}
                         as={NextImage}
@@ -50,7 +50,7 @@ const Footer = ({}) => {
                             <div>
                                 <Link href="https://t.me/scintONTU">
                                     Телеграм-канал
-                                    <span className="font-bold">SCINT</span>
+                                    <span className="font-bold"> SCINT</span>
                                 </Link>
                             </div>
                         </div>

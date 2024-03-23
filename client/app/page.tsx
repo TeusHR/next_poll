@@ -3,6 +3,7 @@ import LinkList from "@/components/LinkList";
 import CellItem, {ICellItem} from "@/components/Cell/CellItem";
 import React from "react";
 import Partners from "@/components/Partners";
+import Feedback from "@/components/Feedback";
 
 const cellItemsRow: ICellItem[] = [
     {
@@ -25,18 +26,21 @@ const cellItemsRow: ICellItem[] = [
 
 export default function Home() {
     return (
-        <div className="xl:container mx-auto my-4 px-8 max-md:px-4">
-            <div className="mt-6 flex flex-col gap-20">
-                <Cell
-                    style={"w-full flex flex-row max-sm:flex-col 2xl:gap-x-56 max-2xl:gap-x-40 max-xl:gap-x-12 max-md:gap-x-4"}/>
-                <LinkList/>
-                <div className="flex flex-row gap-8">
-                    {cellItemsRow.map((item, index) =>
-                        <CellItem key={index} text={item.text} image={item.image} link={item.link}/>
-                    )}
+        <>
+            <div className="xl:container mx-auto my-4 px-8 max-md:px-4">
+                <div className="mt-6 flex flex-col gap-20">
+                    <Cell
+                        style={"w-full flex flex-row max-sm:flex-col 2xl:gap-x-56 max-2xl:gap-x-40 max-xl:gap-x-12 max-md:gap-x-4"}/>
+                    <LinkList/>
+                    <div className="flex flex-row gap-8">
+                        {cellItemsRow.map((item, index) =>
+                            <CellItem key={index} text={item.text} image={item.image} link={item.link}/>
+                        )}
+                    </div>
+                    <Partners/>
                 </div>
-                <Partners/>
             </div>
-        </div>
+            <Feedback/>
+        </>
     );
 }
