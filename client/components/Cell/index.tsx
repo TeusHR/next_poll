@@ -37,22 +37,42 @@ const Cell = ({style}: Props) => {
 
     return (
         <div className={style}>
-            <div className="flex flex-col mt-6 text-4xl max-sm:text-3xl text-center gap-y-12 w-full justify-end">
-                <span>
+            {/*<div className="flex flex-col mt-6 text-4xl max-sm:text-3xl text-center gap-y-12 w-full justify-end">*/}
+            {/*    <span>*/}
+            {/*        Наукова робота ОНТУ*/}
+            {/*    </span>*/}
+            {/*    {cellItemsLeft.map((item, index) =>*/}
+            {/*        <CellItem key={index} text={item.text} image={item.image} link={item.link}/>)*/}
+            {/*    }*/}
+            {/*</div>*/}
+
+            {/*<div className="flex flex-col mt-6 text-4xl max-sm:text-3xl text-center gap-y-12 w-full justify-end">*/}
+            {/*    */}
+            {/*    <span>*/}
+            {/*        Міжнародна діяльність ОНТУ*/}
+            {/*    </span>*/}
+            {/*    {cellItemsRight.map((item, index) =>*/}
+            {/*        <CellItem key={index} text={item.text} image={item.image} link={item.link}/>)*/}
+            {/*    }*/}
+            {/*</div>*/}
+
+            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-28 max-md:gap-16 max-xl:gap-16 mt-6 text-4xl max-sm:text-3xl text-center gap-y-12 w-full items-end">
+                <div className="flex flex-col gap-12 max-xl:gap-6 mt-6 w-full justify-end">
+                    <span>
                     Наукова робота ОНТУ
                 </span>
-                {cellItemsLeft.map((item, index) =>
-                    <CellItem key={index} text={item.text} image={item.image} link={item.link}/>)
-                }
-            </div>
-
-            <div className="flex flex-col mt-6 text-4xl max-sm:text-3xl text-center gap-y-12 w-full justify-end">
-                 <span>
+                    {cellItemsLeft.map((item, index) =>
+                        <CellItem key={index} text={item.text} image={item.image} link={item.link}/>)
+                    }
+                </div>
+                <div className="flex flex-col gap-12 max-xl:gap-6 mt-6 w-full justify-end">
+                    <span>
                     Міжнародна діяльність ОНТУ
                 </span>
-                {cellItemsRight.map((item, index) =>
-                    <CellItem key={index} text={item.text} image={item.image} link={item.link}/>)
-                }
+                    {cellItemsRight.map((item, index) =>
+                        <CellItem key={index} text={item.text} image={item.image} link={item.link}/>)
+                    }
+                </div>
             </div>
 
             {/*<div*/}

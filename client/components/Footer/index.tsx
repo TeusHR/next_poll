@@ -7,18 +7,20 @@ const Footer = ({}) => {
 
 
     return (
-        <div className="h-[300px] bg-[#17161D] w-full">
+        <div className="h-[300px] max-md:h-auto bg-[#17161D] w-full">
             <div className="xl:container mx-auto h-full">
                 <div
-                    className="flex flex-row gap-20 max-xl:gap-10 max-xl:p-6 p-8 max-xl:pt-28 pt-28 h-full items-center text-white text-xl md:text-base">
-                    <Image
-                        src={'/image/logoft.png'}
-                        as={NextImage}
-                        alt={'ONTU'}
-                        width={150}
-                        height={115}
-                    />
-                    <div className="flex flex-col gap-10">
+                    className="grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 max-sm:justify-center gap-20 max-xl:gap-10 max-xl:p-6 p-8 max-xl:pt-28 pt-28 h-full items-center text-white text-xl md:text-base">
+                    <div className="flex w-full max-sm:justify-center">
+                        <Image
+                            src={'/image/logoft.png'}
+                            as={NextImage}
+                            alt={'ONTU'}
+                            width={150}
+                            height={115}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-10 max-sm:items-center">
                         <Image
                             src={'/image/need2know.png'}
                             as={NextImage}
@@ -30,7 +32,7 @@ const Footer = ({}) => {
                             scint.uni@gmail.com
                         </span>
                     </div>
-                    <div className="flex flex-col gap-10">
+                    <div className="flex flex-col gap-10 max-sm:items-center">
                         <span>
                           Сайт ОНТУ
                         </span>
@@ -38,7 +40,7 @@ const Footer = ({}) => {
                           048-712-41-79
                         </span>
                     </div>
-                    <div className="flex flex-col gap-10">
+                    <div className="flex flex-col gap-10 max-sm:items-center">
                         <div className="flex flex-row gap-3">
                             <Image
                                 src={'/image/tg.svg'}

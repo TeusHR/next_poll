@@ -9,9 +9,9 @@ const Header = ({}) => {
 
     return (
         <>
-            <header className="flex flex-row h-[178px] justify-between items-center p-4 my-4 xl:container mx-auto">
-                <div className="flex flex-row gap-4">
-                    <Link href="/" className="w-auto h-full">
+            <header className="flex flex-row h-[178px] max-sm:h-auto max-sm:flex-col gap-4 justify-between items-center p-4 my-4 xl:container mx-auto">
+                <div className="flex flex-row max-sm:flex-col justify-center gap-4">
+                    <Link href="/" className="w-auto h-full flex justify-center">
                         <Image src={'/image/logo.svg'}
                                alt={'ONTU логотип'}
                                as={NextImage}
@@ -20,7 +20,7 @@ const Header = ({}) => {
                                fetchPriority={"high"}
                         />
                     </Link>
-                    <div className="flex flex-col gap-4 text-primary">
+                    <div className="flex flex-col gap-4 text-primary max-sm:text-center">
                         <div className="text-6xl font-semibold">
                             SCINT ONTU
                         </div>
