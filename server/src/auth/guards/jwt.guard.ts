@@ -16,14 +16,14 @@ export class JwtGuard implements CanActivate {
 
     const token = this.extractTokenFromHeader(request);
 
-    if (!token) throw new UnauthorizedException("Доступ запрещен");
+    if (!token) throw new UnauthorizedException("Access denied");
 
     try {
       request["user"] = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET_KEY,
       });
     } catch (e) {
-      throw new UnauthorizedException("Доступ запрещен");
+      throw new UnauthorizedException("Access denied");
     }
 
     return true;
@@ -71,12 +71,12 @@ export class AdminJwtGuard implements CanActivate {
 
     const token = this.extractTokenFromHeader(request);
 
-    if (!token) throw new UnauthorizedException("Доступ запрещен");
+    if (!token) throw new UnauthorizedException("Access denied");
 
     try {
       request["user"] = await this.checkRole(token);
     } catch (_) {
-      throw new UnauthorizedException("Доступ запрещен");
+      throw new UnauthorizedException("Access denied");
     }
 
     return true;
@@ -92,7 +92,7 @@ export class AdminJwtGuard implements CanActivate {
       secret: process.env.JWT_SECRET_KEY,
     });
     if (user.sub.role !== "ADMIN")
-      throw new UnauthorizedException("Доступ запрещен");
+      throw new UnauthorizedException("Access denied");
     return user;
   }
 }

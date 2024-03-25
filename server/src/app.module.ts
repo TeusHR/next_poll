@@ -10,6 +10,12 @@ import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { AuthModule } from "./auth/auth.module";
 import { JwtService } from "@nestjs/jwt";
+import { ConferenceModule } from "./conference/conference.module";
+import { ScienceSchoolModule } from "./science-school/science-school.module";
+import { CooperationModule } from "./cooperation/cooperation.module";
+import { ResearchWorkModule } from "./research-work/research-work.module";
+import { ActivityModule } from "./activity/activity.module";
+import { InnovationModule } from "./innovation/innovation.module";
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -42,6 +48,12 @@ import { JwtService } from "@nestjs/jwt";
       },
     }),
     AuthModule,
+    ConferenceModule,
+    ScienceSchoolModule,
+    CooperationModule,
+    ResearchWorkModule,
+    ActivityModule,
+    InnovationModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

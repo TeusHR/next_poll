@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { path } from "app-root-path";
 import * as pathNode from "path";
+import { join } from "path";
 
 export const checkFileExists = (filePath: string) => {
   return new Promise((resolve) => {
@@ -59,8 +60,15 @@ export const renameFile = async (oldFile: string, newFilePath: string) => {
   }
 };
 
-export const deleteFile = async (filePath: string): Promise<void> => {
-  return await fs.promises.unlink(filePath);
+export const deleteFile = async (
+  filePath: string,
+  isImagePath?: boolean,
+): Promise<void> => {
+  try {
+    let filepath = filePath;
+    if (isImagePath) filepath = join(path, ...filePath.split("/"));
+    return await fs.promises.unlink(filepath);
+  } catch (_) {}
 };
 
 export const readFileContents = async (filePath: string): Promise<string> => {

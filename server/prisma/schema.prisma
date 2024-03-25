@@ -13,3 +13,71 @@ model User {
   name     String
   password String
 }
+
+model Conference {
+  id      String         @id @default(uuid())
+  date    DateTime       @db.Timestamptz(3)
+  type    ConferenceType
+  country String
+  title   String
+  text    String
+  files   String[]       @default([])
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model ScienceSchool {
+  id    String @id @default(uuid())
+  title String
+  text  String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Cooperation {
+  id    String @id @default(uuid())
+  title String
+  text  String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model ResearchWork {
+  id    String @id @default(uuid())
+  title String
+  text  String
+  image String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Activity {
+  id    String @id @default(uuid())
+  title String
+  text  String
+  image String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Innovation {
+  id     String   @id @default(uuid())
+  title  String
+  text   String
+  images String[] @default([])
+  files  String[] @default([])
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+enum ConferenceType {
+  SEMINAR
+  COMPETITION
+  CONFERENCT
+}
