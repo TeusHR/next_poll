@@ -5,25 +5,23 @@ import {
   Post,
   Query,
   StreamableFile,
-  UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { IsAdmin } from "./common/decorators/auth.decorator";
+import { FilesInterceptor } from "@nestjs/platform-express";
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post("/upload")
-  @IsAdmin()
-  @UseInterceptors(FileInterceptor("file"))
+  @Post()
+  @UseInterceptors(FilesInterceptor("file"))
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
     @Query("folder") folder?: string,
   ) {
-    return this.appService.saveFiles([file], folder);
+    return this.appService.saveFiles(files, folder);
   }
 
   @Get("/download/:fileName")
