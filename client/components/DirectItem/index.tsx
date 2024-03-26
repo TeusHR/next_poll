@@ -2,17 +2,18 @@ import React from 'react'
 import Title from "@/components/UI/Title";
 
 type Props = {
-    title:string,
-    text:string,
-    index:number,
+    title: string,
+    text: string,
+    index: number,
 }
 
-const DirectItem = ({title, text, index}:Props) => {
+const DirectItem = ({title, text, index}: Props) => {
 
     return (
-        <div className="flex flex-row gap-14">
+        <div className="flex flex-row gap-14 max-sm:gap-7 max-xsm:flex-col">
             <div>
-                <span className="text-8xl font-bold text-white" style={{WebkitTextStroke:"2px black", WebkitTextFillColor:"transparent"}}>
+                <span className="text-8xl font-bold text-white"
+                      style={{WebkitTextStroke: "2px black", WebkitTextFillColor: "transparent"}}>
                     {index < 10 ? `0${index}/` : `${index}/`}
                 </span>
             </div>

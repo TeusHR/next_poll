@@ -47,22 +47,22 @@ const ScheduleC = ({}) => {
                         <div className="flex flex-row max-sm:flex-col gap-y-6 gap-x-36 max-xl:gap-x-8">
                             <div className="flex flex-col gap-2">
                                 <div className="flex flex-row gap-2">
-                            <span>
-                                28 січня
-                            </span>
+                                    <span>
+                                        28 січня
+                                    </span>
                                     <span className="text-[#D9D9D9]">&#8226;</span>
                                     <span>
-                               Конференція
-                            </span>
+                                        Конференція
+                                    </span>
                                     <span className="text-[#D9D9D9]">&#8226;</span>
                                     <span>
-                                Україна
-                            </span>
+                                        Україна
+                                    </span>
                                 </div>
                                 <div>
-                            <span className="font-medium">
-                                Конференція з собачок
-                            </span>
+                                    <span className="font-medium">
+                                        Конференція з собачок
+                                    </span>
                                 </div>
                             </div>
                             <ButtonDetails link={''}>
