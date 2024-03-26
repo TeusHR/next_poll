@@ -1,6 +1,6 @@
 import React from 'react'
-import Title from "@/components/UI/Title";
-import ButtonDetails from "@/components/UI/ButtonDetails";
+import Title from "components/UI/Title";
+import ButtonDetails from "components/UI/ButtonDetails";
 
 
 const ScheduleC = ({}) => {

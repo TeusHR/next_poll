@@ -2,7 +2,8 @@ import React from 'react'
 import Title from "components/UI/Title";
 import NewsItem from "@/components/NewsItem";
 
-const news = [
+
+const research = [
     {
         image: '/image/preview.png',
         title: 'Lorem ipsum dolor sit amet',
@@ -22,23 +23,24 @@ const news = [
         date: new Date()
     },
 ]
-
-const News = ({}) => {
+const Research = ({}) => {
 
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
             <div className="flex flex-col gap-14">
-                <Title text="Наукова робота ОНТУ"
+                <Title text="Інноваційні розробки"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
                 <div className="flex flex-col gap-14">
-                    {news.map((item, index) =>
+                    {research.map((item, index) =>
                         <NewsItem title={item.title} image={item.image}
                                   key={index}
                                   text={item.text}
                                   date={"28 січня"}
                                   index={index}
-                                  lengthArr={news.length}/>
+                                  buttonDetails
+                                  link={'/'}
+                                  lengthArr={research.length}/>
                     )}
                 </div>
             </div>
@@ -46,4 +48,4 @@ const News = ({}) => {
     )
 }
 
-export default News;
+export default Research;

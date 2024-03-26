@@ -14,7 +14,7 @@ const ButtonDetails = ({link, style, text = 'Детальніше', children}:Pr
 
     return (
         <Link href={link}>
-            <Button disableRipple className={`${style ? style : 'cursor-pointer border border-[#111318] font-medium flex flex-row gap-4 py-4 px-8 text-base'}`}>
+            <Button disableRipple className={`${style ? style : 'cursor-pointer border border-[#111318] font-medium flex flex-row gap-4 py-4 px-8 max-sm:py-3 max-sm:px-6 text-base'}`}>
                 {text}
                 {children}
             </Button>
