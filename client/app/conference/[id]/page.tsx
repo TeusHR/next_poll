@@ -1,6 +1,7 @@
 import React from 'react'
 import Title from "@/components/UI/Title";
 import Document from "@/components/Document";
+import DocumentViewer from "@/components/DocumentViewer";
 
 
 const Conference = ({}) => {
@@ -36,6 +37,7 @@ const Conference = ({}) => {
                     volutpat metus venenatis sed.
                 </div>
                 <div className="flex flex-col">
+                    <DocumentViewer/>
                     <Document/>
                 </div>
             </div>

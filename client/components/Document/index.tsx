@@ -1,8 +1,10 @@
+'use client'
 import React from 'react'
 import Link from "next/link";
+import {useDisclosure} from "@nextui-org/react";
 
 const Document = ({}) => {
-
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     return (
         <Link href={"/"} className="flex flex-row gap-3">
