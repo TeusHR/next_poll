@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateResearchWorkDto } from "./dto/create-research-work.dto";
 import { UpdateResearchWorkDto } from "./dto/update-research-work.dto";
-import { PrismaService } from "../prisma.service";
+import { paginate, PrismaService } from "../prisma.service";
 import { deleteFile } from "../common/helpers/storage.helper";
+import { ResearchWork, Prisma } from "@prisma/client";
+import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 
 @Injectable()
 export class ResearchWorkService {
@@ -14,11 +16,25 @@ export class ResearchWorkService {
     });
   }
 
-  findAll(limit: number) {
-    return this.prismaService.researchWork.findMany({
-      orderBy: { updatedAt: "desc" },
-      take: limit || undefined,
-    });
+  async findAll({
+    page,
+    perPage,
+    orderBy,
+  }: {
+    orderBy?: Prisma.ResearchWorkOrderByWithRelationInput;
+    page?: number;
+    perPage?: number;
+  }): Promise<PaginatorTypes.PaginatedResult<ResearchWork>> {
+    return paginate(
+      this.prismaService.researchWork,
+      {
+        orderBy,
+      },
+      {
+        page,
+        perPage,
+      },
+    );
   }
 
   async findOne(id: string) {

@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateCooperationDto } from "./dto/create-cooperation.dto";
 import { UpdateCooperationDto } from "./dto/update-cooperation.dto";
-import { PrismaService } from "../prisma.service";
+import { paginate, PrismaService } from "../prisma.service";
+import { Cooperation, Prisma } from "@prisma/client";
+import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 
 @Injectable()
 export class CooperationService {
@@ -13,11 +15,25 @@ export class CooperationService {
     });
   }
 
-  findAll(limit: number) {
-    return this.prismaService.cooperation.findMany({
-      orderBy: { updatedAt: "desc" },
-      take: limit || undefined,
-    });
+  async findAll({
+    page,
+    perPage,
+    orderBy,
+  }: {
+    orderBy?: Prisma.CooperationOrderByWithRelationInput;
+    page?: number;
+    perPage?: number;
+  }): Promise<PaginatorTypes.PaginatedResult<Cooperation>> {
+    return paginate(
+      this.prismaService.cooperation,
+      {
+        orderBy,
+      },
+      {
+        page,
+        perPage,
+      },
+    );
   }
 
   async findOne(id: string) {

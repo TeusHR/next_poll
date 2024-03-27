@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateScienceSchoolDto } from "./dto/create-science-school.dto";
 import { UpdateScienceSchoolDto } from "./dto/update-science-school.dto";
-import { PrismaService } from "../prisma.service";
+import { paginate, PrismaService } from "../prisma.service";
+import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
+import { Prisma, ScienceSchool } from "@prisma/client";
 
 @Injectable()
 export class ScienceSchoolService {
@@ -13,11 +15,25 @@ export class ScienceSchoolService {
     });
   }
 
-  findAll(limit: number) {
-    return this.prismaService.scienceSchool.findMany({
-      orderBy: { updatedAt: "desc" },
-      take: limit || undefined,
-    });
+  async findAll({
+    page,
+    perPage,
+    orderBy,
+  }: {
+    orderBy?: Prisma.ScienceSchoolOrderByWithRelationInput;
+    page?: number;
+    perPage?: number;
+  }): Promise<PaginatorTypes.PaginatedResult<ScienceSchool>> {
+    return paginate(
+      this.prismaService.scienceSchool,
+      {
+        orderBy,
+      },
+      {
+        page,
+        perPage,
+      },
+    );
   }
 
   async findOne(id: string) {

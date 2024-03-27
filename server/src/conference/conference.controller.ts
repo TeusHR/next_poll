@@ -24,8 +24,18 @@ export class ConferenceController {
   }
 
   @Get()
-  findAll(@Query("limit") limit: string) {
-    return this.conferenceService.findAll(+limit);
+  findAll(
+    @Query("limit") limit?: string,
+    @Query("page") page?: string,
+    @Query("column") column?: string,
+    @Query("order") order?: string,
+  ) {
+    const orderBy = { [column || "updatedAt"]: order || "desc" };
+    return this.conferenceService.findAll({
+      perPage: +limit || undefined,
+      page: +page || 1,
+      orderBy,
+    });
   }
 
   @Get(":id")
