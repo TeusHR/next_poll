@@ -12,12 +12,12 @@ interface Props {
 
 const Providers = ({ children }: Props) => {
     return <SessionProvider>
-        <Provider store={store}>
+        {/*<Provider store={store}>*/}
             <NextUIProvider>
                 <ToastContainer limit={3} autoClose={5000} closeOnClick newestOnTop position="bottom-center" pauseOnHover/>
                 {children}
             </NextUIProvider>
-        </Provider>
+        {/*</Provider>*/}
     </SessionProvider>
 }
 

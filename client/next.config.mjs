@@ -5,7 +5,10 @@ const nextConfig = {
         BACKEND_URL: "http://localhost:4000",
         LOCAL_BACKEND_URL: "http://localhost:4000",
     },
-
+    webpack: (config) => {
+        config.resolve.alias.canvas = false;
+        return config;
+    },
     async rewrites() {
         return [
             {

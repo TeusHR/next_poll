@@ -1,8 +1,9 @@
+'use client'
 import React from 'react'
 import Title from "@/components/UI/Title";
 import Document from "@/components/Document";
 import DocumentViewer from "@/components/DocumentViewer";
-
+import {Worker} from '@react-pdf-viewer/core';
 
 const Conference = ({}) => {
 
@@ -11,7 +12,8 @@ const Conference = ({}) => {
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
             <div className="flex flex-col gap-14 max-sm:gap-8">
                 <div className="flex flec-row gap-8 items-end max-sm:flex-col max-sm:gap-4 max-sm:items-start">
-                    <Title text="Конференція з собачок" style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
+                    <Title text="Конференція з собачок"
+                           style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
                     <div className="flex flex-row gap-2 sm:min-w-max">
                         <span>
                             28 січня
@@ -36,8 +38,10 @@ const Conference = ({}) => {
                     facilisis. Etiam quis pellentesque justo. Vivamus eget felis elit. Sed porttitor metus erat, quis
                     volutpat metus venenatis sed.
                 </div>
-                <div className="flex flex-col">
-                    <DocumentViewer/>
+                <div className="flex flex-col relative">
+                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                        <DocumentViewer/>
+                    </Worker>
                     <Document/>
                 </div>
             </div>
