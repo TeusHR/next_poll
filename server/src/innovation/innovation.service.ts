@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateInnovationDto } from "./dto/create-innovation.dto";
 import { UpdateInnovationDto } from "./dto/update-innovation.dto";
-import { PrismaService } from "../prisma.service";
+import { paginate, PrismaService } from "../prisma.service";
 import { deleteFile } from "../common/helpers/storage.helper";
+import { Innovation, Prisma } from "@prisma/client";
+import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 
 @Injectable()
 export class InnovationService {
@@ -14,11 +16,25 @@ export class InnovationService {
     });
   }
 
-  findAll(limit: number) {
-    return this.prismaService.innovation.findMany({
-      orderBy: { updatedAt: "desc" },
-      take: limit || undefined,
-    });
+  async findAll({
+    page,
+    perPage,
+    orderBy,
+  }: {
+    orderBy?: Prisma.InnovationOrderByWithRelationInput;
+    page?: number;
+    perPage?: number;
+  }): Promise<PaginatorTypes.PaginatedResult<Innovation>> {
+    return paginate(
+      this.prismaService.innovation,
+      {
+        orderBy,
+      },
+      {
+        page,
+        perPage,
+      },
+    );
   }
 
   async findOne(id: string) {

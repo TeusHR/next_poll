@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateActivityDto } from "./dto/create-activity.dto";
 import { UpdateActivityDto } from "./dto/update-activity.dto";
-import { PrismaService } from "../prisma.service";
+import { paginate, PrismaService } from "../prisma.service";
 import { deleteFile } from "../common/helpers/storage.helper";
+import { Prisma, Activity } from "@prisma/client";
+import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 
 @Injectable()
 export class ActivityService {
@@ -14,11 +16,25 @@ export class ActivityService {
     });
   }
 
-  findAll(limit: number) {
-    return this.prismaService.activity.findMany({
-      orderBy: { updatedAt: "desc" },
-      take: limit || undefined,
-    });
+  async findAll({
+    page,
+    perPage,
+    orderBy,
+  }: {
+    orderBy?: Prisma.ActivityOrderByWithRelationInput;
+    page?: number;
+    perPage?: number;
+  }): Promise<PaginatorTypes.PaginatedResult<Activity>> {
+    return paginate(
+      this.prismaService.activity,
+      {
+        orderBy,
+      },
+      {
+        page,
+        perPage,
+      },
+    );
   }
 
   async findOne(id: string) {

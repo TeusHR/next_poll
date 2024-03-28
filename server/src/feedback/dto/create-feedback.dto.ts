@@ -1,11 +1,16 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { Transform } from "class-transformer";
 
-export class CreateScienceSchoolDto {
+export class CreateFeedbackDto {
   @IsString()
   @Transform(({ value }) => value?.toString().trim())
   @IsNotEmpty()
-  title: string;
+  name: string;
+
+  @IsEmail()
+  @Transform(({ value }) => value?.toString().trim())
+  @IsNotEmpty()
+  email: string;
 
   @IsString()
   @Transform(({ value }) => value?.toString().trim())

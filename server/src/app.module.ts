@@ -16,6 +16,9 @@ import { CooperationModule } from "./cooperation/cooperation.module";
 import { ResearchWorkModule } from "./research-work/research-work.module";
 import { ActivityModule } from "./activity/activity.module";
 import { InnovationModule } from "./innovation/innovation.module";
+import { StudentScienceModule } from "./student-science/student-science.module";
+import { InternationalProjectModule } from "./international-project/international-project.module";
+import { FeedbackModule } from "./feedback/feedback.module";
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -40,7 +43,7 @@ import { InnovationModule } from "./innovation/innovation.module";
         from: process.env.SMTP_USER,
       },
       template: {
-        dir: path + "/templates",
+        dir: join(path, "server", "templates"),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
@@ -54,6 +57,9 @@ import { InnovationModule } from "./innovation/innovation.module";
     ResearchWorkModule,
     ActivityModule,
     InnovationModule,
+    StudentScienceModule,
+    InternationalProjectModule,
+    FeedbackModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

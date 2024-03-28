@@ -24,8 +24,18 @@ export class ScienceSchoolController {
   }
 
   @Get()
-  findAll(@Query("limit") limit: string) {
-    return this.scienceSchoolService.findAll(+limit);
+  findAll(
+    @Query("limit") limit?: string,
+    @Query("page") page?: string,
+    @Query("column") column?: string,
+    @Query("order") order?: string,
+  ) {
+    const orderBy = { [column || "updatedAt"]: order || "desc" };
+    return this.scienceSchoolService.findAll({
+      perPage: +limit || undefined,
+      page: +page || 1,
+      orderBy,
+    });
   }
 
   @Get(":id")

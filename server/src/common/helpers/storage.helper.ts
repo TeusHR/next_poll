@@ -39,7 +39,7 @@ export const createFile = async (
   data: string,
 ): Promise<void> => {
   const isDirExist = await checkDirExists(filePath);
-  const absoluteDirPath = pathNode.join(path, filePath);
+  const absoluteDirPath = pathNode.join(path, "server", filePath);
 
   if (!isDirExist) await fs.promises.mkdir(absoluteDirPath);
 
@@ -52,8 +52,8 @@ export const createFile = async (
 
 export const renameFile = async (oldFile: string, newFilePath: string) => {
   try {
-    const oldAbsoluteFilePath = pathNode.join(path, oldFile);
-    const newAbsoluteFilePath = pathNode.join(path, newFilePath);
+    const oldAbsoluteFilePath = pathNode.join(path, "server", oldFile);
+    const newAbsoluteFilePath = pathNode.join(path, "server", newFilePath);
     await fs.promises.rename(oldAbsoluteFilePath, newAbsoluteFilePath);
   } catch (e) {
     throw new Error(`Error renaming file: ${e.message}`);
@@ -66,14 +66,17 @@ export const deleteFile = async (
 ): Promise<void> => {
   try {
     let filepath = filePath;
-    if (isImagePath) filepath = join(path, ...filePath.split("/"));
+    if (isImagePath) filepath = join(path, "server", ...filePath.split("/"));
     return await fs.promises.unlink(filepath);
   } catch (_) {}
 };
 
 export const readFileContents = async (filePath: string): Promise<string> => {
   try {
-    return await fs.promises.readFile(pathNode.join(path, filePath), "utf8");
+    return await fs.promises.readFile(
+      pathNode.join(path, "server", filePath),
+      "utf8",
+    );
   } catch (err) {
     if (err.code === "ENOENT") {
       return null;
@@ -86,7 +89,9 @@ export const getFileCreationDate = async (
   filePath: string,
 ): Promise<Date | null> => {
   try {
-    const stats = await fs.promises.stat(pathNode.join(path, filePath));
+    const stats = await fs.promises.stat(
+      pathNode.join(path, "server", filePath),
+    );
     return stats.birthtime;
   } catch (err) {
     if (err.code === "ENOENT") {
