@@ -25,6 +25,7 @@ const Footer = ({}) => {
                             src={'/image/need2know.png'}
                             as={NextImage}
                             alt={'need2know'}
+                            radius={'none'}
                             width={200}
                             height={25}
                         />

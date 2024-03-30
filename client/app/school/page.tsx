@@ -17,12 +17,12 @@ const directItem = [
     },
 ]
 
-const Science = ({}) => {
+const School = ({}) => {
 
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
-            <div className="flex flex-col gap-14">
+            <div className="flex flex-col gap-14 max-sm:gap-8">
                 <Title text="Наукові школи"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
                 {directItem.map((item, index) =>
@@ -37,4 +37,4 @@ const Science = ({}) => {
     )
 }
 
-export default Science;
+export default School;

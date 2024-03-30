@@ -1,9 +1,6 @@
-'use client'
 import React from 'react'
 import Title from "@/components/UI/Title";
 import Document from "@/components/Document";
-import DocumentViewer from "@/components/DocumentViewer";
-import {Worker} from '@react-pdf-viewer/core';
 
 const Conference = ({}) => {
 
@@ -38,11 +35,8 @@ const Conference = ({}) => {
                     facilisis. Etiam quis pellentesque justo. Vivamus eget felis elit. Sed porttitor metus erat, quis
                     volutpat metus venenatis sed.
                 </div>
-                <div className="flex flex-col relative">
-                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                        <DocumentViewer/>
-                    </Worker>
-                    <Document/>
+                <div className="flex flex-col relative w-max">
+                    <Document link={"/image/document.pdf"}/>
                 </div>
             </div>
         </div>

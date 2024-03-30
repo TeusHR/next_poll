@@ -1,8 +1,8 @@
 import React from 'react'
-import Title from "components/UI/Title";
+import DetailsPage from "@/components/DetailsPage";
 import NewsItem from "@/components/NewsItem";
 
-const news = [
+const research = [
     {
         image: '/image/preview.png',
         title: 'Lorem ipsum dolor sit amet',
@@ -23,22 +23,23 @@ const news = [
     },
 ]
 
-const News = ({}) => {
+const ResearchItem = ({}) => {
 
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
-            <div className="flex flex-col gap-14 max-sm:gap-8">
-                <Title text="Наукова робота ОНТУ"
-                       style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
-                <div className="flex flex-col gap-14">
-                    {news.map((item, index) =>
+            <div className="flex flex-col gap-14">
+                <DetailsPage/>
+                <div className="flex flex-col gap-14 max-sm:gap-5">
+                    {research.map((item, index) =>
                         <NewsItem title={item.title} image={item.image}
                                   key={index}
                                   text={item.text}
                                   date={"28 січня"}
                                   index={index}
-                                  lengthArr={news.length}/>
+                                  buttonDetails
+                                  link={'/'}
+                                  lengthArr={research.length}/>
                     )}
                 </div>
             </div>
@@ -46,4 +47,4 @@ const News = ({}) => {
     )
 }
 
-export default News;
+export default ResearchItem;
