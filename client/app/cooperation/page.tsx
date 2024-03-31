@@ -1,5 +1,5 @@
 import React from 'react'
-import Title from "components/UI/Title";
+import Title from "@/components/UI/Title";
 import DirectItem from "@/components/DirectItem";
 
 const directItem = [
