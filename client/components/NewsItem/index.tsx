@@ -13,9 +13,10 @@ type Props = {
     lengthArr: number,
     buttonDetails?: boolean,
     link?: string,
+    showDate?: boolean
 }
 
-const NewsItem = ({title, image, text, date, index, lengthArr, buttonDetails, link = '/'}: Props) => {
+const NewsItem = ({title, image, text, date, index, lengthArr, buttonDetails, link = '/', showDate = true}: Props) => {
 
 
     return (
@@ -23,10 +24,14 @@ const NewsItem = ({title, image, text, date, index, lengthArr, buttonDetails, li
             <div className="flex flex-row gap-3 items-center">
                 <Title text={title}
                        style="text-[#2E2C39] text-3xl max-xl:text-2xl max-sm:text-xl font-semibold"/>
-                <span className="text-[#D9D9D9]">&#8226;</span>
-                <span>
-                    {date}
-                </span>
+                {showDate ?
+                    <>
+                        <span className="text-[#D9D9D9]">&#8226;</span>
+                        <span>
+                            {date}
+                        </span>
+                    </> :
+                    ''}
             </div>
             <div
                 className="flex flex-row max-md:flex-col max-md:items-center gap-4 text-xl max-sm:text-base items-start">
@@ -35,6 +40,7 @@ const NewsItem = ({title, image, text, date, index, lengthArr, buttonDetails, li
                        height={210}
                        classNames={{wrapper: "w-full min-w-[230px]"}}
                        alt={'preview'}
+                       radius="none"
                        as={NextImage}
                        fetchPriority={"high"}
                 />
