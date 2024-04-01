@@ -46,7 +46,7 @@ export default function Login() {
     }
 
     return (
-        <div className="flex w-screen items-center justify-center h-screen">
+        <div className="flex w-full items-center justify-center h-screen">
             <form onSubmit={handleSubmit(onSubmit)} className="border rounded-xl px-10 py-5 flex flex-col gap-5 w-1/4">
                 <h1 className="text-center font-bold">Auth</h1>
                 <Controller name="email" control={control} rules={{required: "Field is required"}} render={({ field }) => <div>
