@@ -4,7 +4,6 @@ import { PropsWithChildren } from "react";
 import Providers from "../providers";
 import "@/assets/styles/index.scss"
 import 'react-toastify/dist/ReactToastify.css';
-import Layout from "@/components/Layout";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,9 +23,9 @@ export default function RootLayout({ children, }: PropsWithChildren) {
     <html lang="uk">
       <body className={inter.className}>
       <Providers>
-            <Layout>
+            {/*<Layout>*/}
                 {children}
-            </Layout>
+            {/*</Layout>*/}
       </Providers>
       </body>
     </html>

@@ -4,6 +4,7 @@ import CellItem, {ICellItem} from "@/components/Cell/CellItem";
 import React from "react";
 import Partners from "@/components/Partners";
 import Feedback from "@/components/Feedback";
+import Layout from "@/components/Layout";
 
 const cellItemsRow: ICellItem[] = [
     {
@@ -26,15 +27,17 @@ const cellItemsRow: ICellItem[] = [
 
 export default function Home() {
     return (
-        <>
+        <Layout>
             <div className="xl:container mx-auto my-4 px-8 max-md:px-4">
                 <div className="mt-6 flex flex-col gap-20">
                     <Cell
                         style={"w-full flex flex-row max-sm:flex-col 2xl:gap-x-56 max-2xl:gap-x-40 max-xl:gap-x-12 max-md:gap-x-4"}/>
                     <LinkList/>
                 </div>
+
             </div>
-            <div className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 max-sm:grid-rows-3 px-24 max-2xl:px-12 max-xl:px-8 mt-20 gap-12">
+            <div
+                className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 max-sm:grid-rows-3 px-24 max-2xl:px-12 max-xl:px-8 mt-20 gap-12">
                 {cellItemsRow.map((item, index) =>
                     <CellItem key={index} text={item.text} image={item.image} link={item.link} styleImage/>
                 )}
@@ -43,6 +46,6 @@ export default function Home() {
                 <Partners/>
             </div>
             <Feedback/>
-        </>
+        </Layout>
     );
 }
