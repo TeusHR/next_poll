@@ -44,6 +44,7 @@ const ConferenceTabs = ({}) => {
                 {/*    <ProductQuery categories={categories} products={initialProducts}/>*/}
                 {/*</Tab>*/}
             </Tabs>
+            {JSON.stringify(initialConference)}
         </div>
     )
 }
