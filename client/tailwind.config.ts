@@ -17,6 +17,9 @@ const tailwindConfig: Config = {
                 '3xl': '1650px',
                 'xsm': '480px'
             },
+            colors: {
+                fd:'#ffd70d'
+            }
         },
     },
     darkMode: "class",

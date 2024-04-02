@@ -24,3 +24,15 @@ export enum ConferenceType {
     COMPETITION,
     CONFERENCT,
 }
+
+export interface IResponseMeta<T> {
+    data:T
+    meta: {
+        currentPage: number
+        lastPage: number
+        next: number
+        perPage: number
+        prev: number
+        total: number
+    }
+}
