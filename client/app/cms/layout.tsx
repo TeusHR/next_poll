@@ -2,7 +2,6 @@ import React from 'react'
 import {Metadata} from "next";
 import Header from "@/components/CMS/Header";
 import Sidebar from "@/components/CMS/Sidebar";
-import NavbarBurger from "@/components/CMS/NavbarBurger";
 
 export const metadata: Metadata = {
     title: "Адмін панель",
@@ -22,12 +21,10 @@ const LayoutCMS = ({
 
     return (
         <div className="flex">
-            {/*<Header/>*/}
             <Sidebar/>
             <main className="flex-1">
                 <div className="flex flex-col lg:ml-60 sm:border-r sm:border-zinc-700 min-h-screen">
                     <Header/>
-                    <NavbarBurger/>
                     <div className="flex flex-col pt-2 px-4 space-y-2 bg-zinc-100 flex-grow pb-4">
                         {children}
                     </div>

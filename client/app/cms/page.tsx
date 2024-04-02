@@ -1,11 +1,16 @@
-import React from 'react'
+import React, {Suspense} from 'react'
+import Loading from "@/components/Loading";
+import ConferenceTabs from "./conference/ConferenceTabs";
 
-const CMS = ({}) => {
+
+const CMS = async ({}) => {
 
 
     return (
         <div>
-            next
+            <Suspense fallback={<Loading transparent/>}>
+                <ConferenceTabs/>
+            </Suspense>
         </div>
     )
 }

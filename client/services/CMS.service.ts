@@ -7,49 +7,24 @@ import {
     getResearchWorksUrl,
     getScienceSchoolsUrl
 } from "@/config/url.config";
+import {IConferences, ICreateConferences} from "@/types/Conference";
+import {ICreateScience} from "@/types/Science";
+import {ICreateCooperation} from "@/types/Cooperation";
+import {ICreateResearch} from "@/types/Research";
+import {ICreateInnovation} from "@/types/Innovation";
+import {ICreateStudent} from "@/types/Student";
+import {$api} from "@/api/interceptors";
 
-enum ConferenceType {
-    SEMINAR,
-    COMPETITION,
-    CONFERENCT,
-}
-
-interface ICreateConferences {
-    type:ConferenceType
-    country:string
-    title:string
-    text:string
-    files:string[]
-}
-
-interface ICreateScience {
-    title:string
-    text:string
-}
-
-interface ICreateCooperation {
-    title:string
-    text:string
-}
-
-interface ICreateResearch {
-    title:string
-    text:string
-    image:string
-}
-
-interface ICreateInnovation {
-    title:string
-    text:string
-    images:string[]
-    files:string[]
-}
-
-interface ICreateStudent {
-    text:string
-}
 
 export const ConferencesService = {
+    async getAllConference(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IConferences[]>(getConferencesUrl(''))
+        return data
+    },
+    async getConference(id: string) {
+        const {data} = await $api.get<IConferences>(getConferencesUrl(`/${id}`))
+        return data
+    },
     async postConferences(item:ICreateConferences, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateConferences>(getConferencesUrl(''), item)
         return status
