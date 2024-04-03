@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateInnovationDto } from "./dto/create-innovation.dto";
 import { UpdateInnovationDto } from "./dto/update-innovation.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { deleteFile } from "../common/helpers/storage.helper";
 import { Innovation, Prisma } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
+import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 
 @Injectable()
 export class InnovationService {
@@ -49,22 +49,8 @@ export class InnovationService {
   async update(id: string, updateInnovationDto: UpdateInnovationDto) {
     const innovation = await this.findOne(id);
 
-    if (innovation.files.length && updateInnovationDto.files) {
-      const filtered = innovation.files.filter(
-        (file) => !updateInnovationDto.files.includes(file),
-      );
-      for (let i = 0; i < filtered.length; i++) {
-        await deleteFile(filtered[i], true);
-      }
-    }
-    if (innovation.images.length && updateInnovationDto.images) {
-      const filtered = innovation.images.filter(
-        (file) => !updateInnovationDto.images.includes(file),
-      );
-      for (let i = 0; i < filtered.length; i++) {
-        await deleteFile(filtered[i], true);
-      }
-    }
+    await deleteFilePack(innovation.files, updateInnovationDto.files);
+    await deleteFilePack(innovation.images, updateInnovationDto.images);
 
     return this.prismaService.innovation.update({
       where: { id },
@@ -74,17 +60,10 @@ export class InnovationService {
 
   async remove(id: string) {
     const innovation = await this.findOne(id);
-    if (innovation.files.length) {
-      for (let i = 0; i < innovation.files.length; i++) {
-        await deleteFile(innovation.files[i], true);
-      }
-    }
 
-    if (innovation.images.length) {
-      for (let i = 0; i < innovation.images.length; i++) {
-        await deleteFile(innovation.images[i], true);
-      }
-    }
+    await deleteFiles(innovation.files);
+    await deleteFiles(innovation.images);
+
     return this.prismaService.innovation.delete({ where: { id } });
   }
 }

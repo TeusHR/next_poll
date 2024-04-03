@@ -4,7 +4,7 @@ import { UpdateInternationalProjectDto } from "./dto/update-international-projec
 import { paginate, PrismaService } from "../prisma.service";
 import { InternationalProject, Prisma } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
-import { deleteFile } from "../common/helpers/storage.helper";
+import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 
 @Injectable()
 export class InternationalProjectService {
@@ -53,28 +53,15 @@ export class InternationalProjectService {
   ) {
     const internationalProject = await this.findOne(id);
 
-    if (
-      internationalProject.files.length &&
-      updateInternationalProjectDto.files
-    ) {
-      const filtered = internationalProject.files.filter(
-        (file) => !updateInternationalProjectDto.files.includes(file),
-      );
-      for (let i = 0; i < filtered.length; i++) {
-        await deleteFile(filtered[i], true);
-      }
-    }
-    if (
-      internationalProject.images.length &&
-      updateInternationalProjectDto.images
-    ) {
-      const filtered = internationalProject.images.filter(
-        (file) => !updateInternationalProjectDto.images.includes(file),
-      );
-      for (let i = 0; i < filtered.length; i++) {
-        await deleteFile(filtered[i], true);
-      }
-    }
+    await deleteFilePack(
+      internationalProject.files,
+      updateInternationalProjectDto.files,
+    );
+
+    await deleteFilePack(
+      internationalProject.images,
+      updateInternationalProjectDto.images,
+    );
 
     return this.prismaService.internationalProject.update({
       where: { id },
@@ -84,17 +71,10 @@ export class InternationalProjectService {
 
   async remove(id: string) {
     const internationalProject = await this.findOne(id);
-    if (internationalProject.files.length) {
-      for (let i = 0; i < internationalProject.files.length; i++) {
-        await deleteFile(internationalProject.files[i], true);
-      }
-    }
 
-    if (internationalProject.images.length) {
-      for (let i = 0; i < internationalProject.images.length; i++) {
-        await deleteFile(internationalProject.images[i], true);
-      }
-    }
+    await deleteFiles(internationalProject.files);
+    await deleteFiles(internationalProject.images);
+
     return this.prismaService.internationalProject.delete({ where: { id } });
   }
 }

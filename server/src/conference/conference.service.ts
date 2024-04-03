@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateConferenceDto } from "./dto/create-conference.dto";
 import { UpdateConferenceDto } from "./dto/update-conference.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { deleteFile } from "../common/helpers/storage.helper";
 import { Prisma, Conference } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
+import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 
 @Injectable()
 export class ConferenceService {
@@ -47,14 +47,8 @@ export class ConferenceService {
 
   async update(id: string, updateConferenceDto: UpdateConferenceDto) {
     const conference = await this.findOne(id);
-    if (conference.files.length && updateConferenceDto.files) {
-      const filtered = conference.files.filter(
-        (file) => !updateConferenceDto.files.includes(file),
-      );
-      for (let i = 0; i < filtered.length; i++) {
-        await deleteFile(filtered[i], true);
-      }
-    }
+    await deleteFilePack(conference.files, updateConferenceDto.files);
+
     return this.prismaService.conference.update({
       where: { id },
       data: updateConferenceDto,
@@ -63,11 +57,9 @@ export class ConferenceService {
 
   async remove(id: string) {
     const conference = await this.findOne(id);
-    if (conference.files) {
-      for (let i = 0; i < conference.files.length; i++) {
-        await deleteFile(conference.files[i], true);
-      }
-    }
+
+    await deleteFiles(conference.files);
+
     return this.prismaService.conference.delete({ where: { id } });
   }
 }

@@ -1,7 +1,12 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Transform } from "class-transformer";
 
-export class CreateStudentScienceDto {
+export class CreateTrainingDto {
+  @IsString()
+  @Transform(({ value }) => value?.toString().trim())
+  @IsNotEmpty()
+  title: string;
+
   @IsString()
   @Transform(({ value }) => value?.toString().trim())
   @IsNotEmpty()
@@ -10,4 +15,8 @@ export class CreateStudentScienceDto {
   @IsOptional()
   @IsString({ each: true })
   files: string[];
+
+  @IsOptional()
+  @IsString({ each: true })
+  images: string[];
 }

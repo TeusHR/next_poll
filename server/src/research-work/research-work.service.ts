@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateResearchWorkDto } from "./dto/create-research-work.dto";
 import { UpdateResearchWorkDto } from "./dto/update-research-work.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { deleteFile } from "../common/helpers/storage.helper";
 import { ResearchWork, Prisma } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
+import { deleteFiles } from "../common/helpers/storage.helper";
 
 @Injectable()
 export class ResearchWorkService {
@@ -50,7 +50,7 @@ export class ResearchWorkService {
     const researchWork = await this.findOne(id);
 
     if (researchWork.image !== updateResearchWorkDto.image)
-      await deleteFile(researchWork.image, true);
+      await deleteFiles([researchWork.image]);
 
     return this.prismaService.researchWork.update({
       where: { id },
@@ -60,7 +60,9 @@ export class ResearchWorkService {
 
   async remove(id: string) {
     const researchWork = await this.findOne(id);
-    await deleteFile(researchWork.image, true);
+
+    await deleteFiles([researchWork.image]);
+
     return this.prismaService.researchWork.delete({ where: { id } });
   }
 }

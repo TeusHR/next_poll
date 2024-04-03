@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { CreateStudentScienceDto } from "./dto/create-student-science.dto";
 import { PrismaService } from "../prisma.service";
+import { deleteFilePack } from "src/common/helpers/storage.helper";
 
 @Injectable()
 export class StudentScienceService {
@@ -8,15 +9,20 @@ export class StudentScienceService {
 
   async createOrUpdate(createStudentScienceDto: CreateStudentScienceDto) {
     const studentScience = await this.prismaService.studentScience.findFirst();
+    let res: any;
     if (studentScience)
-      return this.prismaService.studentScience.update({
+      res = this.prismaService.studentScience.update({
         data: createStudentScienceDto,
         where: { id: studentScience.id },
       });
     else
-      return this.prismaService.studentScience.create({
+      res = this.prismaService.studentScience.create({
         data: createStudentScienceDto,
       });
+
+    await deleteFilePack(res.files, createStudentScienceDto.files);
+
+    return res;
   }
 
   find() {

@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateActivityDto } from "./dto/create-activity.dto";
 import { UpdateActivityDto } from "./dto/update-activity.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { deleteFile } from "../common/helpers/storage.helper";
 import { Prisma, Activity } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
+import { deleteFiles } from "../common/helpers/storage.helper";
 
 @Injectable()
 export class ActivityService {
@@ -50,7 +50,7 @@ export class ActivityService {
     const activity = await this.findOne(id);
 
     if (activity.image !== updateActivityDto.image)
-      await deleteFile(activity.image, true);
+      await deleteFiles([activity.image]);
 
     return this.prismaService.activity.update({
       where: { id },
@@ -60,7 +60,7 @@ export class ActivityService {
 
   async remove(id: string) {
     const activity = await this.findOne(id);
-    await deleteFile(activity.image, true);
+    await deleteFiles([activity.image]);
     return this.prismaService.activity.delete({ where: { id } });
   }
 }

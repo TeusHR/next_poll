@@ -19,6 +19,12 @@ import { InnovationModule } from "./innovation/innovation.module";
 import { StudentScienceModule } from "./student-science/student-science.module";
 import { InternationalProjectModule } from "./international-project/international-project.module";
 import { FeedbackModule } from "./feedback/feedback.module";
+import { LaboratoryModule } from "./laboratory/laboratory.module";
+import { LaboratoryDevelopmentModule } from "./laboratory-development/laboratory-development.module";
+import { DIGAMModule } from "./digam/digam.module";
+import { ConsultingModule } from './consulting/consulting.module';
+import { TrainingModule } from './training/training.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -60,6 +66,11 @@ import { FeedbackModule } from "./feedback/feedback.module";
     StudentScienceModule,
     InternationalProjectModule,
     FeedbackModule,
+    LaboratoryModule,
+    LaboratoryDevelopmentModule,
+    DIGAMModule,
+    ConsultingModule,
+    TrainingModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],
