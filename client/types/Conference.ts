@@ -1,5 +1,5 @@
 export interface ICreateConferences {
-    type:ConferenceType
+    type:string
     country:string
     date:string
     title:string
@@ -9,7 +9,7 @@ export interface ICreateConferences {
 
 export interface IConferences {
     id:string
-    type:ConferenceType
+    type:string
     country:string
     date:string
     title:string
@@ -17,6 +17,15 @@ export interface IConferences {
     files:string[]
     "createdAt": string
     "updatedAt": string
+}
+
+export type CreateConferenceForm = {
+    type:string
+    country:string
+    date:string
+    title:string
+    text:string
+    files:FileList[],
 }
 
 export enum ConferenceType {

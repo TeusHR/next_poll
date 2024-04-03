@@ -19,10 +19,7 @@ const Feedback = ({}) => {
     const {
         handleSubmit,
         control,
-        setFocus,
         formState,
-        setValue,
-        resetField,
     } = useForm<IFeedbackForm>({
         mode: "all",
         defaultValues: {
@@ -87,7 +84,7 @@ const Feedback = ({}) => {
                                            }}
                                            max="50"
                                            min="2"
-                                           placeholder="Пошка"
+                                           placeholder="Пошта"
                                            autoComplete="off"
                                            isInvalid={!!formState.errors.gmail?.message}
                                            errorMessage={formState.errors.gmail?.message}

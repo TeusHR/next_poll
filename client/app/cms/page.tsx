@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react'
 import Loading from "@/components/Loading";
-import ConferenceTabs from "./conference/ConferenceTabs";
+import ConferenceTabs from "./conference/components/ConferenceTabs";
 
 
 const CMS = async ({}) => {

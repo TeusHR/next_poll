@@ -135,7 +135,7 @@ const ConferenceTable: FC<Props> = ({
         <>
         <TableItems dataItems={filterConference?.data.sort(toDate) || []}
                         searchInput={valueSearch}
-                        typeProduct='product'
+                        typeProduct='conference'
                         selectedKeys={selectedKeys}
                         onSelectKeys={onSelectKeys}
                         totalDataItems={totalDataItems}
