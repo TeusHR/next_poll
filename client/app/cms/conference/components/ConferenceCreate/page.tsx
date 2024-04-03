@@ -8,6 +8,21 @@ import {toast} from "react-toastify";
 import {ConferencesService} from "@/services/CMS.service";
 import {Input} from "@nextui-org/input";
 import {Button} from "@nextui-org/button";
+import Select from "@/components/CMS/Select";
+import {countryOptions} from "@/utils/CountrySet";
+
+const typeConference = [{
+    label: 'Конференція',
+    value: 'CONFERENCT',
+}, {
+    label: 'Семінар',
+    value: 'SEMINAR',
+},
+    {
+        label: 'Конкурс',
+        value: 'COMPETITION',
+    }
+]
 
 const ConferenceCreate = ({}) => {
     const {
@@ -22,10 +37,10 @@ const ConferenceCreate = ({}) => {
         mode: 'all',
         defaultValues: {
             title: '',
-            country: '',
+            country: new Set<string>(),
             date: '',
             text: '',
-            type: ''
+            type: new Set<string>(["SEMINAR"])
         }
     })
 
@@ -38,7 +53,7 @@ const ConferenceCreate = ({}) => {
         id: "",
         text: "",
         title: "",
-        type: "SEMINAR",
+        type: 'SEMINAR',
         updatedAt: ""
     })
 
@@ -51,7 +66,7 @@ const ConferenceCreate = ({}) => {
     const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
         if (toast.isActive('toast-register') || status !== 'authenticated')
             return;
-
+        console.log(dataForm)
         setIsLoading(true)
 
 
@@ -61,8 +76,8 @@ const ConferenceCreate = ({}) => {
         if (true) {
 
             const dataProduct: ICreateConferences = {
-                type: "SEMINAR",
-                country: dataForm.country,
+                type: Array.from(dataForm.type).toString(),
+                country: Array.from(dataForm.country).toString(),
                 date: dataForm.date,
                 title: dataForm.title,
                 text: dataForm.text,
@@ -87,57 +102,130 @@ const ConferenceCreate = ({}) => {
     return (
         <div className="flex flex-col gap-8 w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex gap-12 max-2xl:gap-4 max-2xl:grid max-2xl:grid-cols-2">
-                    <div
-                        className="w-[300px] max-2xl:row-start-1 max-2xl:col-start-1 max-2xl:row-end-2 max-2xl:col-end-3">
-                        <div className="rounded-[20px] w-[300px] bg-white px-8 py-6 flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="w-full flex flex-col gap-4">
-                                    <div className="text-black font-montserrat text-xl max-xl:text-base font-bold">
-                                        Верифікація:
-                                    </div>
-                                    <div className="flex flex-row gap-4 w-full">
-                                        <div className="flex flex-col gap-4 w-full relative">
-                                            <Controller name="title" control={control} rules={{
-                                                required: "Обов'язкове поле",
-                                                validate: (value) => {
-                                                    if (/^\d+$/.test(value))
-                                                        return true
-                                                    else
-                                                        return 'Тільки цифри'
-                                                }
-                                            }} render={({field}) =>
-                                                <Input className="border-none py-2"
-                                                       type="text"
-                                                       defaultValue={field.value}
-                                                       isRequired
-                                                       classNames={{
-                                                           inputWrapper: "border-b-1 border-primary pb-[5px]",
-                                                           input: "focus:outline-none text-xl text-primary px-2",
-                                                           errorMessage: "text-red-600 text-base"
-                                                       }}
-                                                       max="50"
-                                                       min="2"
-                                                       placeholder="Пошка"
-                                                       autoComplete="off"
-                                                       isInvalid={!!formState.errors.title?.message}
-                                                       errorMessage={formState.errors.title?.message}
-                                                />
-                                            }
+                <div className="flex gap-12 max-2xl:gap-4 max-2xl:grid">
+                    {/*<div className="max-2xl:row-start-1 max-2xl:col-start-1 max-2xl:row-end-2 max-2xl:col-end-3">*/}
+                    <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col gap-4">
+                        <div className="flex flex-col gap-4">
+                            <div className="w-full flex flex-col gap-4">
+                                <div className="flex flex-row gap-4 w-full">
+                                    <div className="flex flex-col gap-4 w-full relative justify-end">
+                                        <Controller name="title" control={control} rules={{
+                                            required: "Обов'язкове поле",
+                                            minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
+                                            maxLength: {value: 50, message: "Максимальна довжина 50 символів"},
+                                            // validate: (value) => {
+                                            //     if (/^\d+$/.test(value))
+                                            //         return true
+                                            //     else
+                                            //         return 'Тільки цифри'
+                                            // }
+                                        }} render={({field}) =>
+                                            <Input className="border-none py-2"
+                                                   type="text"
+                                                   value={field.value}
+                                                   onValueChange={field.onChange}
+                                                   isRequired
+                                                   classNames={{
+                                                       inputWrapper: "border-1 border-primary-500",
+                                                       input: "focus:outline-none text-base text-primary",
+                                                       errorMessage: "text-red-600 text-sm",
+                                                       label: "text-base",
+                                                   }}
+                                                   key="title"
+                                                   label="Назва"
+                                                   labelPlacement="outside"
+                                                   placeholder="Введіть назву"
+                                                   autoComplete="off"
+                                                   isInvalid={!!formState.errors.title?.message}
+                                                   errorMessage={formState.errors.title?.message}
                                             />
-                                        </div>
+                                        }
+                                        />
+                                        <Controller name="date" control={control}
+                                                    rules={{
+                                                        required: "Обов'язкове поле",
+                                                        // validate: (value) => {
+                                                        //     if (value)
+                                                        //         if (String(value).length > 10)
+                                                        //             return 'Число має бути менше 10 цифр'
+                                                        // },
+                                                    }}
+                                                    render={({field}) =>
+                                                        <Input className="border-none py-2"
+                                                               type="datetime-local"
+                                                               value={field.value}
+                                                               onValueChange={field.onChange}
+                                                               isRequired
+                                                               classNames={{
+                                                                   inputWrapper: "border-1 border-primary-500",
+                                                                   input: "focus:outline-none text-base text-primary",
+                                                                   errorMessage: "text-red-600 text-sm",
+                                                                   label: "text-base",
+                                                               }}
+                                                               key="date"
+                                                               label="Дата"
+                                                               labelPlacement="outside"
+                                                               placeholder="Введіть дату"
+                                                               autoComplete="off"
+                                                               isInvalid={!!formState.errors.date?.message}
+                                                               errorMessage={formState.errors.date?.message}
+                                                        />
+                                                    }
+                                        />
                                     </div>
-                                </div>
-                                <div className="flex justify-center items-center">
-                                    {/*<Button onClick={(e) => handlerArticle(e)}*/}
-                                    {/*        isLoading={isLoading}*/}
-                                    {/*        className="px-6 bg-primary-400 text-xl">*/}
-                                    {/*    Перевірити*/}
-                                    {/*</Button>*/}
+                                    <div className="flex flex-col gap-4 w-full relative justify-end">
+                                        <Controller name="type" control={control} rules={{
+                                            required: 'Обов\'язкове поле',
+                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true
+                                        }} render={({field}) =>
+                                            <div>
+                                                <div
+                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.type?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>Тип
+                                                </div>
+                                                <Select options={typeConference.map(item => ({
+                                                    label: item.label,
+                                                    value: item.value
+                                                }))}
+                                                        selectionMode={'single'}
+                                                        justify
+                                                        selected={field.value}
+                                                        onChange={field.onChange}/>
+                                                {formState.errors.type?.message &&
+                                                    <div
+                                                        className="text-red-600 text-sm">{formState.errors.type.message}</div>}
+                                            </div>
+                                        }
+                                        />
+                                        <Controller name="country" control={control} rules={{
+                                            required: 'Обов\'язкове поле',
+                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true
+                                        }} render={({field}) =>
+                                            <div>
+                                                <div
+                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.country?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
+                                                    Країна
+                                                </div>
+                                                <Select options={countryOptions.map(item => ({
+                                                    label: item.label,
+                                                    value: item.value
+                                                }))}
+                                                        selectionMode={'single'}
+                                                        justify
+                                                        isSearchable
+                                                        selected={field.value}
+                                                        onChange={field.onChange}/>
+                                                {formState.errors.country?.message &&
+                                                    <div
+                                                        className="text-red-600 text-sm">{formState.errors.country.message}</div>}
+                                            </div>
+                                        }
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {/*</div>*/}
                     <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col gap-4">
                         <div className="flex">
                             <div className="w-full flex flex-col gap-4">
@@ -168,36 +256,9 @@ const ConferenceCreate = ({}) => {
                                             />
                                         }
                                         />
-                                        <Controller name="date" control={control}
-                                                    rules={{
-                                                        validate: (value) => {
-                                                            if (value)
-                                                                if (String(value).length > 10)
-                                                                    return 'Число має бути менше 10 цифр'
-                                                        },
-                                                    }}
-                                                    render={({field}) =>
-                                                        <Input className="border-none py-2"
-                                                               type="text"
-                                                               defaultValue={field.value}
-                                                               isRequired
-                                                               classNames={{
-                                                                   inputWrapper: "border-b-1 border-primary pb-[5px]",
-                                                                   input: "focus:outline-none text-xl text-primary px-2",
-                                                                   errorMessage: "text-red-600 text-base"
-                                                               }}
-                                                               max="50"
-                                                               min="2"
-                                                               placeholder="Пошка"
-                                                               autoComplete="off"
-                                                               isInvalid={!!formState.errors.date?.message}
-                                                               errorMessage={formState.errors.date?.message}
-                                                        />
-                                                    }
-                                        />
                                     </div>
                                     <div className="flex flex-row gap-4 items-end w-full relative">
-                                        <Controller name="type" control={control} rules={{
+                                        <Controller name="title" control={control} rules={{
                                             required: "Обов'язкове поле",
                                         }} render={({field}) =>
                                             <Input className="border-none py-2"
@@ -218,26 +279,7 @@ const ConferenceCreate = ({}) => {
                                             />
                                         }
                                         />
-                                        <Controller name="country" control={control}
-                                                    render={({field}) =>
-                                                        <Input className="border-none py-2"
-                                                               type="text"
-                                                               defaultValue={field.value}
-                                                               isRequired
-                                                               classNames={{
-                                                                   inputWrapper: "border-b-1 border-primary pb-[5px]",
-                                                                   input: "focus:outline-none text-xl text-primary px-2",
-                                                                   errorMessage: "text-red-600 text-base"
-                                                               }}
-                                                               max="50"
-                                                               min="2"
-                                                               placeholder="Пошка"
-                                                               autoComplete="off"
-                                                               isInvalid={!!formState.errors.country?.message}
-                                                               errorMessage={formState.errors.country?.message}
-                                                        />
-                                                    }
-                                        />
+
                                     </div>
                                     <div className="flex flex-row gap-4 items-end w-full relative">
                                         <Controller name="files" control={control} rules={{
@@ -363,75 +405,75 @@ const ConferenceCreate = ({}) => {
                                 <div className="text-black font-montserrat text-xl max-xl:text-base font-bold">
                                     Налаштування:
                                 </div>
-                                {/*<text className="grid grid-cols-2 gap-4 w-full">*/}
-                                {/*    <text className="flex flex-col gap-4 w-full relative">*/}
-                                {/*        <Controller name="ingredients" control={control} render={({field}) =>*/}
-                                {/*            <FormControl isInvalid={!!formState.errors.ingredients?.message}*/}
-                                {/*                         className="min-h-[110px]">*/}
-                                {/*                <FormLabel*/}
-                                {/*                    className="text-brand-gray-200 max-xl:!text-sm">Інгредієнти</FormLabel>*/}
-                                {/*                <SelectID options={ingredients.map(item => ({label: item.title, value: item.id.toString()}))}*/}
-                                {/*                          selectionMode={'multiple'}*/}
-                                {/*                          isSearchable*/}
-                                {/*                          justify*/}
-                                {/*                          selected={field.value}*/}
-                                {/*                          disabled={missArticle || ingredients.length === 0}*/}
-                                {/*                          onChange={field.onChange}/>*/}
-                                {/*                {formState.errors.ingredients?.message &&*/}
-                                {/*                    <FormErrorMessage>{formState.errors.ingredients.message}</FormErrorMessage>}*/}
-                                {/*            </FormControl>}*/}
-                                {/*        />*/}
-                                {/*        <Controller name="filterCategories" control={control} render={({field}) =>*/}
-                                {/*            <FormControl isInvalid={!!formState.errors.filterCategories?.message}*/}
-                                {/*                         className="min-h-[110px]">*/}
-                                {/*                <FormLabel*/}
-                                {/*                    className="text-brand-gray-200 max-xl:!text-sm">Фільтри</FormLabel>*/}
-                                {/*                <SelectID options={FilterCategories.map(item => ({label: item.name, value: item.id.toString()}))}*/}
-                                {/*                          selected={field.value}*/}
-                                {/*                          justify*/}
-                                {/*                          disabled={(watchCategories === undefined || watchCategories.size === 0 || FilterCategories.length === 0) || missArticle}*/}
-                                {/*                          selectionMode={'multiple'}*/}
-                                {/*                          onChange={field.onChange}/>*/}
-                                {/*                {formState.errors.filterCategories?.message &&*/}
-                                {/*                    <FormErrorMessage>{formState.errors.filterCategories.message}</FormErrorMessage>}*/}
-                                {/*            </FormControl>}*/}
-                                {/*        />*/}
-                                {/*    </text>*/}
-                                {/*    <text className="flex flex-col gap-4 w-full relative">*/}
-                                {/*        <Controller name="categories" control={control}*/}
-                                {/*                    rules={{*/}
-                                {/*                        required: 'Обязательное поле',*/}
-                                {/*                        validate: value => value.size === 0 ? 'Обязательное поле' : true*/}
-                                {/*                    }}*/}
-                                {/*                    render={({field}) =>*/}
-                                {/*                        <FormControl isRequired isInvalid={!!formState.errors.categories?.message}*/}
-                                {/*                                     className="min-h-[110px]">*/}
-                                {/*                            <FormLabel*/}
-                                {/*                                className="text-brand-gray-200 max-xl:!text-sm">Категорія</FormLabel>*/}
-                                {/*                            <SelectID options={categories.map(item => ({label: item.name, value: item.id.toString()}))}*/}
-                                {/*                                      selected={field.value}*/}
-                                {/*                                      justify*/}
-                                {/*                                      disabled={missArticle || categories.length === 0}*/}
-                                {/*                                      onChange={field.onChange}/>*/}
-                                {/*                            {formState.errors.categories?.message &&*/}
-                                {/*                                <FormErrorMessage>{formState.errors.categories.message}</FormErrorMessage>}*/}
-                                {/*                        </FormControl>}*/}
-                                {/*        />*/}
-                                {/*        <Controller name="subCategories" control={control} render={({field}) =>*/}
-                                {/*            <FormControl isInvalid={!!formState.errors.subCategories?.message}*/}
-                                {/*                         className="min-h-[110px]">*/}
-                                {/*                <FormLabel className="text-brand-gray-200 max-xl:!text-sm">Підкатегорія</FormLabel>*/}
-                                {/*                <SelectID options={subCategories.map(item => ({label: item.name, value: item.id.toString()}))}*/}
-                                {/*                          selected={field.value}*/}
-                                {/*                          justify*/}
-                                {/*                          disabled={(watchCategories === undefined || watchCategories.size === 0 || subCategories.length === 0) || missArticle}*/}
-                                {/*                          onChange={field.onChange}/>*/}
-                                {/*                {formState.errors.subCategories?.message &&*/}
-                                {/*                    <FormErrorMessage>{formState.errors.subCategories.message}</FormErrorMessage>}*/}
-                                {/*            </FormControl>}*/}
-                                {/*        />*/}
-                                {/*    </text>*/}
-                                {/*</text>*/}
+                                <div className="grid grid-cols-2 gap-4 w-full">
+                                    <div className="flex flex-col gap-4 w-full relative">
+                                        {/*<Controller name="ingredients" control={control} render={({field}) =>*/}
+                                        {/*    <FormControl isInvalid={!!formState.errors.ingredients?.message}*/}
+                                        {/*                 className="min-h-[110px]">*/}
+                                        {/*        <FormLabel*/}
+                                        {/*            className="text-brand-gray-200 max-xl:!text-sm">Інгредієнти</FormLabel>*/}
+                                        {/*        <SelectID options={ingredients.map(item => ({label: item.title, value: item.id.toString()}))}*/}
+                                        {/*                  selectionMode={'multiple'}*/}
+                                        {/*                  isSearchable*/}
+                                        {/*                  justify*/}
+                                        {/*                  selected={field.value}*/}
+                                        {/*                  disabled={missArticle || ingredients.length === 0}*/}
+                                        {/*                  onChange={field.onChange}/>*/}
+                                        {/*        {formState.errors.ingredients?.message &&*/}
+                                        {/*            <FormErrorMessage>{formState.errors.ingredients.message}</FormErrorMessage>}*/}
+                                        {/*    </FormControl>}*/}
+                                        {/*/>*/}
+                                        {/*<Controller name="filterCategories" control={control} render={({field}) =>*/}
+                                        {/*    <FormControl isInvalid={!!formState.errors.filterCategories?.message}*/}
+                                        {/*                 className="min-h-[110px]">*/}
+                                        {/*        <FormLabel*/}
+                                        {/*            className="text-brand-gray-200 max-xl:!text-sm">Фільтри</FormLabel>*/}
+                                        {/*        <SelectID options={FilterCategories.map(item => ({label: item.name, value: item.id.toString()}))}*/}
+                                        {/*                  selected={field.value}*/}
+                                        {/*                  justify*/}
+                                        {/*                  disabled={(watchCategories === undefined || watchCategories.size === 0 || FilterCategories.length === 0) || missArticle}*/}
+                                        {/*                  selectionMode={'multiple'}*/}
+                                        {/*                  onChange={field.onChange}/>*/}
+                                        {/*        {formState.errors.filterCategories?.message &&*/}
+                                        {/*            <FormErrorMessage>{formState.errors.filterCategories.message}</FormErrorMessage>}*/}
+                                        {/*    </FormControl>}*/}
+                                        {/*/>*/}
+                                    </div>
+                                    {/*<div className="flex flex-col gap-4 w-full relative">*/}
+                                    {/*    <Controller name="categories" control={control}*/}
+                                    {/*                rules={{*/}
+                                    {/*                    required: 'Обязательное поле',*/}
+                                    {/*                    validate: value => value.size === 0 ? 'Обязательное поле' : true*/}
+                                    {/*                }}*/}
+                                    {/*                render={({field}) =>*/}
+                                    {/*                    <FormControl isRequired isInvalid={!!formState.errors.categories?.message}*/}
+                                    {/*                                 className="min-h-[110px]">*/}
+                                    {/*                        <FormLabel*/}
+                                    {/*                            className="text-brand-gray-200 max-xl:!text-sm">Категорія</FormLabel>*/}
+                                    {/*                        <SelectID options={categories.map(item => ({label: item.name, value: item.id.toString()}))}*/}
+                                    {/*                                  selected={field.value}*/}
+                                    {/*                                  justify*/}
+                                    {/*                                  disabled={missArticle || categories.length === 0}*/}
+                                    {/*                                  onChange={field.onChange}/>*/}
+                                    {/*                        {formState.errors.categories?.message &&*/}
+                                    {/*                            <FormErrorMessage>{formState.errors.categories.message}</FormErrorMessage>}*/}
+                                    {/*                    </FormControl>}*/}
+                                    {/*    />*/}
+                                    {/*    <Controller name="subCategories" control={control} render={({field}) =>*/}
+                                    {/*        <FormControl isInvalid={!!formState.errors.subCategories?.message}*/}
+                                    {/*                     className="min-h-[110px]">*/}
+                                    {/*            <FormLabel className="text-brand-gray-200 max-xl:!text-sm">Підкатегорія</FormLabel>*/}
+                                    {/*            <SelectID options={subCategories.map(item => ({label: item.name, value: item.id.toString()}))}*/}
+                                    {/*                      selected={field.value}*/}
+                                    {/*                      justify*/}
+                                    {/*                      disabled={(watchCategories === undefined || watchCategories.size === 0 || subCategories.length === 0) || missArticle}*/}
+                                    {/*                      onChange={field.onChange}/>*/}
+                                    {/*            {formState.errors.subCategories?.message &&*/}
+                                    {/*                <FormErrorMessage>{formState.errors.subCategories.message}</FormErrorMessage>}*/}
+                                    {/*        </FormControl>}*/}
+                                    {/*    />*/}
+                                    {/*</div>*/}
+                                </div>
                             </div>
                         </div>
                     </div>

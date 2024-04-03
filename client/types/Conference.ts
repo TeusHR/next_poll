@@ -20,8 +20,8 @@ export interface IConferences {
 }
 
 export type CreateConferenceForm = {
-    type:string
-    country:string
+    type: Set<string>,
+    country:Set<string>
     date:string
     title:string
     text:string
