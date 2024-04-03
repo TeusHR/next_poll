@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { LaboratoryDevelopmentController } from './laboratory-development.controller';
-import { LaboratoryDevelopmentService } from './laboratory-development.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { LaboratoryDevelopmentController } from "./laboratory-development.controller";
+import { LaboratoryDevelopmentService } from "./laboratory-development.service";
 
-describe('LaboratoryDevelopmentController', () => {
+describe("LaboratoryDevelopmentController", () => {
   let controller: LaboratoryDevelopmentController;
 
   beforeEach(async () => {
@@ -11,10 +11,12 @@ describe('LaboratoryDevelopmentController', () => {
       providers: [LaboratoryDevelopmentService],
     }).compile();
 
-    controller = module.get<LaboratoryDevelopmentController>(LaboratoryDevelopmentController);
+    controller = module.get<LaboratoryDevelopmentController>(
+      LaboratoryDevelopmentController,
+    );
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 });

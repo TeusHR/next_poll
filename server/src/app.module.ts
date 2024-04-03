@@ -22,8 +22,8 @@ import { FeedbackModule } from "./feedback/feedback.module";
 import { LaboratoryModule } from "./laboratory/laboratory.module";
 import { LaboratoryDevelopmentModule } from "./laboratory-development/laboratory-development.module";
 import { DIGAMModule } from "./digam/digam.module";
-import { ConsultingModule } from './consulting/consulting.module';
-import { TrainingModule } from './training/training.module';
+import { ConsultingModule } from "./consulting/consulting.module";
+import { TrainingModule } from "./training/training.module";
 
 @Module({
   imports: [

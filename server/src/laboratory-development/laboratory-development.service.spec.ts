@@ -1,7 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { LaboratoryDevelopmentService } from './laboratory-development.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { LaboratoryDevelopmentService } from "./laboratory-development.service";
 
-describe('LaboratoryDevelopmentService', () => {
+describe("LaboratoryDevelopmentService", () => {
   let service: LaboratoryDevelopmentService;
 
   beforeEach(async () => {
@@ -9,10 +9,12 @@ describe('LaboratoryDevelopmentService', () => {
       providers: [LaboratoryDevelopmentService],
     }).compile();
 
-    service = module.get<LaboratoryDevelopmentService>(LaboratoryDevelopmentService);
+    service = module.get<LaboratoryDevelopmentService>(
+      LaboratoryDevelopmentService,
+    );
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });
