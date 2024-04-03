@@ -90,7 +90,6 @@ export class ConferenceService {
         items: grouped[parseInt(key)].items,
       }));
 
-    // Преобразование отсортированного массива в объект для удобства доступа
     return sortedGroupedArray.reduce(
       (acc, cur) => {
         acc[cur.monthName] = cur.items;
