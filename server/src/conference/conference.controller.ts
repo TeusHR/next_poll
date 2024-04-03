@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
 } from "@nestjs/common";
 import { ConferenceService } from "./conference.service";
 import { CreateConferenceDto } from "./dto/create-conference.dto";
@@ -24,18 +23,8 @@ export class ConferenceController {
   }
 
   @Get()
-  findAll(
-    @Query("limit") limit?: string,
-    @Query("page") page?: string,
-    @Query("column") column?: string,
-    @Query("order") order?: string,
-  ) {
-    const orderBy = { [column || "updatedAt"]: order || "desc" };
-    return this.conferenceService.findAll({
-      perPage: +limit || undefined,
-      page: +page || 1,
-      orderBy,
-    });
+  findAll() {
+    return this.conferenceService.findAll();
   }
 
   @Get(":id")

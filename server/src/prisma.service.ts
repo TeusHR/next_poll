@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { paginator, PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 
 export const paginate: PaginatorTypes.PaginateFunction = paginator({
-  perPage: 2,
+  perPage: 5,
 });
 
 @Injectable()
