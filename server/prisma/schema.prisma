@@ -84,8 +84,9 @@ model Innovation {
 
 // Студентська наука
 model StudentScience {
-  id   String @id @default(uuid())
-  text String
+  id    String   @id @default(uuid())
+  text  String
+  files String[] @default([])
 }
 
 // Міжнародні проекти
@@ -108,6 +109,67 @@ model Feedback {
   text  String
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+// Науково-дослідні лабораторії
+model Laboratory {
+  id     String   @id @default(uuid())
+  title  String
+  text   String
+  images String[] @default([])
+  files  String[] @default([])
+
+  developments LaboratoryDevelopment[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+// Розробки лабораторії
+model LaboratoryDevelopment {
+  id     String   @id @default(uuid())
+  title  String
+  text   String
+  images String[] @default([])
+  files  String[] @default([])
+
+  laboratory   Laboratory @relation(references: [id], fields: [laboratoryId])
+  laboratoryId String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+// Відділ міжнародних грантів та академічної мобільності (Department of International Grants and Academic Mobility)
+model DIGAM {
+  id                  String @id @default(uuid())
+  text                String
+  organizations       Json[] @default([]) // {image: string, title: string, link: string}[]
+  foreignUniversities Json[] @default([]) // {country: string, title: string, description: string}[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Consulting {
+  id     String @id @default(uuid())
+  title  String
+  text   String
+  images Json[] @default([]) // {image: string, description: string}[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Training {
+  id     String   @id @default(uuid())
+  title  String
+  text   String
+  images String[] @default([])
+  files  String[] @default([])
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
 enum ConferenceType {

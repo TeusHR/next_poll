@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateConferenceDto } from "./dto/create-conference.dto";
 import { UpdateConferenceDto } from "./dto/update-conference.dto";
-import { paginate, PrismaService } from "../prisma.service";
-import { deleteFile } from "../common/helpers/storage.helper";
-import { Prisma, Conference } from "@prisma/client";
-import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
+import { PrismaService } from "../prisma.service";
+import { Conference } from "@prisma/client";
+import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
+import "moment/locale/uk";
+import * as moment from "moment";
+
+moment.locale("uk");
 
 @Injectable()
 export class ConferenceService {
@@ -16,25 +19,9 @@ export class ConferenceService {
     });
   }
 
-  async findAll({
-    page,
-    perPage,
-    orderBy,
-  }: {
-    orderBy?: Prisma.ConferenceOrderByWithRelationInput;
-    page?: number;
-    perPage?: number;
-  }): Promise<PaginatorTypes.PaginatedResult<Conference>> {
-    return paginate(
-      this.prismaService.conference,
-      {
-        orderBy,
-      },
-      {
-        page,
-        perPage,
-      },
-    );
+  async findAll() {
+    const conferences = await this.prismaService.conference.findMany();
+    return this.groupByMonth(conferences);
   }
 
   async findOne(id: string) {
@@ -47,14 +34,8 @@ export class ConferenceService {
 
   async update(id: string, updateConferenceDto: UpdateConferenceDto) {
     const conference = await this.findOne(id);
-    if (conference.files.length && updateConferenceDto.files) {
-      const filtered = conference.files.filter(
-        (file) => !updateConferenceDto.files.includes(file),
-      );
-      for (let i = 0; i < filtered.length; i++) {
-        await deleteFile(filtered[i], true);
-      }
-    }
+    await deleteFilePack(conference.files, updateConferenceDto.files);
+
     return this.prismaService.conference.update({
       where: { id },
       data: updateConferenceDto,
@@ -63,11 +44,58 @@ export class ConferenceService {
 
   async remove(id: string) {
     const conference = await this.findOne(id);
-    if (conference.files) {
-      for (let i = 0; i < conference.files.length; i++) {
-        await deleteFile(conference.files[i], true);
-      }
-    }
+
+    await deleteFiles(conference.files);
+
     return this.prismaService.conference.delete({ where: { id } });
+  }
+
+  groupByMonth(conferences: Conference[]) {
+    const monthNamesUkr = [
+      "Січень",
+      "Лютий",
+      "Березень",
+      "Квітень",
+      "Травень",
+      "Червень",
+      "Липень",
+      "Серпень",
+      "Вересень",
+      "Жовтень",
+      "Листопад",
+      "Грудень",
+    ];
+    const grouped = conferences.reduce(
+      (accumulator, item) => {
+        const monthIndex = new Date(item.date).getMonth();
+        const monthName = monthNamesUkr[monthIndex];
+
+        if (!accumulator[monthIndex]) {
+          accumulator[monthIndex] = { monthName, items: [] };
+        }
+
+        accumulator[monthIndex].items.push({
+          ...item,
+          date: moment(item.date).format("D MMMM"),
+        });
+        return accumulator;
+      },
+      {} as Record<number, { monthName: string; items: any[] }>,
+    );
+
+    const sortedGroupedArray = Object.keys(grouped)
+      .sort((a, b) => parseInt(a) - parseInt(b))
+      .map((key) => ({
+        monthName: grouped[parseInt(key)].monthName,
+        items: grouped[parseInt(key)].items,
+      }));
+
+    return sortedGroupedArray.reduce(
+      (acc, cur) => {
+        acc[cur.monthName] = cur.items;
+        return acc;
+      },
+      {} as Record<string, any[]>,
+    );
   }
 }

@@ -60,17 +60,6 @@ export const renameFile = async (oldFile: string, newFilePath: string) => {
   }
 };
 
-export const deleteFile = async (
-  filePath: string,
-  isImagePath?: boolean,
-): Promise<void> => {
-  try {
-    let filepath = filePath;
-    if (isImagePath) filepath = join(path, "server", ...filePath.split("/"));
-    return await fs.promises.unlink(filepath);
-  } catch (_) {}
-};
-
 export const readFileContents = async (filePath: string): Promise<string> => {
   try {
     return await fs.promises.readFile(
@@ -99,4 +88,35 @@ export const getFileCreationDate = async (
     }
     throw err;
   }
+};
+
+export const deleteFilePack = async (
+  currentFiles: string[],
+  newFiles: string[],
+) => {
+  if (currentFiles.length && newFiles) {
+    const filtered = currentFiles.filter((file) => !newFiles.includes(file));
+    for (let i = 0; i < filtered.length; i++) {
+      await deleteFile(filtered[i], true);
+    }
+  }
+};
+
+export const deleteFiles = async (files: string[]) => {
+  if (files.length) {
+    for (let i = 0; i < files.length; i++) {
+      await deleteFile(files[i], true);
+    }
+  }
+};
+
+const deleteFile = async (
+  filePath: string,
+  isImagePath?: boolean,
+): Promise<void> => {
+  try {
+    let filepath = filePath;
+    if (isImagePath) filepath = join(path, "server", ...filePath.split("/"));
+    return await fs.promises.unlink(filepath);
+  } catch (_) {}
 };
