@@ -1,6 +1,6 @@
 'use client'
 import React, {FC, useCallback, useEffect, useMemo, useState} from 'react'
-import {IConferences, IResponseMeta} from "@/types/Conference";
+import {IConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
 import {useRouter} from "next/navigation";
 import {Button} from "@nextui-org/button";
 import TableItems from "@/components/CMS/TableItems";
@@ -9,7 +9,7 @@ import moment from "moment/moment";
 
 type Props = {
     tableColumn: { title: string, key: string }[]
-    conferences: IResponseMeta<IConferences[]> | undefined
+    conferences: IGroupConference | undefined
     showAdd?: boolean
     selectionMode?: 'none' | 'multiple'
     selectedKeys?: Set<string>
@@ -31,7 +31,7 @@ const ConferenceTable: FC<Props> = ({
     const router = useRouter()
 
     const [valueSearch, setValueSearch] = useState<string>('')
-    const [filterConference, setFilterConference] = useState<IResponseMeta<IConferences[]>>()
+    const [filterConference, setFilterConference] = useState<IGroupConference>()
 
     const handleSelectCategories = useCallback(() => {
         if (false) {
@@ -130,19 +130,20 @@ const ConferenceTable: FC<Props> = ({
     const toDate = (a:IConferences, b:IConferences) => {
         return moment(a.date, 'YYYY-MM-DD').valueOf() - moment(b.date, 'YYYY-MM-DD').valueOf();
     };
+    console.log(filterConference)
 
     return (
         <>
-        <TableItems dataItems={filterConference?.data.sort(toDate) || []}
-                        searchInput={valueSearch}
-                        typeProduct='conference'
-                        selectedKeys={selectedKeys}
-                        onSelectKeys={onSelectKeys}
-                        totalDataItems={totalDataItems}
-                        selectionMode={selectionMode}
-                        topContent={topContent}
-                        disableShadow={disableShadow}
-                        tableColumn={tableColumn}/>
+        {/*<TableItems dataItems={filterConference || []}*/}
+        {/*                searchInput={valueSearch}*/}
+        {/*                typeProduct='conference'*/}
+        {/*                selectedKeys={selectedKeys}*/}
+        {/*                onSelectKeys={onSelectKeys}*/}
+        {/*                totalDataItems={totalDataItems}*/}
+        {/*                selectionMode={selectionMode}*/}
+        {/*                topContent={topContent}*/}
+        {/*                disableShadow={disableShadow}*/}
+        {/*                tableColumn={tableColumn}/>*/}
         </>
     )
 }

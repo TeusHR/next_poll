@@ -1,5 +1,3 @@
-
-
 export function StringConferenceType<T>(type:T):string {
     if(type === 'SEMINAR')
         return 'Семінар'

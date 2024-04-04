@@ -7,7 +7,7 @@ import {
     getResearchWorksUrl,
     getScienceSchoolsUrl
 } from "@/config/url.config";
-import {IConferences, ICreateConferences, IResponseMeta} from "@/types/Conference";
+import {IConferences, ICreateConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
 import {ICreateScience} from "@/types/Science";
 import {ICreateCooperation} from "@/types/Cooperation";
 import {ICreateResearch} from "@/types/Research";
@@ -18,7 +18,7 @@ import {$api} from "@/api/interceptors";
 
 export const ConferencesService = {
     async getAllConference(authAxios: AxiosInstance, page: number, limit: number) {
-        const {data} = await authAxios.get<IResponseMeta<IConferences[]>>(getConferencesUrl(''))
+        const {data} = await authAxios.get<IGroupConference>(getConferencesUrl(''))
         return data
     },
     async getConference(id: string) {
