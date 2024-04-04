@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {CreateConferenceForm, IConferences, ICreateConferences} from "@/types/Conference";
 import {useSession} from "next-auth/react";
@@ -10,6 +10,8 @@ import {Input} from "@nextui-org/input";
 import {Button} from "@nextui-org/button";
 import Select from "@/components/CMS/Select";
 import {countryOptions} from "@/utils/CountrySet";
+import DNDUpload from "@/UI/DNDFiles";
+import {log} from "next/dist/server/typescript/utils";
 
 const typeConference = [{
     label: 'Конференція',
@@ -98,6 +100,30 @@ const ConferenceCreate = ({}) => {
             toast.error('Зображення не було завантажено.')
         }
     }
+
+    const onUpload = (files:File[]) => {
+        console.log(files);
+    };
+
+    const [filesInput, setFilesInput] = useState<File[]>([]);
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.dir(event.target)
+        const inputFiles = event.target.files;
+        console.log(inputFiles)
+        if (event.target.files && event.target.files.length > 0) {
+            const file: any = event.target.files[0];
+            console.log(URL.createObjectURL(file));
+        }
+        if (inputFiles) {
+            const inputFilesArray = Array.from(inputFiles);
+            setFilesInput(inputFilesArray);
+        }
+    };
+
+    useEffect(() => {
+        console.log(filesInput)
+    }, [filesInput])
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -188,6 +214,7 @@ const ConferenceCreate = ({}) => {
                                                 }))}
                                                         selectionMode={'single'}
                                                         justify
+                                                        disabled={false}
                                                         selected={field.value}
                                                         onChange={field.onChange}/>
                                                 {formState.errors.type?.message &&
@@ -212,6 +239,7 @@ const ConferenceCreate = ({}) => {
                                                         selectionMode={'single'}
                                                         justify
                                                         isSearchable
+                                                        disabled={false}
                                                         selected={field.value}
                                                         onChange={field.onChange}/>
                                                 {formState.errors.country?.message &&
@@ -220,6 +248,43 @@ const ConferenceCreate = ({}) => {
                                             </div>
                                         }
                                         />
+                                    </div>
+                                </div>
+                                <div className="flex flex-row gap-4 w-full relative">
+                                    {/*<div className="flex flex-col gap-4 w-full relative justify-end">*/}
+                                    {/*    <DNDUpload onUpload={onUpload}*/}
+                                    {/*               styleContainer="w-full h-[125px] flex items-center justify-center text-2xl border-2 border-primary border-dashed"*/}
+                                    {/*    >*/}
+                                    {/*        Гей, скинь мені файли*/}
+                                    {/*    </DNDUpload>*/}
+                                    {/*</div>*/}
+                                    <div className="absolute w-full h-full">
+                                        <Controller name="files" control={control} rules={{
+                                            required: 'Обов\'язкове поле',
+                                        }} render={({field}) =>
+                                            <div>
+                                                <div
+                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.type?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>Тип
+                                                </div>
+                                                <Input
+                                                    type={"file"}
+                                                    accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                                    classNames={{
+                                                        base: 'h-full',
+                                                        inputWrapper: 'h-full'
+                                                    }}
+                                                    onChange={(evt) => {
+                                                        handleInputChange(evt)
+                                                        field.onChange(evt.target.files);
+                                                    }}
+                                                />
+                                                {formState.errors.type?.message &&
+                                                    <div
+                                                        className="text-red-600 text-sm">{formState.errors.type.message}</div>}
+                                            </div>
+                                        }
+                                        />
+
                                     </div>
                                 </div>
                             </div>

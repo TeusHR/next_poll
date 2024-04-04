@@ -4,7 +4,7 @@ import {useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {ConferencesService} from "@/services/CMS.service";
-import {IConferences, IResponseMeta} from "@/types/Conference";
+import {IConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
 import {Tab, Tabs} from "@nextui-org/react";
 import TitleBack from "@/components/CMS/TitleBack";
 import ConferenceTable from "../ConferenceTable";
@@ -21,7 +21,7 @@ const tableColumn: { title: string, key: string }[] = [
 
 const ConferenceTabs = ({}) => {
 
-    const [initialConference, setInitialConference] = useState<IResponseMeta<IConferences[]>>()
+    const [initialConference, setInitialConference] = useState<IGroupConference>()
 
     const searchParams = useSearchParams()
     const {status} = useSession()

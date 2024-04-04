@@ -45,3 +45,7 @@ export interface IResponseMeta<T> {
         total: number
     }
 }
+
+export interface IGroupConference {
+    [key: string]: IConferences[]
+}
