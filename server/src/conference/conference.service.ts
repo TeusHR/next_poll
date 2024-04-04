@@ -68,34 +68,26 @@ export class ConferenceService {
     const grouped = conferences.reduce(
       (accumulator, item) => {
         const monthIndex = new Date(item.date).getMonth();
-        const monthName = monthNamesUkr[monthIndex];
+        const month = monthNamesUkr[monthIndex];
 
         if (!accumulator[monthIndex]) {
-          accumulator[monthIndex] = { monthName, items: [] };
+          accumulator[monthIndex] = { month, items: [] };
         }
 
         accumulator[monthIndex].items.push({
           ...item,
-          date: moment(item.date).format("D MMMM"),
+          // date: moment(item.date).format("D MMMM"),
         });
         return accumulator;
       },
-      {} as Record<number, { monthName: string; items: any[] }>,
+      {} as Record<number, { month: string; items: any[] }>,
     );
 
-    const sortedGroupedArray = Object.keys(grouped)
+    return Object.keys(grouped)
       .sort((a, b) => parseInt(a) - parseInt(b))
       .map((key) => ({
-        monthName: grouped[parseInt(key)].monthName,
+        month: grouped[parseInt(key)].month,
         items: grouped[parseInt(key)].items,
       }));
-
-    return sortedGroupedArray.reduce(
-      (acc, cur) => {
-        acc[cur.monthName] = cur.items;
-        return acc;
-      },
-      {} as Record<string, any[]>,
-    );
   }
 }

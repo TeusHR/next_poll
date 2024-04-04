@@ -1,6 +1,6 @@
 {
   "name": "scint_ontu",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "author": "Vitalii Kondratenko, Oleksandr Karatanas",
   "private": true,
   "scripts": {
