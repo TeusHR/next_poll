@@ -18,76 +18,19 @@ interface IMessage {
     type: string | null,
 }
 
+const ConstFormats = ['.pdf',
+    '.doc',
+    '.docx',
+    '.xml',]
+
 const DNDUpload: FC<Props> = ({
                                   onUpload,
                                   styleContainer,
                                   children,
                                   multiple= true,
-                                  formats,
+                                  formats = ConstFormats,
                                   count
                               }) => {
-    // const drop = React.useRef<HTMLDivElement>(null);
-    // const [dragging, setDragging] = React.useState(false);
-    //
-    // useEffect(() => {
-    //     if (drop.current) {
-    //         drop.current.addEventListener('dragover', handleDragOver);
-    //         drop.current.addEventListener('drop', handleDrop);
-    //         drop.current.addEventListener('dragenter', handleDragEnter);
-    //         drop.current.addEventListener('dragleave', handleDragLeave);
-    //     }
-    //
-    //     return () => {
-    //         if (drop.current) {
-    //             drop.current.removeEventListener('dragover', handleDragOver);
-    //             drop.current.removeEventListener('drop', handleDrop);
-    //             drop.current.removeEventListener('dragenter', handleDragEnter);
-    //             drop.current.removeEventListener('dragleave', handleDragLeave);
-    //         }
-    //     };
-    // }, []);
-    //
-    // const handleDragOver = (e: any) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    // };
-    //
-    // const handleDrop = (e: any) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //
-    //     const files = [...e.dataTransfer.files];
-    //
-    //     // check if the provided count prop is less than uploaded count of files
-    //     if (count && count < files.length) {
-    //         console.log(`Only ${count} file${count !== 1 ? 's' : ''} can be uploaded at a time`);
-    //         return;
-    //     }
-    //
-    //     // check if some uploaded file is not in one of the allowed formats
-    //     if (formats && files.some((file) => !formats.some((format) => file.name.toLowerCase().endsWith(format.toLowerCase())))) {
-    //         console.log(`Only following file formats are acceptable: ${formats.join(', ')}`);
-    //         return;
-    //     }
-    //
-    //     if (files && files.length) {
-    //         console.log(files)
-    //     }
-    // };
-    //
-    // const handleDragEnter = (e:any) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //
-    //     setDragging(true);
-    // };
-    //
-    // const handleDragLeave = (e:any) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //
-    //     setDragging(false);
-    // };
 
     const drag = useRef<HTMLDivElement>(null);
 
@@ -147,17 +90,16 @@ const DNDUpload: FC<Props> = ({
         setDragging(false);
 
         const droppedFiles = Array.from(event.dataTransfer.files);
-        setFiles(droppedFiles);
 
         if (count && count < files.length) {
             showMessage(`Тільки ${count} файл${count !== 1 ? 'ов' : ''} можна завантажувати одночасно`, 'error', 2000);
             return;
         }
 
-        if (formats && files.some((file) => !formats.some((format) => file.name.toLowerCase().endsWith(format.toLowerCase())))) {
-            showMessage(`Прийнятні лише такі формати файлів: ${formats.join(', ')}`, 'error', 2000);
+        if (checkFormats(droppedFiles))
             return;
-        }
+
+        setFiles(droppedFiles);
 
         droppedFiles.forEach((file) => {
             const reader = new FileReader();
@@ -176,30 +118,38 @@ const DNDUpload: FC<Props> = ({
     };
 
     useEffect(() => {
-        console.log(files)
         if (files.length > 0) {
             onUpload(files)
-            showMessage(`Файл${count !== 1 ? 'и' : ''} успішно завантажено`, 'success', 1000);
+            showMessage(`Файл${count !== 1 ? 'и' : ''} успішно завантажено`, 'success', 2500);
             setFiles([]);
         }
     }, [count, files, onUpload])
 
+    const checkFormats = (file:File[]):boolean=> {
+        const invalidFiles = file.filter(file => {
+            const extensionMatch = formats.some(extension => file.name.toLowerCase().endsWith(extension));
+            return !extensionMatch;
+        });
+
+        if (invalidFiles.length > 0) {
+            const allowedFormats = [...formats].join(', ');
+            showMessage(`Прийнятні лише такі формати файлів: ${allowedFormats}`, 'error', 3000);
+            return true;
+        }
+
+        return false
+    }
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const inputFiles = event.target.files;
-        console.log(inputFiles)
-        console.dir(event.target)
         if (inputFiles) {
             const inputFilesArray = Array.from(inputFiles);
-            onUpload(inputFilesArray);
-            // showMessage(`Файл${inputFilesArray.length !== 1 ? 'и' : ''} успішно завантажено`, 'success', 1000);
-            setFilesInput(event.target.value);
+            if(!checkFormats(inputFilesArray)) {
+                setFiles(inputFilesArray);
+            }
         }
     };
 
-    useEffect(() => {
-        console.log(filesInput)
-    }, [filesInput])
 
     return (
         <div
@@ -211,7 +161,7 @@ const DNDUpload: FC<Props> = ({
             // ref={drop}
         >
             {message.show && (
-                <div className="w-full h-full flex z-50 items-center justify-center bg-default-100 rounded-[12px]">
+                <div className="w-full h-full flex z-50 text-center items-center justify-center bg-default-100 rounded-[12px]">
                     {message.text}
                 </div>
             )}
@@ -227,14 +177,11 @@ const DNDUpload: FC<Props> = ({
                 {children}
             </div>
             <div className="absolute w-full h-full opacity-0">
-                <Input
+                <input
                     type={"file"}
                     multiple={multiple}
-                    accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    classNames={{
-                        base: 'h-full',
-                        inputWrapper: 'h-full'
-                    }}
+                    className="w-full h-full"
+                    accept={formats.toString()}
                     value={filesInput}
                     onChange={handleInputChange}
                 />

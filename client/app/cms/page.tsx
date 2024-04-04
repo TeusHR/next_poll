@@ -1,18 +1,7 @@
-import React, {Suspense} from 'react'
-import Loading from "@/components/Loading";
-import ConferenceTabs from "./conference/components/ConferenceTabs";
-
+import {redirect} from "next/navigation";
 
 const CMS = async ({}) => {
-
-
-    return (
-        <div>
-            <Suspense fallback={<Loading transparent/>}>
-                <ConferenceTabs/>
-            </Suspense>
-        </div>
-    )
+    redirect('/cms/conference')
 }
 
 export default CMS;

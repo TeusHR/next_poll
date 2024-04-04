@@ -28,7 +28,7 @@ const Select = ({
                     disabled = false,
                     isSearchable = false,
                     selectAll,
-                    mainWrapperStyle,
+                    mainWrapperStyle = '',
                     placeholder,
                     justify = false,
                     isClearable = true,
@@ -82,7 +82,7 @@ const Select = ({
         onChange(new Set())
     }, [onChange, onClose])
     return (
-        <div ref={parentRef} className={`${mainWrapperStyle} py-2`}>
+        <div ref={parentRef} className={`${mainWrapperStyle} min-w-[215px] py-2`}>
             <Dropdown shouldBlockScroll={false} closeOnSelect={selectionMode === 'single'} aria-disabled={disabled}
                       style={{width: parentRef?.current?.clientWidth ? `${parentRef?.current?.clientWidth}px` : '100%'}}
                       isDisabled={disabled} triggerScaleOnOpen={false}
