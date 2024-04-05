@@ -40,6 +40,9 @@
     "swiper": "^11.0.7"
   },
   "devDependencies": {
+    "@tiptap/extension-document": "^2.2.4",
+    "@tiptap/extension-text-align": "^2.2.4",
+    "@tiptap/extension-underline": "^2.2.4",
     "@types/fslightbox-react": "^1.7.7",
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.11.30",

@@ -24,6 +24,7 @@ import { LaboratoryDevelopmentModule } from "./laboratory-development/laboratory
 import { DIGAMModule } from "./digam/digam.module";
 import { ConsultingModule } from "./consulting/consulting.module";
 import { TrainingModule } from "./training/training.module";
+import { PrismaService } from "./prisma.service";
 
 @Module({
   imports: [
@@ -73,6 +74,6 @@ import { TrainingModule } from "./training/training.module";
     TrainingModule,
   ],
   controllers: [AppController],
-  providers: [AppService, JwtService],
+  providers: [AppService, PrismaService, JwtService],
 })
 export class AppModule {}

@@ -76,7 +76,7 @@ export class ConferenceService {
 
         accumulator[monthIndex].items.push({
           ...item,
-          // date: moment(item.date).format("D MMMM"),
+          date: moment(item.date).format("D MMMM"),
         });
         return accumulator;
       },

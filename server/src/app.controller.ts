@@ -15,7 +15,12 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post()
+  @Get("search/:value")
+  async search(@Param("value") value: string) {
+    return this.appService.globalSearch(value);
+  }
+
+  @Post("/upload")
   @UseInterceptors(FilesInterceptor("file"))
   async uploadFile(
     @UploadedFiles() files: Express.Multer.File[],

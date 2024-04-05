@@ -13,6 +13,7 @@ node_modules/
 
 # Nest.js specific
 dist/
+/server/uploads/
 
 # production
 build/
