@@ -4,14 +4,16 @@ import {useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {ConferencesService} from "@/services/CMS.service";
-import {IConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
+import {ILiftGroupConference} from "@/types/Conference";
 import {Tab, Tabs} from "@nextui-org/react";
 import TitleBack from "@/components/CMS/TitleBack";
 import ConferenceTable from "../ConferenceTable";
+import {LiftGroupConference} from "@/utils/ConferenceType";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
     {title: 'Назва', key: 'title'},
+    {title: 'Місяць', key: 'month'},
     {title: 'Дата', key: 'date'},
     {title: 'Тип', key: 'type'},
     {title: 'Країна', key: 'country'},
@@ -21,7 +23,7 @@ const tableColumn: { title: string, key: string }[] = [
 
 const ConferenceTabs = ({}) => {
 
-    const [initialConference, setInitialConference] = useState<IGroupConference>()
+    const [initialConference, setInitialConference] = useState<ILiftGroupConference[]>([])
 
     const searchParams = useSearchParams()
     const {status} = useSession()
@@ -30,7 +32,7 @@ const ConferenceTabs = ({}) => {
     useEffect(() => {
         if (status === 'authenticated') {
             ConferencesService.getAllConference($apiAuth, Number(searchParams.get('page') ?? 1), 6).then(res => {
-                setInitialConference(res)
+                setInitialConference(LiftGroupConference(res))
             })
         }
     }, [$apiAuth, searchParams, status]);
@@ -52,7 +54,7 @@ const ConferenceTabs = ({}) => {
                     <ConferenceTable tableColumn={tableColumn} conferences={initialConference} showAdd/>
                 </Tab>
             </Tabs>
-            {JSON.stringify(initialConference)}
+            {/*{JSON.stringify(initialConference)}*/}
         </div>
     )
 }

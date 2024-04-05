@@ -1,6 +1,6 @@
 'use client'
 import React, {Key, useCallback, useEffect, useMemo, useState} from 'react'
-import {IConferences} from "@/types/Conference";
+import {IConferences, ILiftGroupConference} from "@/types/Conference";
 import {
     Checkbox,
     Pagination,
@@ -20,6 +20,8 @@ import moment from "moment/moment";
 import {Image, Button} from "@nextui-org/react";
 import {AxiosInstance} from "axios";
 import {StringConferenceType} from "@/utils/ConferenceType";
+import {ConferencesService} from "@/services/CMS.service";
+import {toast} from "react-toastify";
 
 type Props<T> = {
     dataItems: T[]
@@ -39,23 +41,23 @@ type Props<T> = {
     refetch?: () => void
 }
 
-const TableItems = <T extends IConferences>({
-                                                                                                                        dataItems,
-                                                                                                                        rowsViewPage = 6,
-                                                                                                                        tableColumn,
-                                                                                                                        tableType = 'link',
-                                                                                                                        initialPage,
-                                                                                                                        searchInput,
-                                                                                                                        selectedKeys,
-                                                                                                                        onSelectKeys,
-                                                                                                                        typeProduct,
-                                                                                                                        disableShadow = false,
-                                                                                                                        selectionMode = 'none',
-                                                                                                                        topContent,
-                                                                                                                        totalDataItems = 0,
-                                                                                                                        refetch,
-                                                                                                                        deleteMessage = 'Ви впевнені що хочете видалити?'
-                                                                                                                    }: Props<T>) => {
+const TableItems = <T extends ILiftGroupConference>({
+                                                        dataItems,
+                                                        rowsViewPage = 6,
+                                                        tableColumn,
+                                                        tableType = 'link',
+                                                        initialPage,
+                                                        searchInput,
+                                                        selectedKeys,
+                                                        onSelectKeys,
+                                                        typeProduct,
+                                                        disableShadow = false,
+                                                        selectionMode = 'none',
+                                                        topContent,
+                                                        totalDataItems = 0,
+                                                        refetch,
+                                                        deleteMessage = 'Ви впевнені що хочете видалити?'
+                                                    }: Props<T>) => {
 
 
     const {isOpen, onClose, onOpen} = useDisclosure();
@@ -125,7 +127,7 @@ const TableItems = <T extends IConferences>({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router, tableType, typeProduct])
 
-    const renderCell = useCallback((item: T, idx:number, columnKey: React.Key) => {
+    const renderCell = useCallback((item: T, idx: number, columnKey: React.Key) => {
         const cellValue = item[columnKey as keyof T];
 
         switch (columnKey) {
@@ -152,9 +154,11 @@ const TableItems = <T extends IConferences>({
                     <Checkbox isSelected={Boolean(cellValue)} isReadOnly={true}/>
                 </div>
             case "id":
-                return <div>{idx+1}</div>
+                return <div>{idx + 1}</div>
             case "date":
-                return moment(String(cellValue)).format('YYYY-MM-DD kk:mm')
+                return moment(String(cellValue)).format('YYYY-MM-DD')
+            case "month":
+                return <div>{String(cellValue)}</div>
             case "type":
                 return <div>{StringConferenceType(cellValue)}</div>
             case "from":
@@ -170,7 +174,7 @@ const TableItems = <T extends IConferences>({
                                 onClick={() => redirectItem(item.id,
                                     tableType === 'modal' ? item : undefined)}
                                 className="w-[32px] h-[32px] max-[580px]:max-w-[16px] max-[580px]:min-w-[16px] max-[580px]:h-[16px] max-[580px]:w-[16px] bg-[#828282] rounded-[8px]">
-                            <Tooltip content="Details">
+                            <Tooltip content="Деталі">
                                 <span
                                     className="text-lg w-[20px] text-white cursor-pointer active:opacity-50">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path
@@ -179,7 +183,7 @@ const TableItems = <T extends IConferences>({
                             </Tooltip>
                         </Button>
                         <PopoverDeleteItem setData={setData} apiAuth={$apiAuth}
-                                           productItemID={item.id}
+                                           idItem={item.id}
                                            typeProduct={typeProduct}
                                            deleteMessage={deleteMessage}
                         />
@@ -271,7 +275,7 @@ const TableItems = <T extends IConferences>({
                                     </div>
                                     :
                                     <div className="text-base cursor-pointer h-full">
-                                        {renderCell(item, idx,columnKey)}
+                                        {renderCell(item, idx, columnKey)}
                                     </div>
                                 }
                             </TableCell>
@@ -297,38 +301,32 @@ const TableItems = <T extends IConferences>({
 
 type PropsPopover<T> = {
     setData: React.Dispatch<React.SetStateAction<T[]>>,
-    productItemID: string,
+    idItem: string,
     typeProduct: string,
     deleteMessage?: string
     apiAuth: AxiosInstance
 }
 const PopoverDeleteItem = <T extends IConferences>({
-                                                                                                                               productItemID,
-                                                                                                                               typeProduct,
-                                                                                                                               setData,
-                                                                                                                               deleteMessage = 'Ви впевнені що хочете видалити?',
-                                                                                                                               apiAuth
-                                                                                                                           }: PropsPopover<T>) => {
+                                                       idItem,
+                                                       typeProduct,
+                                                       setData,
+                                                       deleteMessage = 'Ви впевнені що хочете видалити?',
+                                                       apiAuth
+                                                   }: PropsPopover<T>) => {
+
     const [popoverOpen, setPopoverOpen] = useState(false)
 
-    const deleteItem = async (idProduct: string) => {
+    const deleteItem = async (idItem: string) => {
         try {
             setPopoverOpen(false)
-            setData((prevState) => prevState.filter((item) => item.id !== idProduct))
+            setData((prevState) => prevState.filter((item) => item.id !== idItem))
 
 
-            // if (typeProduct === 'product')
-            //     await ProductService.removeProduct(idProduct, apiAuth)
+            if (typeProduct === 'conference')
+                await ConferencesService.removeConferences(idItem, apiAuth)
             // else if (typeProduct === 'ingredients')
             //     await IngredientsService.removeIngredients(idProduct, apiAuth)
-            // else if (typeProduct === 'categories')
-            //     await CategoryService.removeCategory(idProduct, apiAuth)
-            // else if (typeProduct === 'discounts')
-            //     await DiscountService.removeDiscount(idProduct, apiAuth)
-            // else if (typeProduct === 'reviews')
-            //     await ReviewService.remove(idProduct, apiAuth)
-            // else if (typeProduct === 'slides')
-            //     await SliderService.removeSlide(idProduct, apiAuth)
+            toast.success('Позиція успішно видалена')
         } catch (err: any) {
             console.log(err)
         }
@@ -340,7 +338,7 @@ const PopoverDeleteItem = <T extends IConferences>({
             <PopoverTrigger onClick={() => setPopoverOpen(true)}>
                 <Button isIconOnly
                         className="w-[32px] h-[32px] max-[580px]:max-w-[16px] max-[580px]:min-w-[16px] max-[580px]:h-[16px] max-[580px]:w-[16px] bg-[#828282] rounded-[8px]">
-                    <Tooltip color="default" content="Delete user">
+                    <Tooltip color="default" content="Видалити">
                         <span className="text-lg w-[20px] text-white cursor-pointer active:opacity-50">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path
                                 d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM18 8H6V20H18V8ZM9 11H11V17H9V11ZM13 11H15V17H13V11ZM9 4V6H15V4H9Z"></path></svg>
@@ -353,8 +351,8 @@ const PopoverDeleteItem = <T extends IConferences>({
                     {deleteMessage}
                 </div>
                 <div className="flex gap-3">
-                    <Button onPress={() => deleteItem(productItemID)}
-                            className="rounded-full bg-primary-400 py-2 px-20 max-w-[210px] max-sm:px-10 text-[18px] max-sm:text-[14px]">
+                    <Button onPress={() => deleteItem(idItem)}
+                            className="rounded-full bg-fd py-2 px-20 max-w-[210px] max-sm:px-10 text-[18px] max-sm:text-[14px]">
                         Так
                     </Button>
                     <Button onPress={() => setPopoverOpen(false)}

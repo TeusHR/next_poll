@@ -18,7 +18,7 @@ import {$api} from "@/api/interceptors";
 
 export const ConferencesService = {
     async getAllConference(authAxios: AxiosInstance, page: number, limit: number) {
-        const {data} = await authAxios.get<IGroupConference>(getConferencesUrl(''))
+        const {data} = await authAxios.get<IGroupConference[]>(getConferencesUrl(''))
         return data
     },
     async getConference(id: string) {
@@ -33,7 +33,7 @@ export const ConferencesService = {
         const {status} = await authAxios.put<ICreateConferences>(getConferencesUrl(`/${id}`), item)
         return status
     },
-    async removeConferences(id: number, authAxios: AxiosInstance) {
+    async removeConferences(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getConferencesUrl(`/${id}`))
         return status === 200
     },

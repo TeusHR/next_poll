@@ -1,6 +1,6 @@
 'use client'
 import React, {FC, useCallback, useEffect, useMemo, useState} from 'react'
-import {IConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
+import {ILiftGroupConference} from "@/types/Conference";
 import {useRouter} from "next/navigation";
 import {Button} from "@nextui-org/button";
 import TableItems from "@/components/CMS/TableItems";
@@ -9,7 +9,7 @@ import moment from "moment/moment";
 
 type Props = {
     tableColumn: { title: string, key: string }[]
-    conferences: IGroupConference | undefined
+    conferences: ILiftGroupConference[]
     showAdd?: boolean
     selectionMode?: 'none' | 'multiple'
     selectedKeys?: Set<string>
@@ -31,7 +31,8 @@ const ConferenceTable: FC<Props> = ({
     const router = useRouter()
 
     const [valueSearch, setValueSearch] = useState<string>('')
-    const [filterConference, setFilterConference] = useState<IGroupConference>()
+    const [filterConference,
+        setFilterConference] = useState<ILiftGroupConference[]>([])
 
     const handleSelectCategories = useCallback(() => {
         if (false) {
@@ -59,15 +60,13 @@ const ConferenceTable: FC<Props> = ({
             //     );
             //     setFilterProducts(filter);
             // }
-        }
-        else if (valueSearch.trim() !== '') {
+        } else if (valueSearch.trim() !== '') {
             // let filter = conferences.filter((conferences) =>
             //     conferences.title.toLowerCase().includes(valueSearch.toLowerCase()) ||
             //     conferences.itemCode?.toLowerCase().includes(valueSearch.toLowerCase())
             // );
             // setFilterConference(filter);
-        }
-        else {
+        } else {
             setFilterConference(conferences);
         }
     }, [conferences, valueSearch])
@@ -79,7 +78,7 @@ const ConferenceTable: FC<Props> = ({
 
     useEffect(() => {
         console.log(conferences)
-        if(conferences)
+        if (conferences)
             setFilterConference(conferences)
     }, [conferences]);
 
@@ -115,11 +114,13 @@ const ConferenceTable: FC<Props> = ({
                             </div>
                         </div>
                         <div>
-                            {showAdd && <Button onPress={openNewProduct} color="default" className="text-black flex-1 bg-fd"
-                                                endContent={<svg xmlns="http://www.w3.org/2000/svg" className="w-[20px]" viewBox="0 0 24 24"
-                                                                 fill="currentColor">
-                                                    <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
-                                                </svg>}>Створити</Button>}
+                            {showAdd &&
+                                <Button onPress={openNewProduct} color="default" className="text-black flex-1 bg-fd"
+                                        endContent={<svg xmlns="http://www.w3.org/2000/svg" className="w-[20px]"
+                                                         viewBox="0 0 24 24"
+                                                         fill="currentColor">
+                                            <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
+                                        </svg>}>Створити</Button>}
                         </div>
                     </div>
                 </div>
@@ -127,23 +128,24 @@ const ConferenceTable: FC<Props> = ({
         )
     }, [valueSearch, conferences, showAdd, openNewProduct])
 
-    const toDate = (a:IConferences, b:IConferences) => {
+    const toDate = (a: ILiftGroupConference, b: ILiftGroupConference) => {
         return moment(a.date, 'YYYY-MM-DD').valueOf() - moment(b.date, 'YYYY-MM-DD').valueOf();
     };
-    console.log(filterConference)
+
 
     return (
         <>
-        {/*<TableItems dataItems={filterConference || []}*/}
-        {/*                searchInput={valueSearch}*/}
-        {/*                typeProduct='conference'*/}
-        {/*                selectedKeys={selectedKeys}*/}
-        {/*                onSelectKeys={onSelectKeys}*/}
-        {/*                totalDataItems={totalDataItems}*/}
-        {/*                selectionMode={selectionMode}*/}
-        {/*                topContent={topContent}*/}
-        {/*                disableShadow={disableShadow}*/}
-        {/*                tableColumn={tableColumn}/>*/}
+            <TableItems dataItems={filterConference || []}
+                        searchInput={valueSearch}
+                        rowsViewPage={10}
+                        typeProduct='conference'
+                        selectedKeys={selectedKeys}
+                        onSelectKeys={onSelectKeys}
+                        totalDataItems={totalDataItems}
+                        selectionMode={selectionMode}
+                        topContent={topContent}
+                        disableShadow={disableShadow}
+                        tableColumn={tableColumn}/>
         </>
     )
 }

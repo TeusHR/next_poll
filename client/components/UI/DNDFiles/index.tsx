@@ -1,11 +1,12 @@
 'use client'
 import React, {FC, useEffect, useRef, useState} from 'react'
 import {DragEvent} from "react";
-import {Input} from "@nextui-org/input";
+
 
 type Props = {
     onUpload: (files: File[]) => void
     styleContainer?: string
+    onChange?: (...event: any[]) => void
     children: React.ReactNode
     formats?: string[]
     multiple?: boolean
@@ -26,8 +27,9 @@ const ConstFormats = ['.pdf',
 const DNDUpload: FC<Props> = ({
                                   onUpload,
                                   styleContainer,
+                                  onChange,
                                   children,
-                                  multiple= true,
+                                  multiple = true,
                                   formats = ConstFormats,
                                   count
                               }) => {
@@ -120,12 +122,15 @@ const DNDUpload: FC<Props> = ({
     useEffect(() => {
         if (files.length > 0) {
             onUpload(files)
+            if (onChange) {
+                onChange(files);
+            }
             showMessage(`Файл${count !== 1 ? 'и' : ''} успішно завантажено`, 'success', 2500);
             setFiles([]);
         }
     }, [count, files, onUpload])
 
-    const checkFormats = (file:File[]):boolean=> {
+    const checkFormats = (file: File[]): boolean => {
         const invalidFiles = file.filter(file => {
             const extensionMatch = formats.some(extension => file.name.toLowerCase().endsWith(extension));
             return !extensionMatch;
@@ -144,7 +149,7 @@ const DNDUpload: FC<Props> = ({
         const inputFiles = event.target.files;
         if (inputFiles) {
             const inputFilesArray = Array.from(inputFiles);
-            if(!checkFormats(inputFilesArray)) {
+            if (!checkFormats(inputFilesArray)) {
                 setFiles(inputFilesArray);
             }
         }
@@ -161,7 +166,8 @@ const DNDUpload: FC<Props> = ({
             // ref={drop}
         >
             {message.show && (
-                <div className="w-full h-full flex z-50 text-center items-center justify-center bg-default-100 rounded-[12px]">
+                <div
+                    className="w-full h-full flex z-50 text-center items-center justify-center bg-default-100 rounded-[12px]">
                     {message.text}
                 </div>
             )}

@@ -47,5 +47,10 @@ export interface IResponseMeta<T> {
 }
 
 export interface IGroupConference {
-    [key: string]: IConferences[]
+    month: string,
+    items:IConferences[]
+}
+
+export interface ILiftGroupConference extends IConferences {
+    month: string,
 }

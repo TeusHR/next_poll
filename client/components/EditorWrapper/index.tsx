@@ -300,7 +300,7 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
                 class: 'border-gray-500 solid border-1 p-4 rounded-l-[20px] h-full min-h-[250px] max-h-[950px] overflow-auto bg-gray-100',
             },
         },
-        onUpdate: ({editor}) => {
+        onUpdate: () => {
             // let content = editor.getHTML(),
             //     json = editor.getJSON().content;
             //
@@ -323,7 +323,6 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
     const debounceUpdate = useCallback(
         debounce(() => {
             if (editor) {
-                console.log(editor.getHTML());
                 onChange(editor.getHTML());
             }
         }, 1000),

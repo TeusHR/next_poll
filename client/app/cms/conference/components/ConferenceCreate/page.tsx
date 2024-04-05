@@ -11,8 +11,10 @@ import {Button} from "@nextui-org/button";
 import Select from "@/components/CMS/Select";
 import {countryOptions} from "@/utils/CountrySet";
 import DNDUpload from "@/UI/DNDFiles";
-import {log} from "next/dist/server/typescript/utils";
 import EditorWrapper from "@/components/EditorWrapper";
+import {FileService} from "@/services/file.service";
+import {uploadFiles} from "@/utils/uploadFiles";
+import moment from "moment/moment";
 
 const typeConference = [{
     label: 'Конференція',
@@ -44,24 +46,24 @@ const ConferenceCreate = ({}) => {
             country: new Set<string>(),
             date: '',
             text: '',
-            type: new Set<string>(["SEMINAR"])
+            type: new Set<string>(["SEMINAR"]),
         }
     })
 
-    const [conferecePreview,
-        setConferencePreview] = useState<IConferences>({
-        country: "",
-        createdAt: "",
-        date: "",
-        files: [],
-        id: "",
-        text: "",
-        title: "",
-        type: 'SEMINAR',
-        updatedAt: ""
-    })
+    // const [conferecePreview,
+    //     setConferencePreview] = useState<IConferences>({
+    //     country: "",
+    //     createdAt: "",
+    //     date: "",
+    //     files: [],
+    //     id: "",
+    //     text: "",
+    //     title: "",
+    //     type: 'SEMINAR',
+    //     updatedAt: ""
+    // })
 
-    const [conferenceFiles, setConferenceFiles] = useState('')
+    // const [conferenceFiles, setConferenceFiles] = useState('')
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
 
@@ -74,20 +76,21 @@ const ConferenceCreate = ({}) => {
         }
         setIsLoading(true)
 
+        // console.log(dataForm.files)
+        // let filesPath = await uploadFiles(dataForm.files, 'pdf', $apiAuth)
+        // console.log(filesPath)
 
-        // let urlImage = await loadImageFile(dataForm.image, 'product', $apiAuth)
-        // let urlImagePage = await loadImageFile(dataForm.pageImage, 'product', $apiAuth)
-
-        if (true) {
+        // if (true) {
 
             const dataProduct: ICreateConferences = {
                 type: Array.from(dataForm.type).toString(),
                 country: Array.from(dataForm.country).toString(),
-                date: dataForm.date,
+                date: moment(dataForm.date).format(),
                 title: dataForm.title,
                 text: dataForm.text,
                 files: ['2342'],
             };
+            console.log(dataProduct)
 
             ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
                 if (status === 201) {
@@ -98,13 +101,14 @@ const ConferenceCreate = ({}) => {
                 console.log(error)
                 toast.error('Щось пішло не так')
             }).finally(() => setIsLoading(false))
-        } else {
-            setIsLoading(false)
-            toast.error('Зображення не було завантажено.')
-        }
+        // }
+        // else {
+        //     setIsLoading(false)
+        //     toast.error('Зображення не було завантажено.')
+        // }
     }
 
-    const onUpload = (files:File[]) => {
+    const onUpload = (files: File[]) => {
         console.log(files);
     };
 
@@ -117,7 +121,8 @@ const ConferenceCreate = ({}) => {
                         <div className="flex flex-col gap-4">
                             <div className="w-full flex flex-col gap-4">
                                 <div className="flex flex-col gap-4 w-full">
-                                    <div className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
+                                    <div
+                                        className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
                                         <Controller name="title" control={control} rules={{
                                             required: "Обов'язкове поле",
                                             minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
@@ -182,7 +187,8 @@ const ConferenceCreate = ({}) => {
                                                     }
                                         />
                                     </div>
-                                    <div className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
+                                    <div
+                                        className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
                                         <Controller name="type" control={control} rules={{
                                             required: 'Обов\'язкове поле',
                                             validate: value => value.size === 0 ? 'Обов\'язкове поле' : true
@@ -235,11 +241,25 @@ const ConferenceCreate = ({}) => {
                                 </div>
                                 <div className="flex flex-row gap-4 w-full relative">
                                     <div className="flex flex-col gap-4 w-full relative justify-end">
-                                        <DNDUpload onUpload={onUpload}
-                                                   styleContainer="w-full h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed"
-                                        >
-                                            Гей, скинь мені файли
-                                        </DNDUpload>
+                                        <Controller name="files" control={control} rules={{
+                                            required: 'Обов\'язкове поле',
+                                        }} render={({field}) =>
+                                            <div className="w-full">
+                                                <div
+                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
+                                                    Завантаження файлів
+                                                </div>
+                                                <DNDUpload onUpload={onUpload}
+                                                           onChange={field.onChange}
+                                                           styleContainer="w-full mt-2 h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                    Гей, скинь мені файли
+                                                </DNDUpload>
+                                                {formState.errors.files?.message &&
+                                                    <div
+                                                        className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                            </div>
+                                        }
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -249,25 +269,24 @@ const ConferenceCreate = ({}) => {
                     <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col gap-4">
                         <div className="flex">
                             <div className="w-full flex flex-col gap-4">
-                                {/*<div className="text-black font-montserrat text-xl max-xl:text-base font-bold">*/}
-                                {/*    Інформація:*/}
-                                {/*</div>*/}
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex flex-col gap-4 items-start w-full relative">
-                                        <Controller name="text" control={control} rules={{
-                                            required: 'Обязательное поле',
-                                        }} render={({field}) =>
+                                        <Controller name="text" control={control}
+                                        //             rules={{
+                                        //     required: 'Обязательное поле',
+                                        // }}
+                                                    render={({field}) =>
                                             <>
                                                 <div
                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
                                                     Текст
                                                 </div>
-                                                    <div className="relative w-full">
-                                                        <EditorWrapper onChange={(field.onChange)}
-                                                                       description={field.value}
-                                                                       placeholder={'Напишіть текст для слайдера'}
-                                                        />
-                                                    </div>
+                                                <div className="relative w-full">
+                                                    <EditorWrapper onChange={(field.onChange)}
+                                                                   description={field.value}
+                                                                   placeholder={'Напишіть текст для слайдера'}
+                                                    />
+                                                </div>
                                             </>
                                         }
                                         />
