@@ -1,7 +1,7 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {CreateConferenceForm, IConferences, ICreateConferences} from "@/types/Conference";
+import {CreateConferenceForm, ICreateConferences} from "@/types/Conference";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
@@ -15,19 +15,7 @@ import EditorWrapper from "@/components/EditorWrapper";
 import {FileService} from "@/services/file.service";
 import {uploadFiles} from "@/utils/uploadFiles";
 import moment from "moment/moment";
-
-const typeConference = [{
-    label: 'Конференція',
-    value: 'CONFERENCT',
-}, {
-    label: 'Семінар',
-    value: 'SEMINAR',
-},
-    {
-        label: 'Конкурс',
-        value: 'COMPETITION',
-    }
-]
+import {typeConference} from "@/utils/ConferenceType";
 
 
 const ConferenceCreate = ({}) => {

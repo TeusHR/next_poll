@@ -1,31 +1,31 @@
 export interface ICreateConferences {
-    type:string
-    country:string
-    date:string
-    title:string
-    text:string
-    files:string[]
+    type: string
+    country: string
+    date: string
+    title: string
+    text: string
+    files: string[]
 }
 
 export interface IConferences {
-    id:string
-    type:string
-    country:string
-    date:string
-    title:string
-    text:string
-    files:string[]
+    id: string
+    type: string
+    country: string
+    date: string
+    title: string
+    text: string
+    files: string[]
     "createdAt": string
     "updatedAt": string
 }
 
 export type CreateConferenceForm = {
     type: Set<string>,
-    country:Set<string>
-    date:string
-    title:string
-    text:string
-    files:FileList[],
+    country: Set<string>
+    date: string
+    title: string
+    text: string
+    files: FileList[],
 }
 
 export enum ConferenceType {
@@ -34,8 +34,17 @@ export enum ConferenceType {
     CONFERENCT,
 }
 
+export interface IConferenceTypeSelect extends NewSetSelect {}
+
+export interface IMonth extends NewSetSelect {}
+
+export interface NewSetSelect {
+    label: string,
+    value: string,
+}
+
 export interface IResponseMeta<T> {
-    data:T
+    data: T
     meta: {
         currentPage: number
         lastPage: number
@@ -48,7 +57,7 @@ export interface IResponseMeta<T> {
 
 export interface IGroupConference {
     month: string,
-    items:IConferences[]
+    items: IConferences[]
 }
 
 export interface ILiftGroupConference extends IConferences {
