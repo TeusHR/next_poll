@@ -25,7 +25,7 @@ export type CreateConferenceForm = {
     date: string
     title: string
     text: string
-    files: FileList[],
+    files: FileList,
 }
 
 export enum ConferenceType {

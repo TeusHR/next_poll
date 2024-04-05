@@ -13,7 +13,6 @@ import {countryOptions} from "@/utils/CountrySet";
 import DNDUpload from "@/UI/DNDFiles";
 import EditorWrapper from "@/components/EditorWrapper";
 import {FileService} from "@/services/file.service";
-import {uploadFiles} from "@/utils/uploadFiles";
 import moment from "moment/moment";
 import {typeConference} from "@/utils/ConferenceType";
 
@@ -23,10 +22,7 @@ const ConferenceCreate = ({}) => {
         handleSubmit,
         control,
         formState,
-        resetField,
-        setValue,
         reset,
-        watch,
     } = useForm<CreateConferenceForm>({
         mode: 'all',
         defaultValues: {
@@ -58,42 +54,46 @@ const ConferenceCreate = ({}) => {
     const [isLoading, setIsLoading] = useState(false)
 
     const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
-        console.log(dataForm)
+
         if (toast.isActive('toast-register') || status !== 'authenticated') {
             return;
         }
         setIsLoading(true)
 
-        // console.log(dataForm.files)
-        // let filesPath = await uploadFiles(dataForm.files, 'pdf', $apiAuth)
-        // console.log(filesPath)
+        let filesPath: {
+            url: string,
+            name: string
+        }[] = []
+        let urlsFiles: string[] = []
 
-        // if (true) {
+        if (dataForm.files && dataForm.files.length > 0) {
+            filesPath = await FileService.upload($apiAuth, dataForm.files, 'pdf')
+            if (filesPath.length > 0) {
+                urlsFiles = filesPath.map(file => file.url);
+            } else {
+                toast.error('Файли не збережені, щось не так.');
+            }
+        }
 
-            const dataProduct: ICreateConferences = {
-                type: Array.from(dataForm.type).toString(),
-                country: Array.from(dataForm.country).toString(),
-                date: moment(dataForm.date).format(),
-                title: dataForm.title,
-                text: dataForm.text,
-                files: ['2342'],
-            };
-            console.log(dataProduct)
+        const dataProduct: ICreateConferences = {
+            type: Array.from(dataForm.type).toString(),
+            country: Array.from(dataForm.country).toString(),
+            date: moment(dataForm.date).format(),
+            title: dataForm.title,
+            text: dataForm.text,
+            files: urlsFiles,
+        };
 
-            ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    toast.success('Конференцію успішно створено')
-                }
-            }).catch((error) => {
-                console.log(error)
-                toast.error('Щось пішло не так')
-            }).finally(() => setIsLoading(false))
-        // }
-        // else {
-        //     setIsLoading(false)
-        //     toast.error('Зображення не було завантажено.')
-        // }
+        ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
+            if (status === 201) {
+                reset()
+                toast.success('Конференцію успішно створено')
+            }
+        }).catch((error) => {
+            console.log(error)
+            toast.error('Щось пішло не так')
+        }).finally(() => setIsLoading(false))
+
     }
 
     const onUpload = (files: File[]) => {
@@ -229,12 +229,16 @@ const ConferenceCreate = ({}) => {
                                 </div>
                                 <div className="flex flex-row gap-4 w-full relative">
                                     <div className="flex flex-col gap-4 w-full relative justify-end">
-                                        <Controller name="files" control={control} rules={{
-                                            required: 'Обов\'язкове поле',
-                                        }} render={({field}) =>
+                                        <Controller name="files" control={control}
+                                        //             rules={{
+                                        //     required: 'Обов\'язкове поле',
+                                        // }}
+                                        render={({field}) =>
                                             <div className="w-full">
                                                 <div
-                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
+                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}
+                                                    // className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}
+                                                >
                                                     Завантаження файлів
                                                 </div>
                                                 <DNDUpload onUpload={onUpload}
@@ -260,23 +264,26 @@ const ConferenceCreate = ({}) => {
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex flex-col gap-4 items-start w-full relative">
                                         <Controller name="text" control={control}
-                                        //             rules={{
-                                        //     required: 'Обязательное поле',
-                                        // }}
+                                                        rules={{
+                                                required: 'Обов\'язкове поле',
+                                            }}
                                                     render={({field}) =>
-                                            <>
-                                                <div
-                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
-                                                    Текст
-                                                </div>
-                                                <div className="relative w-full">
-                                                    <EditorWrapper onChange={(field.onChange)}
-                                                                   description={field.value}
-                                                                   placeholder={'Напишіть текст для слайдера'}
-                                                    />
-                                                </div>
-                                            </>
-                                        }
+                                                        <>
+                                                            <div
+                                                                className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
+                                                                Текст
+                                                            </div>
+                                                            <div className="relative w-full">
+                                                                <EditorWrapper onChange={(field.onChange)}
+                                                                               description={field.value}
+                                                                               placeholder={'Напишіть текст для слайдера'}
+                                                                />
+                                                            </div>
+                                                            {formState.errors.text?.message &&
+                                                                <div
+                                                                    className="text-red-600 text-sm">{formState.errors.text.message}</div>}
+                                                        </>
+                                                    }
                                         />
                                     </div>
                                 </div>
