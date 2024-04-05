@@ -3,8 +3,8 @@ import React, {useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {toast} from "react-toastify";
 import GoogleMap from "@/components/GoogleMap";
-import {Input} from "@nextui-org/input";
-import {Button} from "@nextui-org/button";
+import {Input} from "@nextui-org/react";
+import {Button} from "@nextui-org/react";
 import NextImage from "next/image";
 import {Image} from "@nextui-org/react";
 

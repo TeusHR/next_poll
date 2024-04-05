@@ -2,7 +2,7 @@
 import React, {FC, useCallback, useEffect, useMemo, useState} from 'react'
 import {ILiftGroupConference} from "@/types/Conference";
 import {useRouter} from "next/navigation";
-import {Button} from "@nextui-org/button";
+import {Button} from "@nextui-org/react";
 import TableItems from "@/components/CMS/TableItems";
 import moment from "moment/moment";
 

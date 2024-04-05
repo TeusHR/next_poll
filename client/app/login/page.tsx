@@ -1,6 +1,6 @@
 'use client';
-import { Input } from "@nextui-org/input";
-import { Button } from "@nextui-org/button";
+import { Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import cn from "classnames"
 import { useState } from "react";

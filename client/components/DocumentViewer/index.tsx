@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import {Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
-import {Button} from "@nextui-org/button";
+import {Button} from "@nextui-org/react";
 // import { Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 

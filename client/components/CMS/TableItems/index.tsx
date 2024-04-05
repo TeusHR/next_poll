@@ -156,7 +156,7 @@ const TableItems = <T extends ILiftGroupConference>({
             case "id":
                 return <div>{idx + 1}</div>
             case "date":
-                return moment(String(cellValue)).format('YYYY-MM-DD')
+                return <div>{String(cellValue)}</div>
             case "month":
                 return <div>{String(cellValue)}</div>
             case "type":

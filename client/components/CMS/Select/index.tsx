@@ -1,7 +1,7 @@
 import React, {Key, useCallback, useEffect, useRef, useState} from 'react'
 import {Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, useDisclosure} from "@nextui-org/react";
 import LockIcon from "@/UI/LockIcon";
-import {Input} from "@nextui-org/input";
+import {Input} from "@nextui-org/react";
 import CloseIcon from "@/UI/CloseIcon";
 import ChevronDownIcon from "@/UI/ChevronDownIcon";
 

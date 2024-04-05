@@ -17,7 +17,7 @@ const tableColumn: { title: string, key: string }[] = [
     {title: 'Дата', key: 'date'},
     {title: 'Тип', key: 'type'},
     {title: 'Країна', key: 'country'},
-    {title: 'Опис', key: 'text'},
+    // {title: 'Опис', key: 'text'},
     {title: 'Дії', key: 'action'}
 ]
 
