@@ -240,7 +240,6 @@ type PropsWrapper = {
 
 const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) => {
 
-
     const editor = useEditor({
         extensions: [
             UniqueID.configure({
@@ -314,8 +313,12 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
     })
 
     useEffect(() => {
-        if (description === '' && editor)
-            editor.commands.setContent('')
+        if (description.trim() !== '' && editor) {
+            editor.commands.setContent(description);
+        }
+        if (description === '<p></p>' && editor) {
+            editor.commands.setContent('');
+        }
     }, [description, editor]);
 
 
@@ -324,6 +327,7 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
         debounce(() => {
             if (editor) {
                 onChange(editor.getHTML());
+                console.log(editor.getHTML())
             }
         }, 1000),
         [editor]

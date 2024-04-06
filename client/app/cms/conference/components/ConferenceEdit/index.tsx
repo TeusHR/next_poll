@@ -1,59 +1,67 @@
 'use client'
-import React, {useState} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {CreateConferenceForm, ICreateConferences} from "@/types/Conference";
+import {IConferences, ICreateConferences, UpdateConferenceForm} from "@/types/Conference";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
 import {ConferencesService} from "@/services/CMS.service";
-import {Input} from "@nextui-org/react";
-import {Button} from "@nextui-org/react";
+import {FileService} from "@/services/file.service";
+import moment from "moment";
+import {Button, Input} from "@nextui-org/react";
 import Select from "@/components/CMS/Select";
+import {typeConference} from "@/utils/ConferenceType";
 import {countryOptions} from "@/utils/CountrySet";
 import DNDUpload from "@/UI/DNDFiles";
 import EditorWrapper from "@/components/EditorWrapper";
-import {FileService} from "@/services/file.service";
-import moment from "moment/moment";
-import {typeConference} from "@/utils/ConferenceType";
 
+type Props = {
+    conferenceId: string
+}
 
-const ConferenceCreate = ({}) => {
+const ConferenceEdit: FC<Props> = ({conferenceId}) => {
+
     const {
         handleSubmit,
         control,
         formState,
-        reset,
-    } = useForm<CreateConferenceForm>({
+        setValue,
+    } = useForm<UpdateConferenceForm>({
         mode: 'all',
         defaultValues: {
             title: '',
             country: new Set<string>(),
             date: '',
             text: '',
-            type: new Set<string>(["SEMINAR"]),
+            type: new Set<string>(),
         }
     })
 
-    // const [conferecePreview,
-    //     setConferencePreview] = useState<IConferences>({
-    //     country: "",
-    //     createdAt: "",
-    //     date: "",
-    //     files: [],
-    //     id: "",
-    //     text: "",
-    //     title: "",
-    //     type: 'SEMINAR',
-    //     updatedAt: ""
-    // })
-
-    // const [conferenceFiles, setConferenceFiles] = useState('')
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
-
     const [isLoading, setIsLoading] = useState(false)
+    const [conference, setConference] = useState<IConferences>()
 
-    const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
+    useEffect(() => {
+        setIsLoading(true)
+        ConferencesService.getConference(conferenceId).then(data => setConference(data))
+            .catch(() => {
+                toast.error('Конференцію не знайдено')
+            })
+            .finally(() => setIsLoading(false))
+    }, [conferenceId]);
+
+    useEffect(() => {
+        if (conference) {
+            setValue('title', conference.title)
+            setValue('country', new Set([conference.country]))
+            setValue('type', new Set([conference.type]))
+            setValue('date', moment(conference.date).format('YYYY-MM-DD'))
+            setValue('text', conference.text)
+        }
+    }, [conference, setValue]);
+
+    const onSubmit: SubmitHandler<UpdateConferenceForm> = async (dataForm) => {
 
         if (toast.isActive('toast-register') || status !== 'authenticated') {
             return;
@@ -74,6 +82,8 @@ const ConferenceCreate = ({}) => {
                 toast.error('Файли не збережені, щось не так.');
             }
         }
+        if(urlsFiles.length <= 0 && conference)
+            urlsFiles = conference.files
 
         const dataProduct: ICreateConferences = {
             type: Array.from(dataForm.type).toString(),
@@ -83,17 +93,13 @@ const ConferenceCreate = ({}) => {
             text: dataForm.text,
             files: urlsFiles,
         };
-
-        ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
-            if (status === 201) {
-                reset()
+        ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth).then((status) => {
+            if (status === 200)
                 toast.success('Конференцію успішно створено')
-            }
         }).catch((error) => {
             console.log(error)
             toast.error('Щось пішло не так')
         }).finally(() => setIsLoading(false))
-
     }
 
     const onUpload = (files: File[]) => {
@@ -115,12 +121,6 @@ const ConferenceCreate = ({}) => {
                                             required: "Обов'язкове поле",
                                             minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
                                             maxLength: {value: 50, message: "Максимальна довжина 50 символів"},
-                                            // validate: (value) => {
-                                            //     if (/^\d+$/.test(value))
-                                            //         return true
-                                            //     else
-                                            //         return 'Тільки цифри'
-                                            // }
                                         }} render={({field}) =>
                                             <Input className="border-none py-2"
                                                    type="text"
@@ -146,15 +146,10 @@ const ConferenceCreate = ({}) => {
                                         <Controller name="date" control={control}
                                                     rules={{
                                                         required: "Обов'язкове поле",
-                                                        // validate: (value) => {
-                                                        //     if (value)
-                                                        //         if (String(value).length > 10)
-                                                        //             return 'Число має бути менше 10 цифр'
-                                                        // },
                                                     }}
                                                     render={({field}) =>
                                                         <Input className="border-none py-2"
-                                                               type="datetime-local"
+                                                               type="date"
                                                                value={field.value}
                                                                onValueChange={field.onChange}
                                                                isRequired
@@ -231,27 +226,22 @@ const ConferenceCreate = ({}) => {
                                 <div className="flex flex-row gap-4 w-full relative">
                                     <div className="flex flex-col gap-4 w-full relative justify-end">
                                         <Controller name="files" control={control}
-                                        //             rules={{
-                                        //     required: 'Обов\'язкове поле',
-                                        // }}
-                                        render={({field}) =>
-                                            <div className="w-full">
-                                                <div
-                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}
-                                                    // className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}
-                                                >
-                                                    Завантаження файлів
-                                                </div>
-                                                <DNDUpload onUpload={onUpload}
-                                                           onChange={field.onChange}
-                                                           styleContainer="w-full mt-2 h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
-                                                    Гей, скинь мені файли
-                                                </DNDUpload>
-                                                {formState.errors.files?.message &&
-                                                    <div
-                                                        className="text-red-600 text-sm">{formState.errors.files.message}</div>}
-                                            </div>
-                                        }
+                                                    render={({field}) =>
+                                                        <div className="w-full">
+                                                            <div
+                                                                className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                Завантаження файлів
+                                                            </div>
+                                                            <DNDUpload onUpload={onUpload}
+                                                                       onChange={field.onChange}
+                                                                       styleContainer="w-full mt-2 h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                Гей, скинь мені файли
+                                                            </DNDUpload>
+                                                            {formState.errors.files?.message &&
+                                                                <div
+                                                                    className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                        </div>
+                                                    }
                                         />
                                     </div>
                                 </div>
@@ -265,9 +255,9 @@ const ConferenceCreate = ({}) => {
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex flex-col gap-4 items-start w-full relative">
                                         <Controller name="text" control={control}
-                                                        rules={{
-                                                required: 'Обов\'язкове поле',
-                                            }}
+                                                    rules={{
+                                                        required: 'Обов\'язкове поле',
+                                                    }}
                                                     render={({field}) =>
                                                         <>
                                                             <div
@@ -294,7 +284,7 @@ const ConferenceCreate = ({}) => {
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Оновити
                             </Button>
                         </div>
                     </div>
@@ -306,4 +296,4 @@ const ConferenceCreate = ({}) => {
     )
 }
 
-export default ConferenceCreate;
+export default ConferenceEdit;

@@ -28,6 +28,15 @@ export type CreateConferenceForm = {
     files: FileList,
 }
 
+export type UpdateConferenceForm = {
+    type: Set<string>,
+    country: Set<string>
+    date: string
+    title: string
+    text: string
+    files: FileList,
+}
+
 export enum ConferenceType {
     SEMINAR,
     COMPETITION,

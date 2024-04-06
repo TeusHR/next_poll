@@ -29,8 +29,8 @@ export const ConferencesService = {
         const {status} = await authAxios.post<ICreateConferences>(getConferencesUrl(''), item)
         return status
     },
-    async updateConferences(item:ICreateConferences, id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.put<ICreateConferences>(getConferencesUrl(`/${id}`), item)
+    async updateConferences(item:ICreateConferences, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateConferences>(getConferencesUrl(`/${id}`), item)
         return status
     },
     async removeConferences(id: string, authAxios: AxiosInstance) {
