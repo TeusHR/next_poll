@@ -1,5 +1,5 @@
 import React from 'react'
-import Title from "@/components/UI/Title";
+import Title from "@/UI/Title";
 import CountryCoop from "@/components/CountryCoop";
 import MemberOrganizations from "@/components/MemberOrganizations";
 

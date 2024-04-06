@@ -4,7 +4,6 @@ import CellItem, {ICellItem} from "@/components/Cell/CellItem";
 import React from "react";
 import Partners from "@/components/Partners";
 import Feedback from "@/components/Feedback";
-import Layout from "@/components/Layout";
 
 const cellItemsRow: ICellItem[] = [
     {
@@ -27,7 +26,7 @@ const cellItemsRow: ICellItem[] = [
 
 export default function Home() {
     return (
-        <Layout>
+        <>
             <div className="xl:container mx-auto my-4 px-8 max-md:px-4">
                 <div className="mt-6 flex flex-col gap-20">
                     <Cell
@@ -46,6 +45,6 @@ export default function Home() {
                 <Partners/>
             </div>
             <Feedback/>
-        </Layout>
+        </>
     );
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import Title from "components/UI/Title";
+import Title from "@/UI/Title";
 import ScheduleC from "@/components/ScheduleC";
 
 const Schedule = ({}) => {

@@ -1,13 +1,11 @@
-import React, {ReactNode} from 'react'
+import React, { ReactNode } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-type Props = {
-    children: ReactNode
-}
 
-const Layout = ({children}:Props) => {
-
+export default function LocaleLayout({ children }: {
+    children: ReactNode,
+}) {
 
     return (
         <div className="bg-white w-full text-primary">
@@ -17,7 +15,5 @@ const Layout = ({children}:Props) => {
             </main>
             <Footer/>
         </div>
-    )
+    );
 }
-
-export default Layout;
