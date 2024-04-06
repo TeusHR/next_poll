@@ -1,4 +1,4 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode, Suspense } from "react";
 import Layout from "@/components/Layout";
 
 
@@ -10,7 +10,9 @@ export default function LocaleLayout({children}: {
     return (
         <>
             <Layout>
-                {children}
+                <Suspense>
+                    {children}
+                </Suspense>
             </Layout>
         </>
 
