@@ -40,7 +40,7 @@ const PreviewUpload: FC<Props> = ({files, handleRemoveFile}) => {
                     <span className="w-full truncate">
                          {renderFileName(fileOrString)}
                     </span>
-                    <span onClick={() => handleRemoveFile(index)}>
+                    <span onClick={() => handleRemoveFile(index)} className="cursor-pointer">
                         <CloseIcon />
                     </span>
                 </div>
