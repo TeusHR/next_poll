@@ -128,7 +128,7 @@ const DNDUpload: FC<Props> = ({
             showMessage(`Файл${count !== 1 ? 'и' : ''} успішно завантажено`, 'success', 2500);
             setFiles([]);
         }
-    }, [count, files, onUpload])
+    }, [count, files, onChange, onUpload])
 
     const checkFormats = (file: File[]): boolean => {
         const invalidFiles = file.filter(file => {

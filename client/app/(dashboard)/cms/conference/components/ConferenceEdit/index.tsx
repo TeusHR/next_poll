@@ -1,5 +1,5 @@
 'use client'
-import React, {FC, useEffect, useState} from 'react'
+import React, {FC, useCallback, useEffect, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {IConferences, ICreateConferences, UpdateConferenceForm} from "@/types/Conference";
 import {useSession} from "next-auth/react";
@@ -12,8 +12,9 @@ import {Button, Input} from "@nextui-org/react";
 import Select from "@/components/CMS/Select";
 import {typeConference} from "@/utils/ConferenceType";
 import {countryOptions} from "@/utils/CountrySet";
-import DNDUpload from "@/UI/DNDFiles";
+import DNDUpload from "components/DNDFiles";
 import EditorWrapper from "@/components/EditorWrapper";
+import PreviewUpload from "@/components/DNDFiles/previewUpload";
 
 type Props = {
     conferenceId: string
@@ -41,6 +42,8 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [conference, setConference] = useState<IConferences>()
+    const [uploadFiles, setUploadFiles] = useState<File[]>([])
+    const [previewUpload, setPreviewUpload] = useState<string[]>([])
 
     useEffect(() => {
         setIsLoading(true)
@@ -58,6 +61,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             setValue('type', new Set([conference.type]))
             setValue('date', moment(conference.date).format('YYYY-MM-DD'))
             setValue('text', conference.text)
+            setPreviewUpload(conference.files)
         }
     }, [conference, setValue]);
 
@@ -103,9 +107,25 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
     }
 
     const onUpload = (files: File[]) => {
-        console.log(files);
+        const fileNames = files.map(file => file.name);
+        setPreviewUpload(prevState => [...prevState, ...fileNames]);
+        setUploadFiles((prevState) => [...prevState, ...files])
     };
 
+    const handleRemoveFile = useCallback((index: number) => {
+        setUploadFiles((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+        setPreviewUpload((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+    }, []);
+
+    useEffect(() => {
+        console.log(uploadFiles)
+        console.log(previewUpload)
+    }, [previewUpload, uploadFiles]);
+    
     return (
         <div className="flex flex-col gap-8 w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -234,7 +254,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                             </div>
                                                             <DNDUpload onUpload={onUpload}
                                                                        onChange={field.onChange}
-                                                                       styleContainer="w-full mt-2 h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                       styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                 Гей, скинь мені файли
                                                             </DNDUpload>
                                                             {formState.errors.files?.message &&
@@ -243,6 +263,9 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                         </div>
                                                     }
                                         />
+                                        <div className="w-full flex flex-col gap-4 items-start">
+                                            <PreviewUpload files={previewUpload} handleRemoveFile={handleRemoveFile}/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
