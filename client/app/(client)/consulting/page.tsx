@@ -31,12 +31,11 @@ const Consulting = ({}) => {
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
             <div className="flex flex-col gap-14 max-sm:gap-8">
-                <Title text="Інноваційні розробки"
+                <Title text="Консалтинговий центр НДІ"
                        style="text-[#111318] text-5xl max-xl:text-3xl font-semibold"/>
                 <div
                     className="flex flex-row gap-20 max-sm:flex-col max-xl:gap-14 max-sm:gap-8 text-xl">
-                    <div
-                        className="flex flex-col gap-14 max-sm:gap-10 w-full min-w-[400px] max-lg:min-w-[300px] max-lg:min-h-[300px] max-sm:min-w-[400px] max-sm:min-h-[400px]">
+                    <div className="flex flex-col gap-14 max-sm:gap-10 w-full min-w-[400px] max-lg:min-w-[300px] max-lg:min-h-[300px] max-sm:min-w-[400px] max-sm:min-h-[400px]">
                         <div className="flex flex-col gap-5 max-sm:items-center max-sm:justify-center">
                             <Image src={"/image/preview.png"}
                                    width={0}
@@ -71,7 +70,7 @@ const Consulting = ({}) => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-14 max-sm:gap-10">
-                        <Title text="Інноваційні розробки"
+                        <Title text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                                style="text-[#111318] text-3xl max-xl:text-2xl font-semibold"/>
                         <div>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas porta erat ipsum, et

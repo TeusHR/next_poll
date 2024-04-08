@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {CreateConferenceForm, ICreateConferences} from "@/types/Conference";
 import {useSession} from "next-auth/react";
@@ -10,11 +10,13 @@ import {Input} from "@nextui-org/react";
 import {Button} from "@nextui-org/react";
 import Select from "@/components/CMS/Select";
 import {countryOptions} from "@/utils/CountrySet";
-import DNDUpload from "@/UI/DNDFiles";
+import DNDUpload from "components/DNDFiles";
 import EditorWrapper from "@/components/EditorWrapper";
 import {FileService} from "@/services/file.service";
 import moment from "moment/moment";
 import {typeConference} from "@/utils/ConferenceType";
+import PreviewUpload from "@/components/DNDFiles/previewUpload";
+import {FileToFileList} from "@/utils/FIleToFileList";
 
 
 const ConferenceCreate = ({}) => {
@@ -52,6 +54,9 @@ const ConferenceCreate = ({}) => {
     const $apiAuth = useAxiosAuth()
 
     const [isLoading, setIsLoading] = useState(false)
+    const [uploadFiles, setUploadFiles] = useState<File[]>([])
+    const [previewUpload, setPreviewUpload] = useState<string[]>([])
+
 
     const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
 
@@ -65,9 +70,8 @@ const ConferenceCreate = ({}) => {
             name: string
         }[] = []
         let urlsFiles: string[] = []
-
-        if (dataForm.files && dataForm.files.length > 0) {
-            filesPath = await FileService.upload($apiAuth, dataForm.files, 'pdf')
+        if (uploadFiles.length > 0) {
+            filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf')
             if (filesPath.length > 0) {
                 urlsFiles = filesPath.map(file => file.url);
             } else {
@@ -97,8 +101,19 @@ const ConferenceCreate = ({}) => {
     }
 
     const onUpload = (files: File[]) => {
-        console.log(files);
+        const fileNames = files.map(file => file.name);
+        setPreviewUpload(prevState => [...prevState, ...fileNames]);
+        setUploadFiles((prevState) => [...prevState, ...files])
     };
+
+    const handleRemoveFile = useCallback((index: number) => {
+        setUploadFiles((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+        setPreviewUpload((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+    }, []);
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -154,7 +169,7 @@ const ConferenceCreate = ({}) => {
                                                     }}
                                                     render={({field}) =>
                                                         <Input className="border-none py-2"
-                                                               type="datetime-local"
+                                                               type="date"
                                                                value={field.value}
                                                                onValueChange={field.onChange}
                                                                isRequired
@@ -244,8 +259,8 @@ const ConferenceCreate = ({}) => {
                                                 </div>
                                                 <DNDUpload onUpload={onUpload}
                                                            onChange={field.onChange}
-                                                           styleContainer="w-full mt-2 h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
-                                                    Гей, скинь мені файли
+                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                    Скинь мені файли
                                                 </DNDUpload>
                                                 {formState.errors.files?.message &&
                                                     <div
@@ -253,6 +268,9 @@ const ConferenceCreate = ({}) => {
                                             </div>
                                         }
                                         />
+                                        <div className="w-full flex flex-col gap-4 items-start">
+                                            <PreviewUpload files={previewUpload} handleRemoveFile={handleRemoveFile}/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

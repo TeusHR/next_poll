@@ -1,5 +1,5 @@
 'use client'
-import React, {FC, useEffect, useState} from 'react'
+import React, {FC, useCallback, useEffect, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {IConferences, ICreateConferences, UpdateConferenceForm} from "@/types/Conference";
 import {useSession} from "next-auth/react";
@@ -12,8 +12,10 @@ import {Button, Input} from "@nextui-org/react";
 import Select from "@/components/CMS/Select";
 import {typeConference} from "@/utils/ConferenceType";
 import {countryOptions} from "@/utils/CountrySet";
-import DNDUpload from "@/UI/DNDFiles";
+import DNDUpload from "components/DNDFiles";
 import EditorWrapper from "@/components/EditorWrapper";
+import PreviewUpload from "@/components/DNDFiles/previewUpload";
+import {FileItem, FileToFileList} from "@/utils/FIleToFileList";
 
 type Props = {
     conferenceId: string
@@ -41,6 +43,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [conference, setConference] = useState<IConferences>()
+    const [files, setFiles] = useState<FileItem[]>([]);
 
     useEffect(() => {
         setIsLoading(true)
@@ -51,6 +54,10 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             .finally(() => setIsLoading(false))
     }, [conferenceId]);
 
+    const renderFileName = (fileName: string): string => {
+        return fileName.replace('/uploads/pdf/', '');
+    }
+
     useEffect(() => {
         if (conference) {
             setValue('title', conference.title)
@@ -58,6 +65,14 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             setValue('type', new Set([conference.type]))
             setValue('date', moment(conference.date).format('YYYY-MM-DD'))
             setValue('text', conference.text)
+            const serverFiles = conference.files.map(url => (
+                {
+                    name: renderFileName(url),
+                    type: "server" as const,
+                    url: url,
+                }
+            ));
+            setFiles(serverFiles);
         }
     }, [conference, setValue]);
 
@@ -68,43 +83,68 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
         }
         setIsLoading(true)
 
-        let filesPath: {
-            url: string,
-            name: string
-        }[] = []
-        let urlsFiles: string[] = []
+        try {
+            let filesPath: {
+                url: string,
+                name: string
+            }[] = []
 
-        if (dataForm.files && dataForm.files.length > 0) {
-            filesPath = await FileService.upload($apiAuth, dataForm.files, 'pdf')
-            if (filesPath.length > 0) {
-                urlsFiles = filesPath.map(file => file.url);
-            } else {
-                toast.error('Файли не збережені, щось не так.');
+            let newFilesUrls: string[] = []
+
+
+            const uploadFiles = files.filter(file => file.type === 'uploaded').map(file => file.file as File);
+
+            if (uploadFiles.length > 0) {
+                filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf')
+                if (filesPath.length > 0)
+                    newFilesUrls = filesPath.map(file => file.url);
+                else
+                    toast.error('Файли не збережені, щось не так.');
             }
-        }
-        if(urlsFiles.length <= 0 && conference)
-            urlsFiles = conference.files
 
-        const dataProduct: ICreateConferences = {
-            type: Array.from(dataForm.type).toString(),
-            country: Array.from(dataForm.country).toString(),
-            date: moment(dataForm.date).format(),
-            title: dataForm.title,
-            text: dataForm.text,
-            files: urlsFiles,
-        };
-        ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth).then((status) => {
-            if (status === 200)
-                toast.success('Конференцію успішно створено')
-        }).catch((error) => {
+            const existingFilesUrls = files
+                .filter(file => file.type === 'server')
+                .map(file => file.url)
+
+            const allFilesUrls = [...newFilesUrls, ...existingFilesUrls];
+            console.log(allFilesUrls)
+            const dataProduct: ICreateConferences = {
+                type: Array.from(dataForm.type).toString(),
+                country: Array.from(dataForm.country).toString(),
+                date: moment(dataForm.date).format(),
+                title: dataForm.title,
+                text: dataForm.text,
+                files: allFilesUrls,
+            };
+            ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth).then((status) => {
+                if (status === 200)
+                    toast.success('Конференцію успішно створено')
+            })
+        } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
-        }).finally(() => setIsLoading(false))
+        } finally {
+            setIsLoading(false)
+        }
     }
 
-    const onUpload = (files: File[]) => {
-        console.log(files);
+    const onUpload = (uploadedFiles: File[]) => {
+        const newFiles = uploadedFiles.map(file => ({
+            name: file.name,
+            type: 'uploaded' as const,
+            file,
+            url: file.name
+        }));
+        setFiles(prev => [...prev, ...newFiles]);
     };
+
+    const handleRemoveFile = useCallback((index: number) => {
+        setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
+    }, []);
+
+    const fileNames = files.map(fileItem => {
+        return fileItem.url;
+    });
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -234,7 +274,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                             </div>
                                                             <DNDUpload onUpload={onUpload}
                                                                        onChange={field.onChange}
-                                                                       styleContainer="w-full mt-2 h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                       styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                 Гей, скинь мені файли
                                                             </DNDUpload>
                                                             {formState.errors.files?.message &&
@@ -243,6 +283,9 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                         </div>
                                                     }
                                         />
+                                        <div className="w-full flex flex-col gap-4 items-start">
+                                            <PreviewUpload files={fileNames} handleRemoveFile={handleRemoveFile}/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -283,7 +326,9 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                         <div className="flex justify-center items-center">
                             <Button type={"submit"}
                                     isLoading={isLoading}
-                                    className="px-6 bg-fd text-xl">
+                                    disabled={!conference}
+                                    disableAnimation={!conference}
+                                    className={`px-6 ${!conference ? 'bg-gray-400' : 'bg-fd'} text-xl`}>
                                 Оновити
                             </Button>
                         </div>

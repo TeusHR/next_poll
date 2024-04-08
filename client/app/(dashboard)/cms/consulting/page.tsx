@@ -1,18 +1,18 @@
 import React, {Suspense} from 'react'
 import Loading from "@/components/Loading";
-import ConferenceTabs from "./components/ConferenceTabs";
+import ConsultingTabs from "./components/ConsultingTabs";
 
 
-const Conference = ({}) => {
+const Consulting = ({}) => {
 
 
     return (
         <div>
             <Suspense fallback={<Loading transparent/>}>
-                <ConferenceTabs/>
+                <ConsultingTabs/>
             </Suspense>
         </div>
     )
 }
 
-export default Conference;
+export default Consulting;

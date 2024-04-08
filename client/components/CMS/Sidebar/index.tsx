@@ -14,36 +14,55 @@ export type SideNavItem = {
 };
 
 export const SIDENAV_ITEMS: SideNavItem[] = [
+    // {
+    //     title: 'Home',
+    //     path: '/cms',
+    // },
+    // {
+    //     title: 'Projects',
+    //     path: '/cms',
+    //     submenu: true,
+    //     subMenuItems: [
+    //         {title: 'All', path: '/cms'},
+    //         {title: 'Web Design', path: '/cms'},
+    //         {title: 'Graphic Design', path: '/cms'},
+    //     ],
+    // },
     {
-        title: 'Home',
-        path: '/cms',
+        title: 'Конференції',
+        path: '/cms/conference',
     },
     {
-        title: 'Projects',
-        path: '/cms',
-        submenu: true,
-        subMenuItems: [
-            {title: 'All', path: '/cms'},
-            {title: 'Web Design', path: '/cms'},
-            {title: 'Graphic Design', path: '/cms'},
-        ],
+        title: 'Наукові школи',
+        path: '/cms/science',
     },
     {
-        title: 'Messages',
-        path: '/cms',
+        title: 'Напрямки для співпраці',
+        path: '/cms/consulting',
     },
     {
-        title: 'Settings',
-        path: '/cms',
-        submenu: true,
-        subMenuItems: [
-            {title: 'Account', path: '/cms'},
-            {title: 'Privacy', path: '/cms'},
-        ],
+        title: 'Відділ міжнародних грантів',
+        path: '/cms/department',
     },
     {
-        title: 'Help',
-        path: '/cms',
+        title: 'Інноваційні розробки',
+        path: '/cms/innovations',
+    },
+    {
+        title: 'Міжнародні проекти',
+        path: '/cms/international',
+    },
+    {
+        title: 'Науково-дослідні лабораторії',
+        path: '/cms/research',
+    },
+    {
+        title: 'Наукова робота ОНТУ',
+        path: '/cms/news',
+    },
+    {
+        title: 'Студентська наука',
+        path: '/cms/student',
     },
 ];
 
@@ -86,7 +105,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
     };
 
     return (
-        <div className="">
+        <div>
             {item.submenu ? (
                 <>
                     <button
@@ -97,7 +116,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                     >
                         <div className="flex flex-row space-x-4 items-center">
                             {item.icon}
-                            <span className="font-semibold text-xl  flex">{item.title}</span>
+                            <span className="font-semibold text-base  flex">{item.title}</span>
                         </div>
 
                         <div className={`${subMenuOpen ? 'rotate-180' : ''} w-[24px] h-[24px] flex`}>
@@ -134,7 +153,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                     }`}
                 >
                     {item.icon}
-                    <span className="font-semibold text-xl flex">{item.title}</span>
+                    <span className="font-semibold text-base flex">{item.title}</span>
                 </Link>
             )}
         </div>
