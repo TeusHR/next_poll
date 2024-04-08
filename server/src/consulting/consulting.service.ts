@@ -11,12 +11,12 @@ export class ConsultingService {
     const consulting = await this.prismaService.consulting.findFirst();
     let res: any;
     if (consulting)
-      res = this.prismaService.consulting.update({
+      res = await this.prismaService.consulting.update({
         data: createConsultingDto,
         where: { id: consulting.id },
       });
     else
-      res = this.prismaService.consulting.create({
+      res = await this.prismaService.consulting.create({
         data: createConsultingDto,
       });
 
