@@ -9,6 +9,7 @@ type Props = {
     onChange?: (...event: any[]) => void
     children: React.ReactNode
     formats?: string[]
+    size?: number
     multiple?: boolean
     count?: number
 }
@@ -30,6 +31,7 @@ const DNDUpload: FC<Props> = ({
                                   onChange,
                                   children,
                                   multiple = true,
+                                  size,
                                   formats = ConstFormats,
                                   count
                               }) => {
@@ -135,7 +137,6 @@ const DNDUpload: FC<Props> = ({
             const extensionMatch = formats.some(extension => file.name.toLowerCase().endsWith(extension));
             return !extensionMatch;
         });
-
         if (invalidFiles.length > 0) {
             const allowedFormats = [...formats].join(', ');
             showMessage(`Прийнятні лише такі формати файлів: ${allowedFormats}`, 'error', 3000);
@@ -187,6 +188,7 @@ const DNDUpload: FC<Props> = ({
                     type={"file"}
                     multiple={multiple}
                     className="w-full h-full"
+                    size={size}
                     accept={formats.toString()}
                     value={filesInput}
                     onChange={handleInputChange}

@@ -2,6 +2,7 @@ import {AxiosInstance} from "axios";
 import {
     getActivitiesUrl,
     getConferencesUrl,
+    getConsultingUrl,
     getCooperationsUrl,
     getInnovationsUrl,
     getResearchWorksUrl,
@@ -14,6 +15,7 @@ import {ICreateResearch} from "@/types/Research";
 import {ICreateInnovation} from "@/types/Innovation";
 import {ICreateStudent} from "@/types/Student";
 import {$api} from "@/api/interceptors";
+import {IConsulting} from "@/types/Consulting";
 
 
 export const ConferencesService = {
@@ -35,6 +37,29 @@ export const ConferencesService = {
     },
     async removeConferences(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getConferencesUrl(`/${id}`))
+        return status === 200
+    },
+};
+
+export const ConsultingService = {
+    async getAllConsulting(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IConsulting[]>(getConsultingUrl(''))
+        return data
+    },
+    async getConsulting(id: string) {
+        const {data} = await $api.get<IConferences>(getConsultingUrl(`/${id}`))
+        return data
+    },
+    async postConsulting(item:ICreateConferences, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateConferences>(getConsultingUrl(''), item)
+        return status
+    },
+    async updateConsulting(item:ICreateConferences, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateConferences>(getConsultingUrl(`/${id}`), item)
+        return status
+    },
+    async removeConsulting(id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getConsultingUrl(`/${id}`))
         return status === 200
     },
 };

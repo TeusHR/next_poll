@@ -3,7 +3,7 @@ import Title from "components/UI/Title";
 import ButtonDetails from "components/UI/ButtonDetails";
 
 
-const ScheduleC = ({}) => {
+const ConferenceItem = ({}) => {
 
     const hr = 2
 
@@ -82,4 +82,4 @@ const ScheduleC = ({}) => {
     )
 }
 
-export default ScheduleC;
+export default ConferenceItem;

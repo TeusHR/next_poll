@@ -6,6 +6,8 @@ export const getFileUrl = (folder?: string) => `/upload/?folder=${folder}`
 
 export const getCooperationsUrl = (str: string) => `/cooperations${str}`
 
+export const getConsultingUrl = (str: string) => `/consulting${str}`
+
 export const getInnovationsUrl = (str: string) => `/innovations${str}`
 
 export const getConferencesUrl = (str: string) => `/conferences${str}`
