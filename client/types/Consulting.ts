@@ -22,4 +22,5 @@ export type ICreateConsultingForm = {
     title: string
     text: string
     files: FileList,
+    images:IConsultingImages[]
 }

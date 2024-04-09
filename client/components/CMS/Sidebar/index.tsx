@@ -37,10 +37,6 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/science',
     },
     {
-        title: 'Напрямки для співпраці',
-        path: '/cms/consulting',
-    },
-    {
         title: 'Відділ міжнародних грантів',
         path: '/cms/department',
     },
@@ -55,6 +51,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     {
         title: 'Науково-дослідні лабораторії',
         path: '/cms/research',
+    },
+    {
+        title: 'Консалтинговий центр НДІ',
+        path: '/cms/consulting',
     },
     {
         title: 'Наукова робота ОНТУ',

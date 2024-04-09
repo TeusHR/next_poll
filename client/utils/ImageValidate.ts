@@ -54,4 +54,13 @@ export const HandlerImageValidate = (value: File,
     })
 }
 
+export const loadPreviewImage = (file: File | undefined): string => {
+    if (file)
+        return URL.createObjectURL(file);
+    else
+        return '';
+};
+
+
+
 export const acceptedFormats = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/jpg', 'image/webp'];

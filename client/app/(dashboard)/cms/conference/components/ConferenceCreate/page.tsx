@@ -65,38 +65,40 @@ const ConferenceCreate = ({}) => {
         }
         setIsLoading(true)
 
-        let filesPath: {
-            url: string,
-            name: string
-        }[] = []
-        let urlsFiles: string[] = []
-        if (uploadFiles.length > 0) {
-            filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf')
-            if (filesPath.length > 0) {
+        try {
+
+            let urlsFiles: string[] = [];
+            if (uploadFiles.length > 0) {
+                const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
+                if (filesPath.length === 0) {
+                    toast.error('Файли не збережені, щось не так.');
+                    return;
+                }
                 urlsFiles = filesPath.map(file => file.url);
-            } else {
-                toast.error('Файли не збережені, щось не так.');
             }
+
+            const dataProduct: ICreateConferences = {
+                type: Array.from(dataForm.type).toString(),
+                country: Array.from(dataForm.country).toString(),
+                date: moment(dataForm.date).format(),
+                title: dataForm.title,
+                text: dataForm.text,
+                files: urlsFiles,
+            };
+
+            ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
+                if (status === 201) {
+                    reset()
+                    toast.success('Конференцію успішно створено')
+                }
+            })
         }
-
-        const dataProduct: ICreateConferences = {
-            type: Array.from(dataForm.type).toString(),
-            country: Array.from(dataForm.country).toString(),
-            date: moment(dataForm.date).format(),
-            title: dataForm.title,
-            text: dataForm.text,
-            files: urlsFiles,
-        };
-
-        ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
-            if (status === 201) {
-                reset()
-                toast.success('Конференцію успішно створено')
-            }
-        }).catch((error) => {
+        catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
-        }).finally(() => setIsLoading(false))
+        } finally {
+            setIsLoading(false)
+        }
 
     }
 
