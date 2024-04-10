@@ -54,11 +54,10 @@ export const HandlerImageValidate = (value: File,
     })
 }
 
-export const loadPreviewImage = (file: File | undefined): string => {
+export const loadPreviewImage = (file: File | undefined): string | undefined => {
     if (file)
         return URL.createObjectURL(file);
-    else
-        return '';
+    return undefined
 };
 
 

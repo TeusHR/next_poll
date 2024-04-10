@@ -7,14 +7,7 @@ import {Tab, Tabs} from "@nextui-org/react";
 import TitleBack from "@/components/CMS/TitleBack";
 import {IConsulting} from "@/types/Consulting";
 import ConsultingCreate from "../ConsultingCreate";
-import ConsultingEdit from "../ConsultingEdit";
 
-// const tableColumn: { title: string, key: string }[] = [
-//     {title: 'id', key: 'id'},
-//     {title: 'Назва', key: 'title'},
-//     {title: 'Зображення', key: 'images'},
-//     {title: 'Дії', key: 'action'}
-// ]
 
 const ConsultingTabs = ({}) => {
 
@@ -49,10 +42,7 @@ const ConsultingTabs = ({}) => {
                 tabContent: "group-data-[selected=true]:text-primary max-sm:text-[12px] max-lg:text-base text-black group-data-[hover-unselected=true]:text-primary"
             }} variant="solid">
                 <Tab key="consulting" value="consulting" title="Створення">
-                    <ConsultingCreate/>
-                </Tab>
-                <Tab key="consultingUpdate" value="consultingUpdate" title="Оновлення">
-                    <ConsultingEdit/>
+                    <ConsultingCreate consulting={initialConsulting}/>
                 </Tab>
             </Tabs>
         </div>

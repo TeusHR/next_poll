@@ -1,7 +1,7 @@
 'use client'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {FC, useCallback, useEffect, useState} from 'react'
 import {Controller, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
-import {ICreateConsulting, ICreateConsultingForm} from "@/types/Consulting";
+import {IConsulting, ICreateConsulting, ICreateConsultingForm} from "@/types/Consulting";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
@@ -12,15 +12,21 @@ import EditorWrapper from "@/components/EditorWrapper";
 import {HandlerImageValidate, loadPreviewImage} from "@/utils/ImageValidate";
 import {ConsultingService} from "@/services/CMS.service";
 import {FileService} from "@/services/file.service";
-import {FileToFileList} from "@/utils/FIleToFileList";
+import {FileItem, FileToFileList} from "@/utils/FIleToFileList";
 import CloseIcon from "@/UI/CloseIcon";
 
-const ConsultingCreate = ({}) => {
+type Props = {
+    consulting:IConsulting | undefined
+}
+
+type filePath = { url: string, name: string }
+
+const ConsultingCreate:FC<Props> = ({consulting}) => {
     const {
         handleSubmit,
         control,
         formState,
-        reset,
+        setValue,
     } = useForm<ICreateConsultingForm>({
         mode: 'all',
         defaultValues: {
@@ -38,8 +44,29 @@ const ConsultingCreate = ({}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
 
-    const [uploadFiles, setUploadFiles] = useState<File[]>([])
-    const [previewUpload, setPreviewUpload] = useState<string[]>([])
+    // const [uploadFiles, setUploadFiles] = useState<File[]>([])
+    // const [previewUpload, setPreviewUpload] = useState<string[]>([])
+    const [files, setFiles] = useState<FileItem[]>([]);
+
+    useEffect(() => {
+        if(consulting) {
+            setValue('text', consulting.text)
+            setValue('title', consulting.title)
+            setValue('images', consulting.images)
+            const serverFiles = consulting.images.map(url => (
+                {
+                    name: renderFileName(url.image),
+                    type: "server" as const,
+                    url: url.image,
+                }
+            ));
+            setFiles(serverFiles);
+        }
+    }, [consulting, setValue]);
+
+    const renderFileName = (fileName: string): string => {
+        return fileName.replace('/uploads/image/', '');
+    }
 
     const onSubmit: SubmitHandler<ICreateConsultingForm> = async (dataForm) => {
 
@@ -49,6 +76,8 @@ const ConsultingCreate = ({}) => {
         setIsLoading(true)
 
         try {
+            const uploadFiles = files.filter(file => file.type === 'uploaded').map(file => file.file as File);
+
             const filesPath = uploadFiles.length > 0
                 ? await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'image')
                 : [];
@@ -59,10 +88,8 @@ const ConsultingCreate = ({}) => {
                 return;
             }
 
-            const images = filesPath.map((file, i) => ({
-                image: file.url,
-                description: dataForm.images[i].description
-            }));
+            const serverUploadedFiles  = files.filter(file => file.type === 'server').map(file => file)
+            const images = createImagesList(filesPath, dataForm, serverUploadedFiles);
 
             const dataProduct: ICreateConsulting = {
                 title: dataForm.title,
@@ -71,10 +98,8 @@ const ConsultingCreate = ({}) => {
             };
 
             console.log(dataProduct)
-
             ConsultingService.postConsulting(dataProduct, $apiAuth).then((status) => {
                 if (status === 201) {
-                    reset()
                     toast.success('Успішно створено')
                 }
             })
@@ -87,29 +112,46 @@ const ConsultingCreate = ({}) => {
 
     }
 
+    const createImagesList = (filesPath:filePath[], dataForm:ICreateConsultingForm, serverUploadedFiles:FileItem[]) => {
+        const images = filesPath.map((file, i) => ({
+            image: file.url,
+            description: dataForm.images[serverUploadedFiles.length+i].description
+        }));
+
+        const ServerImages = serverUploadedFiles.map((file, i) => ({
+            image: file.url,
+            description: dataForm.images[i].description
+        }));
+
+        return [...ServerImages, ...images]
+    };
+
     const onUpload = (files: File[]) => {
-        const fileNames = files.map(file => file.name);
-        setPreviewUpload(prevState => [...prevState, ...fileNames]);
-        setUploadFiles((prevState) => [...prevState, ...files])
+        const newFiles = files.map(file => ({
+            name: file.name,
+            type: 'uploaded' as const,
+            file,
+            url: file.name
+        }));
+        setFiles(prev => [...prev, ...newFiles]);
     };
 
     const handleRemoveFile = useCallback((index: number) => {
-        setUploadFiles((currentFiles) => {
-            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
-        });
-        setPreviewUpload((currentFiles) => {
-            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
-        });
+        setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
         remove(index)
     }, [remove]);
 
     useEffect(() => {
-        if (uploadFiles.length > 0) {
-            for (let i = 0; i < uploadFiles.length - fields.length; i++) {
+        if (files.length > 0) {
+            for (let i = 0; i < files.length - fields.length; i++) {
                 append({image: '', description: 'test'})
             }
         }
-    }, [append, fields.length, uploadFiles]);
+    }, [append, fields.length, files]);
+
+    const fileNames = files.map(fileItem => {
+        return fileItem.name;
+    });
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -188,22 +230,21 @@ const ConsultingCreate = ({}) => {
                                                         }
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
-                                                <PreviewUpload files={previewUpload}
-                                                               handleRemoveFile={handleRemoveFile}/>
+                                                <PreviewUpload files={fileNames} handleRemoveFile={handleRemoveFile}/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {uploadFiles.length > 0 &&
+                        {files.length > 0 &&
                             <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
                                 <div className="flex flex-col gap-4">
                                     <div className="w-full flex flex-col gap-4">
                                         {fields.map((item, index) => (
                                             <div className="flex flex-row gap-4 w-full items-center" key={item.id}>
                                                 <div className="w-[80px]">
-                                                    <Image src={loadPreviewImage(uploadFiles[index])}
+                                                    <Image src={loadPreviewImage(files[index].file) || files[index].url}
                                                            alt="preview"/>
                                                 </div>
                                                 <div className="w-full">
