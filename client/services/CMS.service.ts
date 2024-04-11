@@ -10,7 +10,7 @@ import {
 } from "@/config/url.config";
 import {IConferences, ICreateConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
 import {ICreateScience} from "@/types/Science";
-import {ICreateCooperation} from "@/types/Cooperation";
+import {ICooperation, ICreateCooperation} from "@/types/Cooperation";
 import {ICreateResearch} from "@/types/Research";
 import {ICreateInnovation} from "@/types/Innovation";
 import {ICreateStudent} from "@/types/Student";
@@ -69,15 +69,23 @@ export const ScienceService = {
 
 
 export const CooperationService = {
-    async postScience(item:ICreateCooperation, authAxios: AxiosInstance) {
+    async getAllCooperation(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<ICooperation[]>>(getCooperationsUrl(''))
+        return data
+    },
+    async getCooperation(id: string) {
+        const {data} = await $api.get<IResponseMeta<ICooperation>>(getCooperationsUrl(`/${id}`))
+        return data
+    },
+    async post(item:ICreateCooperation, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateCooperation>(getCooperationsUrl(''), item)
         return status
     },
-    async updateScience(item:ICreateCooperation, id: number, authAxios: AxiosInstance) {
+    async updateCooperation(item:ICreateCooperation, id: number, authAxios: AxiosInstance) {
         const {status} = await authAxios.put<ICreateCooperation>(getCooperationsUrl(`/${id}`), item)
         return status
     },
-    async removeScience(id: number, authAxios: AxiosInstance) {
+    async removeCooperation(id: number, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getCooperationsUrl(`/${id}`))
         return status === 200
     },

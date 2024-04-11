@@ -23,6 +23,7 @@ import {StringConferenceType} from "@/utils/ConferenceType";
 import {ConferencesService} from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
+import {ICooperation} from "@/types/Cooperation";
 
 type Props<T> = {
     dataItems: T[]
@@ -42,7 +43,7 @@ type Props<T> = {
     refetch?: () => void
 }
 
-const TableItems = <T extends ILiftGroupConference | IConsulting>({
+const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>({
                                                         dataItems,
                                                         rowsViewPage = 6,
                                                         tableColumn,
@@ -307,7 +308,7 @@ type PropsPopover<T> = {
     deleteMessage?: string
     apiAuth: AxiosInstance
 }
-const PopoverDeleteItem = <T extends IConferences | IConsulting>({
+const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation>({
                                                        idItem,
                                                        typeProduct,
                                                        setData,

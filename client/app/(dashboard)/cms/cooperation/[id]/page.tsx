@@ -1,18 +1,18 @@
 import React, {Suspense} from 'react'
 import TitleBack from "@/components/CMS/TitleBack";
 import Loading from "@/components/Loading";
-import ConsultingCreate from "../components/ConsultingCreate";
+import CooperationEdit from "../components/CooperationEdit";
+import CooperationCreate from "../components/CooperationCreate";
 
-const CMSConsulting = async ({params}: { params: { id: string } }) => {
-
+const CMSConsulting =  async ({params}: { params: { id: string } }) => {
     if (params.id === 'new') {
         return (
             <div>
                 <div className="flex flex-col px-12 py-12 max-xl:px-4">
-                    <TitleBack title="Створення конференції"/>
+                    <TitleBack title="Створення напряму для співпраці"/>
                     <div className="w-full flex flex-row flex-wrap">
                         <Suspense fallback={<Loading transparent/>}>
-                            <ConsultingCreate/>
+                            <CooperationCreate/>
                         </Suspense>
                     </div>
                 </div>
@@ -24,10 +24,10 @@ const CMSConsulting = async ({params}: { params: { id: string } }) => {
     return (
         <div>
             <div className="flex flex-col px-12 py-12 max-xl:px-4">
-                <TitleBack title="Редагування конференції"/>
+                <TitleBack title="Редагування"/>
                 <div className="w-full flex flex-row flex-wrap">
                     <Suspense fallback={<Loading transparent/>}>
-
+                        <CooperationEdit/>
                     </Suspense>
                 </div>
             </div>
