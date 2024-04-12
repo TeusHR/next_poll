@@ -16,6 +16,7 @@ import {ICreateInnovation} from "@/types/Innovation";
 import {ICreateStudent} from "@/types/Student";
 import {$api} from "@/api/interceptors";
 import {IConsulting, ICreateConsulting} from "@/types/Consulting";
+import {IActivity, ICreateActivity} from "@/types/Activity";
 
 
 export const ConferencesService = {
@@ -111,6 +112,29 @@ export const ResearchService = {
     },
     async removeResearch(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getResearchWorksUrl(`/${id}`))
+        return status === 200
+    },
+};
+
+export const ActivityService = {
+    async getAllActivity(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<IActivity[]>>(getActivitiesUrl(`?page=${page}&limit=${limit}`))
+        return data
+    },
+    async getActivity(id: string) {
+        const {data} = await $api.get<IActivity>(getActivitiesUrl(`/${id}`))
+        return data
+    },
+    async postActivity(item:ICreateCooperation, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateActivity>(getActivitiesUrl(''), item)
+        return status
+    },
+    async updateActivity(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateActivity>(getActivitiesUrl(`/${id}`), item)
+        return status
+    },
+    async removeActivity(id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getActivitiesUrl(`/${id}`))
         return status === 200
     },
 };

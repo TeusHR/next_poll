@@ -20,12 +20,13 @@ import moment from "moment/moment";
 import {Image, Button} from "@nextui-org/react";
 import {AxiosInstance} from "axios";
 import {StringConferenceType} from "@/utils/ConferenceType";
-import {ConferencesService, CooperationService, ResearchService} from "@/services/CMS.service";
+import {ActivityService, ConferencesService, CooperationService, ResearchService} from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
 import {ICooperation} from "@/types/Cooperation";
 import {stripHtml} from "../../../app/(dashboard)/cms/utils";
 import {IResearch} from "@/types/Research";
+import {IActivity} from "@/types/Activity";
 
 type Props<T> = {
     dataItems: T[]
@@ -47,7 +48,7 @@ type Props<T> = {
     refetch?: () => void
 }
 
-const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation | IResearch>(
+const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity>(
     {
         dataItems,
         rowsViewPage = 6,
@@ -321,7 +322,7 @@ type PropsPopover<T> = {
     deleteMessage?: string
     apiAuth: AxiosInstance
 }
-const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation | IResearch>({
+const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation | IResearch | IActivity>({
                                                                                     idItem,
                                                                                     typeProduct,
                                                                                     setData,
@@ -343,6 +344,8 @@ const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation |
                 await CooperationService.removeCooperation(idItem, apiAuth)
             else if (typeProduct === 'research')
                 await ResearchService.removeResearch(idItem, apiAuth)
+            else if (typeProduct === 'activity')
+                await ActivityService.removeActivity(idItem, apiAuth)
             // else if (typeProduct === 'ingredients')
             //     await IngredientsService.removeIngredients(idProduct, apiAuth)
             toast.success('Позиція успішно видалена')
