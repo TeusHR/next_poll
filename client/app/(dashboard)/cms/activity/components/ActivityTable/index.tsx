@@ -94,7 +94,7 @@ const ActivityTable = ({}) => {
             <TableItems dataItems={filterActivity || []}
                         searchInput={valueSearch}
                         rowsViewPage={10}
-                        typeProduct='research'
+                        typeProduct='activity'
                         topContent={topContent}
                         tableColumn={tableColumn}
             />
