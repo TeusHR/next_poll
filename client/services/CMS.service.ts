@@ -70,22 +70,22 @@ export const ScienceService = {
 
 export const CooperationService = {
     async getAllCooperation(authAxios: AxiosInstance, page: number, limit: number) {
-        const {data} = await authAxios.get<IResponseMeta<ICooperation[]>>(getCooperationsUrl(''))
+        const {data} = await authAxios.get<IResponseMeta<ICooperation[]>>(getCooperationsUrl(`?page=${page}&limit=${limit}`))
         return data
     },
     async getCooperation(id: string) {
-        const {data} = await $api.get<IResponseMeta<ICooperation>>(getCooperationsUrl(`/${id}`))
+        const {data} = await $api.get<ICooperation>(getCooperationsUrl(`/${id}`))
         return data
     },
     async post(item:ICreateCooperation, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateCooperation>(getCooperationsUrl(''), item)
         return status
     },
-    async updateCooperation(item:ICreateCooperation, id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.put<ICreateCooperation>(getCooperationsUrl(`/${id}`), item)
+    async updateCooperation(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateCooperation>(getCooperationsUrl(`/${id}`), item)
         return status
     },
-    async removeCooperation(id: number, authAxios: AxiosInstance) {
+    async removeCooperation(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getCooperationsUrl(`/${id}`))
         return status === 200
     },

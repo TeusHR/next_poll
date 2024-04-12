@@ -316,7 +316,7 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
         if (description.trim() !== '' && editor) {
             editor.commands.setContent(description);
         }
-        if (description === '<p></p>' && editor) {
+        if (description === '' && editor) {
             editor.commands.setContent('');
         }
     }, [description, editor]);

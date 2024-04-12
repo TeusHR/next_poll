@@ -1,8 +1,8 @@
 import React, {Suspense} from 'react'
 import TitleBack from "@/components/CMS/TitleBack";
 import Loading from "@/components/Loading";
-import CooperationEdit from "../components/CooperationEdit";
 import CooperationCreate from "../components/CooperationCreate";
+import CooperationEdit from "../components/CooperationEdit";
 
 const CMSConsulting =  async ({params}: { params: { id: string } }) => {
     if (params.id === 'new') {
@@ -27,7 +27,7 @@ const CMSConsulting =  async ({params}: { params: { id: string } }) => {
                 <TitleBack title="Редагування"/>
                 <div className="w-full flex flex-row flex-wrap">
                     <Suspense fallback={<Loading transparent/>}>
-                        <CooperationEdit/>
+                        <CooperationEdit cooperationId={params.id}/>
                     </Suspense>
                 </div>
             </div>

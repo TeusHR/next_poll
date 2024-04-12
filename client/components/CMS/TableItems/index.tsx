@@ -14,13 +14,13 @@ import {
     TableHeader,
     TableRow, Tooltip, useDisclosure
 } from "@nextui-org/react";
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import moment from "moment/moment";
 import {Image, Button} from "@nextui-org/react";
 import {AxiosInstance} from "axios";
 import {StringConferenceType} from "@/utils/ConferenceType";
-import {ConferencesService} from "@/services/CMS.service";
+import {ConferencesService, CooperationService} from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
 import {ICooperation} from "@/types/Cooperation";
@@ -31,6 +31,7 @@ type Props<T> = {
     tableColumn: { title: string, key: string }[],
     tableType?: 'modal' | 'link',
     typeProduct: string
+    controlPage?:number
     initialPage?: number
     searchInput?: string
     topContent?: React.ReactNode
@@ -39,31 +40,37 @@ type Props<T> = {
     selectedKeys?: Set<string>
     onSelectKeys?: (keys: Set<string>) => void
     totalDataItems?: number
+    totalPages?: number
     disableShadow?: boolean
     refetch?: () => void
 }
 
-const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>({
-                                                        dataItems,
-                                                        rowsViewPage = 6,
-                                                        tableColumn,
-                                                        tableType = 'link',
-                                                        initialPage,
-                                                        searchInput,
-                                                        selectedKeys,
-                                                        onSelectKeys,
-                                                        typeProduct,
-                                                        disableShadow = false,
-                                                        selectionMode = 'none',
-                                                        topContent,
-                                                        totalDataItems = 0,
-                                                        refetch,
-                                                        deleteMessage = 'Ви впевнені що хочете видалити?'
-                                                    }: Props<T>) => {
+const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>(
+    {
+        dataItems,
+        rowsViewPage = 6,
+        tableColumn,
+        tableType = 'link',
+        controlPage,
+        initialPage,
+        searchInput,
+        selectedKeys,
+        onSelectKeys,
+        typeProduct,
+        disableShadow = false,
+        selectionMode = 'none',
+        topContent,
+        totalDataItems = 0,
+        totalPages,
+        refetch,
+        deleteMessage = 'Ви впевнені що хочете видалити?'
+
+    }: Props<T>) => {
 
 
     const {isOpen, onClose, onOpen} = useDisclosure();
     const router = useRouter();
+    const searchParams = useSearchParams()
     const pathname = usePathname()
     const $apiAuth = useAxiosAuth()
 
@@ -81,7 +88,6 @@ const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         setItems(data.slice(start, end));
-        // router.push(getQueryString('page', page.toString(), searchParams, pathname))
     }, [data, page, pathname, router, rowsPerPage])
 
     const bottomContent = useMemo(() => {
@@ -89,15 +95,18 @@ const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>
         return (
             <div
                 className={`flex w-full ${selectionMode === 'multiple' ? 'justify-between' : 'justify-center'} flex-1 items-end`}>
-                {(total > 1) && <Pagination
+                {((totalPages ? totalPages : total) > 1) && <Pagination
                     isCompact
                     showControls
                     showShadow
                     color="primary"
                     initialPage={initialPage}
                     page={searchInput ? 1 : page}
-                    total={total}
-                    onChange={(page) => setPage(page)}
+                    total={totalPages ? totalPages : total}
+                    onChange={(page) => {
+                        setPage(page)
+                        // router.push(getQueryString('page', page.toString(), searchParams, pathname))
+                    }}
                 />}
                 {selectionMode === 'multiple' &&
                     <div className={`!text-[14px] flex items-center ${total <= 1 ? 'w-full justify-end' : ''}`}>
@@ -105,7 +114,7 @@ const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>
                     </div>}
             </div>
         )
-    }, [initialPage, page, data, totalDataItems, selectedKeys, rowsPerPage, searchInput, selectionMode])
+    }, [totalPages, initialPage, page, data, totalDataItems, selectedKeys, rowsPerPage, searchInput, selectionMode])
 
     const handlerModalOpen = (item: T) => {
         // if (typeProduct === 'categories')
@@ -309,12 +318,12 @@ type PropsPopover<T> = {
     apiAuth: AxiosInstance
 }
 const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation>({
-                                                       idItem,
-                                                       typeProduct,
-                                                       setData,
-                                                       deleteMessage = 'Ви впевнені що хочете видалити?',
-                                                       apiAuth
-                                                   }: PropsPopover<T>) => {
+                                                                                    idItem,
+                                                                                    typeProduct,
+                                                                                    setData,
+                                                                                    deleteMessage = 'Ви впевнені що хочете видалити?',
+                                                                                    apiAuth
+                                                                                }: PropsPopover<T>) => {
 
     const [popoverOpen, setPopoverOpen] = useState(false)
 
@@ -326,6 +335,8 @@ const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation>(
 
             if (typeProduct === 'conference')
                 await ConferencesService.removeConferences(idItem, apiAuth)
+            else if (typeProduct === 'cooperation')
+                await CooperationService.removeCooperation(idItem, apiAuth)
             // else if (typeProduct === 'ingredients')
             //     await IngredientsService.removeIngredients(idProduct, apiAuth)
             toast.success('Позиція успішно видалена')

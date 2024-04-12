@@ -1,7 +1,6 @@
 'use client'
-import React, {FC, useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {IConsulting} from "@/types/Consulting";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
@@ -9,19 +8,13 @@ import {Button, Input} from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import {CooperationService} from "@/services/CMS.service";
 import {ICreateCooperation, ICreateCooperationForm} from "@/types/Cooperation";
-import {Simulate} from "react-dom/test-utils";
-
-type Props = {
-    consulting:IConsulting | undefined
-}
 
 
-const ConsultingCreate:FC<Props> = ({consulting}) => {
+const ConsultingCreate = () => {
     const {
         handleSubmit,
         control,
         formState,
-        setValue,
         reset,
     } = useForm<ICreateCooperationForm>({
         mode: 'all',
@@ -35,13 +28,6 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        if(consulting) {
-            setValue('text', consulting.text)
-            setValue('title', consulting.title)
-        }
-    }, [consulting, setValue]);
-
     const onSubmit: SubmitHandler<ICreateCooperationForm> = async (dataForm) => {
 
         if (toast.isActive('toast-register') || status !== 'authenticated') {
@@ -50,17 +36,14 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
         setIsLoading(true)
 
         try {
-
             const dataProduct: ICreateCooperation = {
                 title: dataForm.title,
                 text: dataForm.text,
             };
-
             console.log(dataProduct)
             CooperationService.post(dataProduct, $apiAuth).then((status) => {
                 if (status === 201) {
                     reset()
-                    setValue('text', '<p></p>')
                     toast.success('Успішно створено')
                 }
             })

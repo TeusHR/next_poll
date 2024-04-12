@@ -9,6 +9,7 @@ import TableSearch from "@/components/CMS/TableSearch";
 import {Button} from "@nextui-org/react";
 import TableItems from "@/components/CMS/TableItems";
 import TitleBack from "@/components/CMS/TitleBack";
+import {IResponseMeta} from "@/types/Conference";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
@@ -19,8 +20,13 @@ const tableColumn: { title: string, key: string }[] = [
 
 const CooperationTable = ({}) => {
 
-    const [initialConference, setInitialConference] = useState<ICooperation[]>([])
+    const [initialCooperation, setInitialConference] = useState<IResponseMeta<ICooperation[]>>({
+        data: [],
+        meta: {currentPage: 0, lastPage: 0, next: 0, perPage: 0, prev: 0, total: 0}
+    })
+
     const searchParams = useSearchParams()
+    // const [page, setPage] = useState(Number(searchParams.get('page')) ?? 1)
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
 
@@ -28,13 +34,38 @@ const CooperationTable = ({}) => {
 
     useEffect(() => {
         if (status === 'authenticated') {
-            CooperationService.getAllCooperation($apiAuth, Number(searchParams.get('page') ?? 1), 6).then(res => {
-                console.log(res)
-                setInitialConference(res.data)
+            CooperationService.getAllCooperation($apiAuth, Number(searchParams.get('page') ?? 1), 999).then(res => {
+                setInitialConference(res)
                 setFilterConsulting(res.data)
             })
         }
     }, [$apiAuth, searchParams, status]);
+
+    // useEffect(() => {
+    //     if (status === 'authenticated') {
+    //         let page = Number(searchParams.get('page') ?? 1)
+    //         setPage(page)
+    //         CooperationService.getAllCooperation($apiAuth, page, 5).then(res => {
+    //             console.log(res)
+    //             setInitialConference((prevState) => (
+    //                 {meta:res.meta, data:[...prevState.data,...res.data]}
+    //             ))
+    //             setFilterConsulting((prevState)=> [...prevState, ...filterConsulting])
+    //         })
+    //     }
+    // }, [$apiAuth, searchParams, status]);
+
+
+    // useEffect(() => {
+    //     if(status === 'authenticated') {
+    //         console.log(Number(searchParams.get('page') ?? 1))
+    //         CooperationService.getAllCooperation($apiAuth, Number(searchParams.get('page') ?? 1), 6).then(res => {
+    //             console.log(res)
+    //             setInitialConference(res)
+    //             setFilterConsulting(res.data)
+    //         })
+    //     }
+    // }, [$apiAuth, page, searchParams, status])
 
     const router = useRouter()
     const [valueSearch,
@@ -43,15 +74,16 @@ const CooperationTable = ({}) => {
         setFilterConsulting] = useState<ICooperation[]>([])
 
     const handleSelectCategories = useCallback(() => {
-        let filter: ICooperation[] = initialConference
-        if (valueSearch.trim() !== '') {
-            filter = initialConference.filter((conferences) =>
-                conferences.title.toLowerCase().includes(valueSearch.toLowerCase()));
+        if(initialCooperation) {
+            let filter: ICooperation[] = initialCooperation.data
+            if (valueSearch.trim() !== '') {
+                filter = initialCooperation.data.filter((conferences) =>
+                    conferences.title.toLowerCase().includes(valueSearch.toLowerCase()));
+            }
+            setFilterConsulting(filter);
         }
 
-        setFilterConsulting(filter);
-
-    }, [initialConference, valueSearch])
+    }, [initialCooperation, valueSearch])
 
     useEffect(() => {
         handleSelectCategories()
@@ -92,10 +124,12 @@ const CooperationTable = ({}) => {
             </div>
             <TableItems dataItems={filterConsulting || []}
                         searchInput={valueSearch}
-                        rowsViewPage={10}
+                        rowsViewPage={5}
+                        // initialPage={page}
                         typeProduct='cooperation'
                         topContent={topContent}
-                        tableColumn={tableColumn}/>
+                        tableColumn={tableColumn}
+            />
         </div>
     )
 }
