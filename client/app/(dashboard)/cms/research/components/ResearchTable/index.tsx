@@ -3,68 +3,65 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {useRouter, useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
-import {CooperationService} from "@/services/CMS.service";
-import {ICooperation} from "@/types/Cooperation";
+import {ResearchService} from "@/services/CMS.service";
+import {IResearch} from "@/types/Research";
 import TableSearch from "@/components/CMS/TableSearch";
 import {Button} from "@nextui-org/react";
-import TableItems from "@/components/CMS/TableItems";
 import TitleBack from "@/components/CMS/TitleBack";
+import TableItems from "@/components/CMS/TableItems";
 import {IResponseMeta} from "@/types/Conference";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
+    {title: 'Зображення', key: 'image'},
     {title: 'Назва', key: 'title'},
     {title: 'Опис', key: 'text'},
     {title: 'Дії', key: 'action'}
 ]
 
-const CooperationTable = ({}) => {
+const ResearchTable = ({}) => {
 
-    const [initialCooperation, setInitialConference] = useState<IResponseMeta<ICooperation[]>>({
-        data: [],
-        meta: {currentPage: 0, lastPage: 0, next: 0, perPage: 0, prev: 0, total: 0}
-    })
+    const [initialResearch, setInitialConference] = useState<IResponseMeta<IResearch[]>>()
 
     const searchParams = useSearchParams()
-    // const [page, setPage] = useState(Number(searchParams.get('page')) ?? 1)
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
-
     const showAdd = true
-
-    useEffect(() => {
-        if (status === 'authenticated') {
-            CooperationService.getAllCooperation($apiAuth, Number(searchParams.get('page') ?? 1), 999).then(res => {
-                setInitialConference(res)
-                setFilterConsulting(res.data)
-            })
-        }
-    }, [$apiAuth, searchParams, status]);
 
     const router = useRouter()
     const [valueSearch,
         setValueSearch] = useState<string>('')
-    const [filterConsulting,
-        setFilterConsulting] = useState<ICooperation[]>([])
+    const [filterResearch,
+        setFilterResearch] = useState<IResearch[]>([])
+
+    useEffect(() => {
+        if (status === 'authenticated') {
+            ResearchService.getAllResearch($apiAuth, Number(searchParams.get('page') ?? 1), 999).then(res => {
+                console.log(res)
+                setInitialConference(res)
+                setFilterResearch(res.data)
+            })
+        }
+    }, [$apiAuth, searchParams, status]);
 
     const handleSelectCategories = useCallback(() => {
-        if(initialCooperation) {
-            let filter: ICooperation[] = initialCooperation.data
+        if(initialResearch) {
+            let filter: IResearch[] = initialResearch.data
             if (valueSearch.trim() !== '') {
-                filter = initialCooperation.data.filter((conferences) =>
+                filter = initialResearch.data.filter((conferences) =>
                     conferences.title.toLowerCase().includes(valueSearch.toLowerCase()));
             }
-            setFilterConsulting(filter);
+            setFilterResearch(filter);
         }
 
-    }, [initialCooperation, valueSearch])
+    }, [initialResearch, valueSearch])
 
     useEffect(() => {
         handleSelectCategories()
     }, [valueSearch, handleSelectCategories]);
 
     const openCreatePage = useCallback(() => {
-        router.push('/cms/cooperation/new')
+        router.push('/cms/research/new')
     }, [router])
 
     const topContent = useMemo(() => {
@@ -89,17 +86,15 @@ const CooperationTable = ({}) => {
             </div>
         )
     }, [valueSearch, showAdd, openCreatePage])
-
-
+    
     return (
         <div className="flex flex-col px-10 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
             <div className="flex items-center justify-between">
-                <TitleBack title="Напрямки для співпраці" isBack={false}/>
+                <TitleBack title="Наукова робота ОНТУ" isBack={false}/>
             </div>
-            <TableItems dataItems={filterConsulting || []}
+            <TableItems dataItems={filterResearch || []}
                         searchInput={valueSearch}
                         rowsViewPage={10}
-                        // initialPage={page}
                         typeProduct='cooperation'
                         topContent={topContent}
                         tableColumn={tableColumn}
@@ -108,4 +103,4 @@ const CooperationTable = ({}) => {
     )
 }
 
-export default CooperationTable;
+export default ResearchTable;

@@ -29,7 +29,7 @@ const Research = ({}) => {
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
             <div className="flex flex-col gap-14 max-sm:gap-8">
-                <Title text="Інноваційні розробки"
+                <Title text="Наукова робота ОНТУ"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
                 <div className="flex flex-col gap-14 max-sm:gap-5">
                     {research.map((item, index) =>

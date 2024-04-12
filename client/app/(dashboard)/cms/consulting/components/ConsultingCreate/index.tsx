@@ -19,7 +19,7 @@ type Props = {
     consulting:IConsulting | undefined
 }
 
-type filePath = { url: string, name: string }
+export type filePath = { url: string, name: string }
 
 const ConsultingCreate:FC<Props> = ({consulting}) => {
     const {

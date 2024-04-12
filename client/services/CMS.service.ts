@@ -11,7 +11,7 @@ import {
 import {IConferences, ICreateConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
 import {ICreateScience} from "@/types/Science";
 import {ICooperation, ICreateCooperation} from "@/types/Cooperation";
-import {ICreateResearch} from "@/types/Research";
+import {ICreateResearch, IResearch} from "@/types/Research";
 import {ICreateInnovation} from "@/types/Innovation";
 import {ICreateStudent} from "@/types/Student";
 import {$api} from "@/api/interceptors";
@@ -93,15 +93,23 @@ export const CooperationService = {
 
 
 export const ResearchService = {
-    async postScience(item:ICreateResearch, authAxios: AxiosInstance) {
-        const {status} = await authAxios.post<ICreateResearch>(getResearchWorksUrl(''), item)
+    async getAllResearch(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<IResearch[]>>(getResearchWorksUrl(`?page=${page}&limit=${limit}`))
+        return data
+    },
+    async getResearch(id: string) {
+        const {data} = await $api.get<ICooperation>(getResearchWorksUrl(`/${id}`))
+        return data
+    },
+    async postResearch(item:ICreateCooperation, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateCooperation>(getResearchWorksUrl(''), item)
         return status
     },
-    async updateScience(item:ICreateResearch, id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.put<ICreateResearch>(getResearchWorksUrl(`/${id}`), item)
+    async updateResearch(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateCooperation>(getResearchWorksUrl(`/${id}`), item)
         return status
     },
-    async removeScience(id: number, authAxios: AxiosInstance) {
+    async removeResearch(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getResearchWorksUrl(`/${id}`))
         return status === 200
     },

@@ -24,6 +24,8 @@ import {ConferencesService, CooperationService} from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
 import {ICooperation} from "@/types/Cooperation";
+import {stripHtml} from "../../../app/(dashboard)/cms/utils";
+import {IResearch} from "@/types/Research";
 
 type Props<T> = {
     dataItems: T[]
@@ -45,7 +47,7 @@ type Props<T> = {
     refetch?: () => void
 }
 
-const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>(
+const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation | IResearch>(
     {
         dataItems,
         rowsViewPage = 6,
@@ -178,6 +180,8 @@ const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation>
                 return moment(String(cellValue)).format('YYYY-MM-DD kk:mm')
             case "sex":
                 return !cellValue ? '' : String(cellValue) === 'MALE' ? 'Чоловіча' : 'Жіноча'
+            case "text":
+                return <div>{stripHtml(cellValue)}</div>
             case "action":
                 return (
                     <div className="flex flex-row gap-4 justify-center">
@@ -317,7 +321,7 @@ type PropsPopover<T> = {
     deleteMessage?: string
     apiAuth: AxiosInstance
 }
-const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation>({
+const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation | IResearch>({
                                                                                     idItem,
                                                                                     typeProduct,
                                                                                     setData,
