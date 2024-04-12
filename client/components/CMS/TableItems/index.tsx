@@ -20,7 +20,7 @@ import moment from "moment/moment";
 import {Image, Button} from "@nextui-org/react";
 import {AxiosInstance} from "axios";
 import {StringConferenceType} from "@/utils/ConferenceType";
-import {ConferencesService, CooperationService} from "@/services/CMS.service";
+import {ConferencesService, CooperationService, ResearchService} from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
 import {ICooperation} from "@/types/Cooperation";
@@ -148,7 +148,7 @@ const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation 
                 if (!('image' in item))
                     break
                 return (
-                    <div className="w-[100px] flex justify-center">
+                    <div className="w-[75px] flex justify-center">
                         {/*// @ts-ignore*/}
                         <Image src={item.image || ''} alt="Food Hub image"/>
                     </div>
@@ -341,6 +341,8 @@ const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation |
                 await ConferencesService.removeConferences(idItem, apiAuth)
             else if (typeProduct === 'cooperation')
                 await CooperationService.removeCooperation(idItem, apiAuth)
+            else if (typeProduct === 'research')
+                await ResearchService.removeResearch(idItem, apiAuth)
             // else if (typeProduct === 'ingredients')
             //     await IngredientsService.removeIngredients(idProduct, apiAuth)
             toast.success('Позиція успішно видалена')

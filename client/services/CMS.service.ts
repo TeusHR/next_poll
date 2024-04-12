@@ -98,15 +98,15 @@ export const ResearchService = {
         return data
     },
     async getResearch(id: string) {
-        const {data} = await $api.get<ICooperation>(getResearchWorksUrl(`/${id}`))
+        const {data} = await $api.get<IResearch>(getResearchWorksUrl(`/${id}`))
         return data
     },
     async postResearch(item:ICreateCooperation, authAxios: AxiosInstance) {
-        const {status} = await authAxios.post<ICreateCooperation>(getResearchWorksUrl(''), item)
+        const {status} = await authAxios.post<ICreateResearch>(getResearchWorksUrl(''), item)
         return status
     },
     async updateResearch(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
-        const {status} = await authAxios.patch<ICreateCooperation>(getResearchWorksUrl(`/${id}`), item)
+        const {status} = await authAxios.patch<ICreateResearch>(getResearchWorksUrl(`/${id}`), item)
         return status
     },
     async removeResearch(id: string, authAxios: AxiosInstance) {

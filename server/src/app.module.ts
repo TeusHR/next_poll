@@ -30,7 +30,7 @@ import { PrismaService } from "./prisma.service";
   imports: [
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: join(path, "uploads"),
+      rootPath: join(path, "server", "uploads"),
       serveRoot: "/uploads",
       serveStaticOptions: { fallthrough: false, maxAge: 1000 * 3600 * 24 },
     }),

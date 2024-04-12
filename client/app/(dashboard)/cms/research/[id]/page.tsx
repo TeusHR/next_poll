@@ -27,7 +27,7 @@ const CMSResearch  =  async ({params}: { params: { id: string } }) =>{
                 <TitleBack title="Редагування"/>
                 <div className="w-full flex flex-row flex-wrap">
                     <Suspense fallback={<Loading transparent/>}>
-                        <ResearchEdit/>
+                        <ResearchEdit researchId={params.id}/>
                     </Suspense>
                 </div>
             </div>

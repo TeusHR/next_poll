@@ -37,7 +37,6 @@ const ResearchTable = ({}) => {
     useEffect(() => {
         if (status === 'authenticated') {
             ResearchService.getAllResearch($apiAuth, Number(searchParams.get('page') ?? 1), 999).then(res => {
-                console.log(res)
                 setInitialConference(res)
                 setFilterResearch(res.data)
             })
@@ -95,7 +94,7 @@ const ResearchTable = ({}) => {
             <TableItems dataItems={filterResearch || []}
                         searchInput={valueSearch}
                         rowsViewPage={10}
-                        typeProduct='cooperation'
+                        typeProduct='research'
                         topContent={topContent}
                         tableColumn={tableColumn}
             />

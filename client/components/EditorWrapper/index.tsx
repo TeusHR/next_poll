@@ -327,7 +327,6 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
         debounce(() => {
             if (editor) {
                 onChange(editor.getHTML());
-                console.log(editor.getHTML())
             }
         }, 1000),
         [editor]

@@ -10,6 +10,12 @@ export interface ICreateResearchForm {
     image:FileList
 }
 
+export interface IUpdateResearchForm {
+    title:string
+    text:string
+    image:FileList | undefined
+}
+
 export interface IResearch {
     id:string
     title:string
