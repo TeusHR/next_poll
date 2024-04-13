@@ -21,3 +21,10 @@ export interface ICreateInnovationForm {
     images:FileList
     files:FileList
 }
+
+export interface IUpdateInnovationForm {
+    title:string
+    text:string
+    images:FileList
+    files:FileList
+}
