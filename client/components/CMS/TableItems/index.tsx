@@ -1,6 +1,6 @@
 'use client'
 import React, {Key, useCallback, useEffect, useMemo, useState} from 'react'
-import {IConferences, ILiftGroupConference} from "@/types/Conference";
+import {ILiftGroupConference} from "@/types/Conference";
 import {
     Checkbox,
     Pagination,
@@ -12,21 +12,29 @@ import {
     TableCell,
     TableColumn,
     TableHeader,
-    TableRow, Tooltip, useDisclosure
+    TableRow,
+    Tooltip,
 } from "@nextui-org/react";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import moment from "moment/moment";
 import {Image, Button} from "@nextui-org/react";
 import {AxiosInstance} from "axios";
 import {StringConferenceType} from "@/utils/ConferenceType";
-import {ActivityService, ConferencesService, CooperationService, ResearchService} from "@/services/CMS.service";
+import {
+    ActivityService,
+    ConferencesService,
+    CooperationService,
+    InnovationsService,
+    ResearchService
+} from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
 import {ICooperation} from "@/types/Cooperation";
 import {stripHtml} from "../../../app/(dashboard)/cms/utils";
 import {IResearch} from "@/types/Research";
 import {IActivity} from "@/types/Activity";
+import {IInnovation} from "@/types/Innovation";
 
 type Props<T> = {
     dataItems: T[]
@@ -48,7 +56,9 @@ type Props<T> = {
     refetch?: () => void
 }
 
-const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity>(
+type ValidDataTypes = ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity | IInnovation;
+
+const TableItems = <T extends ValidDataTypes>(
     {
         dataItems,
         rowsViewPage = 6,
@@ -71,9 +81,9 @@ const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation 
     }: Props<T>) => {
 
 
-    const {isOpen, onClose, onOpen} = useDisclosure();
+    // const {isOpen, onClose, onOpen} = useDisclosure();
     const router = useRouter();
-    const searchParams = useSearchParams()
+    // const searchParams = useSearchParams()
     const pathname = usePathname()
     const $apiAuth = useAxiosAuth()
 
@@ -119,24 +129,24 @@ const TableItems = <T extends ILiftGroupConference | IConsulting | ICooperation 
         )
     }, [totalPages, initialPage, page, data, totalDataItems, selectedKeys, rowsPerPage, searchInput, selectionMode])
 
-    const handlerModalOpen = (item: T) => {
+    // const handlerModalOpen = (item: T) => {
         // if (typeProduct === 'categories')
         //     setItemCategories(item as ICategory)
         // if (typeProduct === 'ingredients')
         //     setItemIngredients(item as IIngredient)
         // if (typeProduct === 'reviews')
         //     setItemReviews(item as IReview)
-    }
+    // }
 
     const redirectItem = useCallback((key: string | number | bigint, item?: T) => {
         if (tableType == 'link' && !String(key).includes('action') && !item)
             router.push(`${typeProduct}/${key}`)
-        else if (tableType == 'modal' && typeProduct === 'ingredients' && !String(key).includes('action') && item)
-            handlerModalOpen(item)
-        else if (tableType == 'modal' && typeProduct === 'categories' && !String(key).includes('action') && item)
-            handlerModalOpen(item)
-        else if (tableType == 'modal' && typeProduct === 'reviews' && !String(key).includes('action') && item)
-            handlerModalOpen(item)
+        // else if (tableType == 'modal' && typeProduct === 'ingredients' && !String(key).includes('action') && item)
+        //     handlerModalOpen(item)
+        // else if (tableType == 'modal' && typeProduct === 'categories' && !String(key).includes('action') && item)
+        //     handlerModalOpen(item)
+        // else if (tableType == 'modal' && typeProduct === 'reviews' && !String(key).includes('action') && item)
+        //     handlerModalOpen(item)
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router, tableType, typeProduct])
@@ -322,7 +332,7 @@ type PropsPopover<T> = {
     deleteMessage?: string
     apiAuth: AxiosInstance
 }
-const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation | IResearch | IActivity>({
+const PopoverDeleteItem = <T extends ValidDataTypes>({
                                                                                     idItem,
                                                                                     typeProduct,
                                                                                     setData,
@@ -346,6 +356,8 @@ const PopoverDeleteItem = <T extends IConferences | IConsulting | ICooperation |
                 await ResearchService.removeResearch(idItem, apiAuth)
             else if (typeProduct === 'activity')
                 await ActivityService.removeActivity(idItem, apiAuth)
+            else if (typeProduct === 'innovations')
+                await InnovationsService.removeInnovation(idItem, apiAuth)
             // else if (typeProduct === 'ingredients')
             //     await IngredientsService.removeIngredients(idProduct, apiAuth)
             toast.success('Позиція успішно видалена')

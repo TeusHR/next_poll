@@ -1,0 +1,302 @@
+'use client'
+import React, {useCallback, useEffect, useState} from 'react'
+import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {useSession} from "next-auth/react";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
+import {toast} from "react-toastify";
+import {InnovationsService} from "@/services/CMS.service";
+import {ICreateInnovation, ICreateInnovationForm} from "@/types/Innovation";
+import {Button, Input} from "@nextui-org/react";
+
+import DNDUpload from "@/components/DNDFiles";
+import PreviewUpload from "@/components/DNDFiles/previewUpload";
+import EditorWrapper from "@/components/EditorWrapper";
+import {HandlerImageValidate} from "@/utils/ImageValidate";
+import {FileService} from "@/services/file.service";
+import {FileToFileList} from "@/utils/FIleToFileList";
+
+
+const InnovationsCreate = ({}) => {
+    const {
+        handleSubmit,
+        control,
+        formState,
+        reset,
+    } = useForm<ICreateInnovationForm>({
+        mode: 'all',
+        defaultValues: {
+            title: '',
+            text: '',
+        }
+    })
+
+    const {status} = useSession()
+    const $apiAuth = useAxiosAuth()
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [uploadFiles, setUploadFiles] = useState<File[]>([])
+    const [previewUpload, setPreviewUpload] = useState<string[]>([])
+
+    const [uploadImages, setUploadImages] = useState<File[]>([])
+    const [previewUploadImages, setPreviewUploadImages] = useState<string[]>([])
+
+    const onSubmit: SubmitHandler<ICreateInnovationForm> = async (dataForm) => {
+
+        if (toast.isActive('toast-register') || status !== 'authenticated') {
+            return;
+        }
+        setIsLoading(true)
+
+        try {
+
+            let urlsDocs: string[] = [];
+            if (uploadFiles.length > 0) {
+                const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
+                if (filesPath.length === 0) {
+                    toast.error('Файли не збережені, щось не так.');
+                    return;
+                }
+                urlsDocs = filesPath.map(file => file.url);
+            }
+
+            let urlsImages: string[] = [];
+            if (uploadImages.length > 0) {
+                const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadImages), 'image');
+                if (filesPath.length === 0) {
+                    toast.error('Файли не збережені, щось не так.');
+                    return;
+                }
+                urlsImages = filesPath.map(file => file.url);
+            }
+
+            const dataProduct: ICreateInnovation = {
+                title: dataForm.title,
+                text: dataForm.text,
+                files: urlsDocs,
+                images: urlsImages
+            };
+            console.log(dataProduct)
+            InnovationsService.postInnovation(dataProduct, $apiAuth).then((status) => {
+                if (status === 201) {
+                    reset()
+                    handlerReset()
+                    toast.success('Успішно створено')
+                }
+            })
+        } catch (error) {
+            console.log(error)
+            toast.error('Щось пішло не так')
+        } finally {
+            setIsLoading(false)
+        }
+
+    }
+
+    const handlerReset = () => {
+        setUploadFiles([])
+        setPreviewUpload([])
+        setUploadImages([])
+        setPreviewUploadImages([])
+    }
+
+    const onUpload = (files: File[]) => {
+        const fileNames = files.map(file => file.name);
+        setUploadFiles((prevState) => [...prevState, ...files])
+        setPreviewUpload(prevState => [...prevState, ...fileNames]);
+    };
+
+    const handleRemoveFile = useCallback((index: number) => {
+        setUploadFiles((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+        setPreviewUpload((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+    }, []);
+
+    const onUploadImage = (files: File[]) => {
+        const fileNames = files.map(file => file.name);
+        setUploadImages((prevState) => [...prevState, ...files])
+        setPreviewUploadImages(prevState => [...prevState, ...fileNames]);
+    };
+
+    const handleRemoveImage = useCallback((index: number) => {
+        setUploadImages((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+        setPreviewUploadImages((currentFiles) => {
+            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
+        });
+    }, []);
+
+    useEffect(() => {
+        console.log(uploadFiles)
+        console.log(uploadImages)
+        console.log(previewUpload)
+        console.log(previewUploadImages)
+    }, [uploadFiles, uploadImages, previewUpload, previewUploadImages])
+
+    return (
+        <div className="flex flex-col gap-8 w-full">
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex gap-12 max-2xl:gap-4 flex-col">
+                    <div className="flex flex-row max-md:flex-col gap-8 max-lg:gap-4 justify-between">
+                        <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
+                            <div className="flex flex-col gap-4">
+                                <div className="w-full flex flex-col gap-4">
+                                    <div className="flex flex-col gap-4 w-full">
+                                        <Controller name="title" control={control} rules={{
+                                            required: "Обов'язкове поле",
+                                            minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
+                                            maxLength: {value: 50, message: "Максимальна довжина 50 символів"},
+                                        }} render={({field}) =>
+                                            <Input className="border-none py-2"
+                                                   type="text"
+                                                   value={field.value}
+                                                   onValueChange={field.onChange}
+                                                   isRequired
+                                                   classNames={{
+                                                       inputWrapper: "border-1 border-primary-500",
+                                                       input: "focus:outline-none text-base text-primary",
+                                                       errorMessage: "text-red-600 text-sm",
+                                                       label: "text-base",
+                                                   }}
+                                                   key="title"
+                                                   label="Назва"
+                                                   labelPlacement="outside"
+                                                   placeholder="Введіть назву"
+                                                   autoComplete="off"
+                                                   isInvalid={!!formState.errors.title?.message}
+                                                   errorMessage={formState.errors.title?.message}
+                                            />
+                                        }
+                                        />
+                                        <div className="flex flex-col gap-4 w-full relative justify-end">
+                                            <Controller name="files" control={control}
+                                                        render={({field}) =>
+                                                            <div className="w-full">
+                                                                <div
+                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                    Завантаження документів
+                                                                </div>
+                                                                <DNDUpload onUpload={onUpload}
+                                                                           onChange={field.onChange}
+                                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                    Скинь мені файли
+                                                                </DNDUpload>
+                                                                {formState.errors.files?.message &&
+                                                                    <div
+                                                                        className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                            </div>
+                                                        }
+                                            />
+                                            <div className="w-full flex flex-col gap-4 items-start">
+                                                <PreviewUpload files={previewUpload}
+                                                               handleRemoveFile={handleRemoveFile}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
+                            <div className="flex flex-col gap-4">
+                                <div className="w-full flex flex-col gap-4">
+                                    <div className="flex flex-row gap-4 w-full items-center">
+                                        <div className="flex flex-col gap-4 w-full relative justify-end">
+                                            <Controller name="images" control={control}
+                                                        rules={{
+                                                            validate: async (value) => {
+                                                                if (value && value.length > 0) {
+                                                                    try {
+                                                                        // @ts-ignore
+                                                                        for (const item of value) {
+                                                                            await HandlerImageValidate(item,
+                                                                                720,
+                                                                                1280,
+                                                                                'Усі зображення має бути 400x400')
+                                                                        }
+                                                                    } catch (error) {
+                                                                        return error as string
+                                                                    }
+                                                                } else {
+                                                                    return 'Не вибрано жодного файлу';
+                                                                }
+                                                            },
+                                                        }}
+                                                        render={({field}) =>
+                                                            <div className="w-full">
+                                                                <div
+                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                    Завантаження зображень
+                                                                </div>
+                                                                <DNDUpload onUpload={onUploadImage}
+                                                                           onChange={field.onChange}
+                                                                           formats={[".png", ".jpeg", ".svg", ".jpg"]}
+                                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                    Скинь мені файли
+                                                                </DNDUpload>
+                                                                {formState.errors.files?.message &&
+                                                                    <div
+                                                                        className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                            </div>
+                                                        }
+                                            />
+                                            <div className="w-full flex flex-col gap-4 items-start">
+                                                <PreviewUpload files={previewUploadImages}
+                                                               type="image"
+                                                               fileImage={uploadImages}
+                                                               handleRemoveFile={handleRemoveImage}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col gap-4">
+                        <div className="flex">
+                            <div className="w-full flex flex-col gap-4">
+                                <div className="flex flex-col gap-1 w-full">
+                                    <div className="flex flex-col gap-4 items-start w-full relative">
+                                        <Controller name="text" control={control}
+                                                    rules={{
+                                                        required: 'Обов\'язкове поле',
+                                                    }}
+                                                    render={({field}) =>
+                                                        <>
+                                                            <div
+                                                                className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
+                                                                Текст
+                                                            </div>
+                                                            <div className="relative w-full">
+                                                                <EditorWrapper onChange={(field.onChange)}
+                                                                               description={field.value}
+                                                                               placeholder={'Напишіть текст для слайдера'}
+                                                                />
+                                                            </div>
+                                                            {formState.errors.text?.message &&
+                                                                <div
+                                                                    className="text-red-600 text-sm">{formState.errors.text.message}</div>}
+                                                        </>
+                                                    }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-center items-center">
+                            <Button type={"submit"}
+                                    isLoading={isLoading}
+                                    className="px-6 bg-fd text-xl">
+                                Створити
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    )
+}
+
+export default InnovationsCreate;

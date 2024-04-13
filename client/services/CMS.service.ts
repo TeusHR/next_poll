@@ -12,7 +12,7 @@ import {IConferences, ICreateConferences, IGroupConference, IResponseMeta} from 
 import {ICreateScience} from "@/types/Science";
 import {ICooperation, ICreateCooperation} from "@/types/Cooperation";
 import {ICreateResearch, IResearch} from "@/types/Research";
-import {ICreateInnovation} from "@/types/Innovation";
+import {ICreateInnovation, IInnovation} from "@/types/Innovation";
 import {ICreateStudent} from "@/types/Student";
 import {$api} from "@/api/interceptors";
 import {IConsulting, ICreateConsulting} from "@/types/Consulting";
@@ -42,6 +42,7 @@ export const ConferencesService = {
     },
 };
 
+
 export const ConsultingService = {
     async getConsulting(authAxios: AxiosInstance) {
         const {data} = await authAxios.get<IConsulting>(getConsultingUrl(''))
@@ -50,21 +51,6 @@ export const ConsultingService = {
     async postConsulting(item:ICreateConsulting, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateConsulting>(getConsultingUrl(''), item)
         return status
-    },
-};
-
-export const ScienceService = {
-    async postScience(item:ICreateScience, authAxios: AxiosInstance) {
-        const {status} = await authAxios.post<ICreateScience>(getScienceSchoolsUrl(''), item)
-        return status
-    },
-    async updateScience(item:ICreateScience, id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.put<ICreateScience>(getScienceSchoolsUrl(`/${id}`), item)
-        return status
-    },
-    async removeScience(id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.delete(getScienceSchoolsUrl(`/${id}`))
-        return status === 200
     },
 };
 
@@ -116,6 +102,7 @@ export const ResearchService = {
     },
 };
 
+
 export const ActivityService = {
     async getAllActivity(authAxios: AxiosInstance, page: number, limit: number) {
         const {data} = await authAxios.get<IResponseMeta<IActivity[]>>(getActivitiesUrl(`?page=${page}&limit=${limit}`))
@@ -140,16 +127,24 @@ export const ActivityService = {
 };
 
 
-export const InnovationService = {
-    async postScience(item:ICreateInnovation, authAxios: AxiosInstance) {
+export const InnovationsService = {
+    async getAllInnovations(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<IInnovation[]>>(getInnovationsUrl(`?page=${page}&limit=${limit}`))
+        return data
+    },
+    async getInnovation(id: string) {
+        const {data} = await $api.get<IInnovation>(getInnovationsUrl(`/${id}`))
+        return data
+    },
+    async postInnovation(item:ICreateCooperation, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateInnovation>(getInnovationsUrl(''), item)
         return status
     },
-    async updateScience(item:ICreateInnovation, id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.put<ICreateInnovation>(getInnovationsUrl(`/${id}`), item)
+    async updateInnovation(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateInnovation>(getInnovationsUrl(`/${id}`), item)
         return status
     },
-    async removeScience(id: number, authAxios: AxiosInstance) {
+    async removeInnovation(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getInnovationsUrl(`/${id}`))
         return status === 200
     },
@@ -167,6 +162,22 @@ export const StudentService = {
     },
     async removeScience(id: number, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getInnovationsUrl(`/${id}`))
+        return status === 200
+    },
+};
+
+
+export const ScienceService = {
+    async postScience(item:ICreateScience, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateScience>(getScienceSchoolsUrl(''), item)
+        return status
+    },
+    async updateScience(item:ICreateScience, id: number, authAxios: AxiosInstance) {
+        const {status} = await authAxios.put<ICreateScience>(getScienceSchoolsUrl(`/${id}`), item)
+        return status
+    },
+    async removeScience(id: number, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getScienceSchoolsUrl(`/${id}`))
         return status === 200
     },
 };

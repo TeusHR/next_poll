@@ -1,16 +1,17 @@
 import React, {Suspense} from 'react'
 import Loading from "@/components/Loading";
-import ActivityTable from "./components/ActivityTable";
+import InnovationsTable from "./components/InnovationsTable";
 
-const Activity =   () =>{
+const Innovations = ({}) => {
+
 
     return (
         <div>
             <Suspense fallback={<Loading transparent/>}>
-                <ActivityTable/>
+                <InnovationsTable/>
             </Suspense>
         </div>
     )
 }
 
-export default Activity;
+export default Innovations;
