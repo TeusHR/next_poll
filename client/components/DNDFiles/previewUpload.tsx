@@ -6,28 +6,35 @@ import WordIcon from "@/UI/WorkIcon";
 import DocumentIcon from "@/UI/DocumentIcon";
 import {Image} from "@nextui-org/react";
 import {loadPreviewImage} from "@/utils/ImageValidate";
+import {uploadType} from "../../app/(dashboard)/cms/innovations/components/InnovationsEdit";
 
 type Props = {
-    files: string[],
+    files: uploadType[],
     handleRemoveFile: (index: number) => void,
     type?: string
-    fileImage?: File[]
 }
 
-const PreviewUpload: FC<Props> = ({files, handleRemoveFile, type, fileImage}) => {
+const PreviewUpload: FC<Props> = ({files, handleRemoveFile, type}) => {
 
-    const getIconByFileType = (fileName: string, index: number): JSX.Element => {
-        const extension = fileName.split('.').pop()?.toLowerCase();
+    const getIconByFileType = (file: uploadType, index: number): JSX.Element => {
+        const extension = file.name.split('.').pop()?.toLowerCase();
         if (extension === 'pdf') {
             return <PdfIcon width={'35px'} height={'35px'}/>;
         } else if (extension === 'doc' || extension === 'docx') {
             return <WordIcon width={'35px'} height={'35px'}/>;
-        } else if (type === 'image' && fileImage) {
+        }
+        else if (type === 'image' && file.file) {
             return <div className="w-[50px]">
-                <Image src={loadPreviewImage(fileImage[index])}
+                <Image src={loadPreviewImage(file.file)}
                        alt="preview"/>
             </div>;
-        } else {
+        }
+        else if (type === 'image') {
+            return <div className="w-[50px]">
+                <Image src={file.url} alt="preview"/>
+            </div>;
+        }
+        else {
             return <DocumentIcon width={'35px'} height={'35px'}/>;
         }
     }
@@ -47,7 +54,7 @@ const PreviewUpload: FC<Props> = ({files, handleRemoveFile, type, fileImage}) =>
                 <div key={index} className="flex w-full gap-3 flex-row items-center text-base text-primary">
                     {getIconByFileType(fileOrString, index)}
                     <span className="w-full truncate">
-                         {renderFileName(fileOrString)}
+                         {renderFileName(fileOrString.name)}
                     </span>
                     <span onClick={() => handleRemoveFile(index)} className="cursor-pointer">
                         <CloseIcon/>

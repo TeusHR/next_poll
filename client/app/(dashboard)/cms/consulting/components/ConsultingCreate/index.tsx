@@ -12,8 +12,9 @@ import EditorWrapper from "@/components/EditorWrapper";
 import {HandlerImageValidate, loadPreviewImage} from "@/utils/ImageValidate";
 import {ConsultingService} from "@/services/CMS.service";
 import {FileService} from "@/services/file.service";
-import {FileItem, FileToFileList} from "@/utils/FIleToFileList";
+import {FileToFileList} from "@/utils/FIleToFileList";
 import CloseIcon from "@/UI/CloseIcon";
+import {uploadType} from "../../../innovations/components/InnovationsEdit";
 
 type Props = {
     consulting:IConsulting | undefined
@@ -44,19 +45,18 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
 
-    // const [uploadFiles, setUploadFiles] = useState<File[]>([])
-    // const [previewUpload, setPreviewUpload] = useState<string[]>([])
-    const [files, setFiles] = useState<FileItem[]>([]);
+    const [files, setFiles] = useState<uploadType[]>([]);
 
     useEffect(() => {
         if(consulting) {
             setValue('text', consulting.text)
             setValue('title', consulting.title)
             setValue('images', consulting.images)
-            const serverFiles = consulting.images.map(url => (
+            const serverFiles:uploadType[] = consulting.images.map(url => (
                 {
                     name: renderFileName(url.image),
-                    type: "server" as const,
+                    typeUpload: "server" as const,
+                    type:"file",
                     url: url.image,
                 }
             ));
@@ -76,7 +76,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
         setIsLoading(true)
 
         try {
-            const uploadFiles = files.filter(file => file.type === 'uploaded').map(file => file.file as File);
+            const uploadFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
 
             const filesPath = uploadFiles.length > 0
                 ? await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'image')
@@ -88,7 +88,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                 return;
             }
 
-            const serverUploadedFiles  = files.filter(file => file.type === 'server').map(file => file)
+            const serverUploadedFiles  = files.filter(file => file.typeUpload === 'server').map(file => file)
             const images = createImagesList(filesPath, dataForm, serverUploadedFiles);
 
             const dataProduct: ICreateConsulting = {
@@ -112,7 +112,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
 
     }
 
-    const createImagesList = (filesPath:filePath[], dataForm:ICreateConsultingForm, serverUploadedFiles:FileItem[]) => {
+    const createImagesList = (filesPath:filePath[], dataForm:ICreateConsultingForm, serverUploadedFiles:uploadType[]) => {
         const images = filesPath.map((file, i) => ({
             image: file.url,
             description: dataForm.images[serverUploadedFiles.length+i].description
@@ -126,17 +126,18 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
         return [...ServerImages, ...images]
     };
 
-    const onUpload = (files: File[]) => {
-        const newFiles = files.map(file => ({
+    const onUpload = (files: File[], type: 'file' | 'image') => {
+        const newFiles:uploadType[] = files.map(file => ({
             name: file.name,
-            type: 'uploaded' as const,
+            typeUpload: 'uploaded' as const,
             file,
+            type,
             url: file.name
         }));
         setFiles(prev => [...prev, ...newFiles]);
     };
 
-    const handleRemoveFile = useCallback((index: number) => {
+    const handleRemoveFile = useCallback((index: number, type: 'file' | 'image') => {
         setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
         remove(index)
     }, [remove]);
@@ -149,9 +150,6 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
         }
     }, [append, fields.length, files]);
 
-    const fileNames = files.map(fileItem => {
-        return fileItem.name;
-    });
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -217,7 +215,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження файлів
                                                                 </div>
-                                                                <DNDUpload onUpload={onUpload}
+                                                                <DNDUpload onUpload={(files) => onUpload(files, 'file')}
                                                                            onChange={field.onChange}
                                                                            formats={[".png", ".jpeg", ".svg", ".jpg"]}
                                                                            styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
@@ -230,7 +228,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                                                         }
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
-                                                <PreviewUpload files={fileNames} handleRemoveFile={handleRemoveFile}/>
+                                                <PreviewUpload files={files} handleRemoveFile={(index) => handleRemoveFile(index, 'file')}/>
                                             </div>
                                         </div>
                                     </div>
@@ -284,7 +282,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                                                     />
                                                 </div>
                                                 <span className="cursor-pointer pt-[20px]"
-                                                      onClick={() => handleRemoveFile(index)}>
+                                                      onClick={() => handleRemoveFile(index, "file")}>
                                                         <CloseIcon/>
                                                     </span>
                                             </div>

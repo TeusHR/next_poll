@@ -1,5 +1,5 @@
 'use client'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -11,9 +11,9 @@ import {Button, Input} from "@nextui-org/react";
 import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
-import {HandlerImageValidate} from "@/utils/ImageValidate";
 import {FileService} from "@/services/file.service";
 import {FileToFileList} from "@/utils/FIleToFileList";
+import {uploadType} from "../InnovationsEdit";
 
 
 const InnovationsCreate = ({}) => {
@@ -34,11 +34,9 @@ const InnovationsCreate = ({}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
 
-    const [uploadFiles, setUploadFiles] = useState<File[]>([])
-    const [previewUpload, setPreviewUpload] = useState<string[]>([])
 
-    const [uploadImages, setUploadImages] = useState<File[]>([])
-    const [previewUploadImages, setPreviewUploadImages] = useState<string[]>([])
+    const [files, setFiles] = useState<uploadType[]>([]);
+    const [filesImage, setFilesImage] = useState<uploadType[]>([]);
 
     const onSubmit: SubmitHandler<ICreateInnovationForm> = async (dataForm) => {
 
@@ -47,27 +45,44 @@ const InnovationsCreate = ({}) => {
         }
         setIsLoading(true)
 
+        const processUpload = async (files:uploadType[], folder:string) => {
+            const filteredFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
+            if (filteredFiles.length === 0) return [];
+
+            const paths = await FileService.upload($apiAuth, FileToFileList(filteredFiles), folder);
+            if (paths.length === 0) {
+                toast.error('Файли не збережені, щось не так.');
+                setIsLoading(false);
+                return [];
+            }
+
+            return paths.map(file => file.url);
+        };
+
         try {
 
-            let urlsDocs: string[] = [];
-            if (uploadFiles.length > 0) {
-                const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
-                if (filesPath.length === 0) {
-                    toast.error('Файли не збережені, щось не так.');
-                    return;
-                }
-                urlsDocs = filesPath.map(file => file.url);
-            }
+            const urlsDocs = await processUpload(files, 'pdf');
+            const urlsImages = await processUpload(filesImage, 'image');
 
-            let urlsImages: string[] = [];
-            if (uploadImages.length > 0) {
-                const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadImages), 'image');
-                if (filesPath.length === 0) {
-                    toast.error('Файли не збережені, щось не так.');
-                    return;
-                }
-                urlsImages = filesPath.map(file => file.url);
-            }
+            // let urlsDocs: string[] = [];
+            // if (uploadFiles.length > 0) {
+            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
+            //     if (filesPath.length === 0) {
+            //         toast.error('Файли не збережені, щось не так.');
+            //         return;
+            //     }
+            //     urlsDocs = filesPath.map(file => file.url);
+            // }
+            //
+            // let urlsImages: string[] = [];
+            // if (uploadImages.length > 0) {
+            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadImages), 'image');
+            //     if (filesPath.length === 0) {
+            //         toast.error('Файли не збережені, щось не так.');
+            //         return;
+            //     }
+            //     urlsImages = filesPath.map(file => file.url);
+            // }
 
             const dataProduct: ICreateInnovation = {
                 title: dataForm.title,
@@ -93,48 +108,27 @@ const InnovationsCreate = ({}) => {
     }
 
     const handlerReset = () => {
-        setUploadFiles([])
-        setPreviewUpload([])
-        setUploadImages([])
-        setPreviewUploadImages([])
+        setFiles([])
+        setFilesImage([])
     }
 
-    const onUpload = (files: File[]) => {
-        const fileNames = files.map(file => file.name);
-        setUploadFiles((prevState) => [...prevState, ...files])
-        setPreviewUpload(prevState => [...prevState, ...fileNames]);
-    };
-
-    const handleRemoveFile = useCallback((index: number) => {
-        setUploadFiles((currentFiles) => {
-            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
-        });
-        setPreviewUpload((currentFiles) => {
-            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
-        });
+    const handleUpload = useCallback((uploadedFiles: File[], type: 'file' | 'image') => {
+        const setter = type === 'file' ? setFiles : setFilesImage;
+        const newFiles:uploadType[] = uploadedFiles.map(file => ({
+            name: file.name,
+            typeUpload: 'uploaded' as const,
+            type: type,
+            file,
+            url: file.name
+        }));
+        setter(prev => [...prev, ...newFiles]);
     }, []);
 
-    const onUploadImage = (files: File[]) => {
-        const fileNames = files.map(file => file.name);
-        setUploadImages((prevState) => [...prevState, ...files])
-        setPreviewUploadImages(prevState => [...prevState, ...fileNames]);
-    };
-
-    const handleRemoveImage = useCallback((index: number) => {
-        setUploadImages((currentFiles) => {
-            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
-        });
-        setPreviewUploadImages((currentFiles) => {
-            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
-        });
+    const handleRemove = useCallback((index: number, type: 'file' | 'image') => {
+        const setter = type === 'file' ? setFiles : setFilesImage;
+        setter(currentFiles => currentFiles.filter((_, fileIndex) => index !== fileIndex));
     }, []);
 
-    useEffect(() => {
-        console.log(uploadFiles)
-        console.log(uploadImages)
-        console.log(previewUpload)
-        console.log(previewUploadImages)
-    }, [uploadFiles, uploadImages, previewUpload, previewUploadImages])
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -179,7 +173,7 @@ const InnovationsCreate = ({}) => {
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження документів
                                                                 </div>
-                                                                <DNDUpload onUpload={onUpload}
+                                                                <DNDUpload onUpload={(files) => handleUpload(files, 'file')}
                                                                            onChange={field.onChange}
                                                                            styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
@@ -191,8 +185,8 @@ const InnovationsCreate = ({}) => {
                                                         }
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
-                                                <PreviewUpload files={previewUpload}
-                                                               handleRemoveFile={handleRemoveFile}/>
+                                                <PreviewUpload files={files}
+                                                               handleRemoveFile={(index) => handleRemove(index, 'file')}/>
                                             </div>
                                         </div>
                                     </div>
@@ -205,32 +199,32 @@ const InnovationsCreate = ({}) => {
                                     <div className="flex flex-row gap-4 w-full items-center">
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="images" control={control}
-                                                        rules={{
-                                                            validate: async (value) => {
-                                                                if (value && value.length > 0) {
-                                                                    try {
-                                                                        // @ts-ignore
-                                                                        for (const item of value) {
-                                                                            await HandlerImageValidate(item,
-                                                                                720,
-                                                                                1280,
-                                                                                'Усі зображення має бути 400x400')
-                                                                        }
-                                                                    } catch (error) {
-                                                                        return error as string
-                                                                    }
-                                                                } else {
-                                                                    return 'Не вибрано жодного файлу';
-                                                                }
-                                                            },
-                                                        }}
+                                                        // rules={{
+                                                        //     validate: async (value) => {
+                                                        //         if (value && value.length > 0) {
+                                                        //             try {
+                                                        //                 // @ts-ignore
+                                                        //                 for (const item of value) {
+                                                        //                     await HandlerImageValidate(item,
+                                                        //                         720,
+                                                        //                         1280,
+                                                        //                         'Усі зображення має бути 400x400')
+                                                        //                 }
+                                                        //             } catch (error) {
+                                                        //                 return error as string
+                                                        //             }
+                                                        //         } else {
+                                                        //             return 'Не вибрано жодного файлу';
+                                                        //         }
+                                                        //     },
+                                                        // }}
                                                         render={({field}) =>
                                                             <div className="w-full">
                                                                 <div
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження зображень
                                                                 </div>
-                                                                <DNDUpload onUpload={onUploadImage}
+                                                                <DNDUpload onUpload={(files) => handleUpload(files, 'image')}
                                                                            onChange={field.onChange}
                                                                            formats={[".png", ".jpeg", ".svg", ".jpg"]}
                                                                            styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
@@ -243,10 +237,9 @@ const InnovationsCreate = ({}) => {
                                                         }
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
-                                                <PreviewUpload files={previewUploadImages}
+                                                <PreviewUpload files={filesImage}
                                                                type="image"
-                                                               fileImage={uploadImages}
-                                                               handleRemoveFile={handleRemoveImage}/>
+                                                               handleRemoveFile={(index) => handleRemove(index, 'image')}/>
                                             </div>
                                         </div>
                                     </div>

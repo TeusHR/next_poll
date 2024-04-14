@@ -15,7 +15,8 @@ import {countryOptions} from "@/utils/CountrySet";
 import DNDUpload from "components/DNDFiles";
 import EditorWrapper from "@/components/EditorWrapper";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
-import {FileItem, FileToFileList} from "@/utils/FIleToFileList";
+import {FileToFileList} from "@/utils/FIleToFileList";
+import {uploadType} from "../../../innovations/components/InnovationsEdit";
 
 type Props = {
     conferenceId: string
@@ -43,7 +44,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [conference, setConference] = useState<IConferences>()
-    const [files, setFiles] = useState<FileItem[]>([]);
+    const [files, setFiles] = useState<uploadType[]>([]);
 
     useEffect(() => {
         setIsLoading(true)
@@ -65,10 +66,11 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             setValue('type', new Set([conference.type]))
             setValue('date', moment(conference.date).format('YYYY-MM-DD'))
             setValue('text', conference.text)
-            const serverFiles = conference.files.map(url => (
+            const serverFiles:uploadType[] = conference.files.map(url => (
                 {
                     name: renderFileName(url),
-                    type: "server" as const,
+                    typeUpload: "server" as const,
+                    type:'file',
                     url: url,
                 }
             ));
@@ -92,7 +94,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             let newFilesUrls: string[] = []
 
 
-            const uploadFiles = files.filter(file => file.type === 'uploaded').map(file => file.file as File);
+            const uploadFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
 
             if (uploadFiles.length > 0) {
                 filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf')
@@ -103,11 +105,11 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             }
 
             const existingFilesUrls = files
-                .filter(file => file.type === 'server')
+                .filter(file => file.typeUpload === 'server')
                 .map(file => file.url)
 
             const allFilesUrls = [...newFilesUrls, ...existingFilesUrls];
-            console.log(allFilesUrls)
+
             const dataProduct: ICreateConferences = {
                 type: Array.from(dataForm.type).toString(),
                 country: Array.from(dataForm.country).toString(),
@@ -128,10 +130,11 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
         }
     }
 
-    const onUpload = (uploadedFiles: File[]) => {
-        const newFiles = uploadedFiles.map(file => ({
+    const onUpload = (files: File[], type: 'file' | 'image') => {
+        const newFiles:uploadType[] = files.map(file => ({
             name: file.name,
-            type: 'uploaded' as const,
+            typeUpload: 'uploaded' as const,
+            type: type,
             file,
             url: file.name
         }));
@@ -141,10 +144,6 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
     const handleRemoveFile = useCallback((index: number) => {
         setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
     }, []);
-
-    const fileNames = files.map(fileItem => {
-        return fileItem.url;
-    });
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -272,7 +271,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                                 className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                 Завантаження файлів
                                                             </div>
-                                                            <DNDUpload onUpload={onUpload}
+                                                            <DNDUpload onUpload={(files) => onUpload(files, 'file')}
                                                                        onChange={field.onChange}
                                                                        styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                 Гей, скинь мені файли
@@ -284,7 +283,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                     }
                                         />
                                         <div className="w-full flex flex-col gap-4 items-start">
-                                            <PreviewUpload files={fileNames} handleRemoveFile={handleRemoveFile}/>
+                                            <PreviewUpload files={files} handleRemoveFile={handleRemoveFile}/>
                                         </div>
                                     </div>
                                 </div>

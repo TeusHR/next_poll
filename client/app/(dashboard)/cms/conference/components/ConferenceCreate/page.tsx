@@ -17,6 +17,7 @@ import moment from "moment/moment";
 import {typeConference} from "@/utils/ConferenceType";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import {FileToFileList} from "@/utils/FIleToFileList";
+import {uploadType} from "../../../innovations/components/InnovationsEdit";
 
 
 const ConferenceCreate = ({}) => {
@@ -54,9 +55,9 @@ const ConferenceCreate = ({}) => {
     const $apiAuth = useAxiosAuth()
 
     const [isLoading, setIsLoading] = useState(false)
-    const [uploadFiles, setUploadFiles] = useState<File[]>([])
-    const [previewUpload, setPreviewUpload] = useState<string[]>([])
-
+    // const [uploadFiles, setUploadFiles] = useState<File[]>([])
+    // const [previewUpload, setPreviewUpload] = useState<string[]>([])
+    const [files, setFiles] = useState<uploadType[]>([]);
 
     const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
 
@@ -66,16 +67,29 @@ const ConferenceCreate = ({}) => {
         setIsLoading(true)
 
         try {
+            const uploadFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
 
-            let urlsFiles: string[] = [];
-            if (uploadFiles.length > 0) {
-                const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
-                if (filesPath.length === 0) {
-                    toast.error('Файли не збережені, щось не так.');
-                    return;
-                }
-                urlsFiles = filesPath.map(file => file.url);
+            const filesPath = uploadFiles.length > 0
+                ? await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf')
+                : [];
+
+            if (filesPath.length === 0 && uploadFiles.length > 0) {
+                toast.error('Файли не збережені, щось не так.');
+                setIsLoading(false);
+                return;
             }
+
+            let urlsFiles: string[] = filesPath.map(file => file.url);
+
+            // let urlsFiles: string[] = []
+            // if (files.length > 0) {
+            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(files), 'pdf');
+            //     if (filesPath.length === 0) {
+            //         toast.error('Файли не збережені, щось не так.');
+            //         return;
+            //     }
+            //     urlsFiles = filesPath.map(file => file.url);
+            // }
 
             const dataProduct: ICreateConferences = {
                 type: Array.from(dataForm.type).toString(),
@@ -89,6 +103,7 @@ const ConferenceCreate = ({}) => {
             ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
                 if (status === 201) {
                     reset()
+                    setFiles([])
                     toast.success('Конференцію успішно створено')
                 }
             })
@@ -102,17 +117,19 @@ const ConferenceCreate = ({}) => {
 
     }
 
-    const onUpload = (files: File[]) => {
-        const fileNames = files.map(file => file.name);
-        setPreviewUpload(prevState => [...prevState, ...fileNames]);
-        setUploadFiles((prevState) => [...prevState, ...files])
+    const onUpload = (files: File[], type: 'file' | 'image') => {
+        const newFiles:uploadType[] = files.map(file => ({
+            name: file.name,
+            typeUpload: 'uploaded' as const,
+            type: type,
+            file,
+            url: file.name
+        }));
+        setFiles(prev => [...prev, ...newFiles]);
     };
 
     const handleRemoveFile = useCallback((index: number) => {
-        setUploadFiles((currentFiles) => {
-            return currentFiles.filter((_, fileIndex) => index !== fileIndex);
-        });
-        setPreviewUpload((currentFiles) => {
+        setFiles((currentFiles) => {
             return currentFiles.filter((_, fileIndex) => index !== fileIndex);
         });
     }, []);
@@ -259,7 +276,7 @@ const ConferenceCreate = ({}) => {
                                                 >
                                                     Завантаження файлів
                                                 </div>
-                                                <DNDUpload onUpload={onUpload}
+                                                <DNDUpload onUpload={(files) => onUpload(files, 'file')}
                                                            onChange={field.onChange}
                                                            styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                     Скинь мені файли
@@ -271,7 +288,7 @@ const ConferenceCreate = ({}) => {
                                         }
                                         />
                                         <div className="w-full flex flex-col gap-4 items-start">
-                                            <PreviewUpload files={previewUpload} handleRemoveFile={handleRemoveFile}/>
+                                            <PreviewUpload files={files} handleRemoveFile={handleRemoveFile}/>
                                         </div>
                                     </div>
                                 </div>

@@ -7,10 +7,3 @@ export function FileToFileList(files: File[]): FileList {
 
     return dataTransfer.files;
 }
-
-export type FileItem = {
-    name: string;
-    type: 'uploaded' | 'server';
-    file?: File;
-    url: string;
-}

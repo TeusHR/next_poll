@@ -4,17 +4,25 @@ import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {ICreateInnovation, IInnovation, IUpdateInnovationForm} from "@/types/Innovation";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
-import {FileItem} from "@/utils/FIleToFileList";
+import {FileToFileList} from "@/utils/FIleToFileList";
 import {InnovationsService} from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {Button, Input} from "@nextui-org/react";
 import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
-import {HandlerImageValidate} from "@/utils/ImageValidate";
 import EditorWrapper from "@/components/EditorWrapper";
+import {FileService} from "@/services/file.service";
 
 type Props = {
     innovationsId: string
+}
+
+export type uploadType = {
+    name: string,
+    typeUpload: "server" | "uploaded",
+    type: "file" | "image",
+    file?:File,
+    url: string,
 }
 
 const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
@@ -36,8 +44,8 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [innovations, setInnovations] = useState<IInnovation>()
-    const [files, setFiles] = useState<FileItem[]>([]);
-    const [filesImage, setFilesImage] = useState<FileItem[]>([]);
+    const [files, setFiles] = useState<uploadType[]>([]);
+    const [filesImage, setFilesImage] = useState<uploadType[]>([]);
 
     useEffect(() => {
         setIsLoading(true)
@@ -52,18 +60,20 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
         if (innovations) {
             setValue('title', innovations.title)
             setValue('text', innovations.text)
-            const serverFiles = innovations.files.map(url => (
+            const serverFiles:uploadType[] = innovations.files.map(url => (
                 {
                     name: renderName(url),
-                    type: "server" as const,
+                    typeUpload: "server" as const,
+                    type:'file',
                     url: url,
                 }
             ));
             setFiles(serverFiles);
-            const serverImage = innovations.images.map(url => (
+            const serverImage:uploadType[] = innovations.images.map(url => (
                 {
                     name: renderName(url),
-                    type: "server" as const,
+                    typeUpload: "server" as const,
+                    type:'image' as const,
                     url: url,
                 }
             ));
@@ -82,7 +92,32 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
         }
         setIsLoading(true)
 
+        const processUpload = async (files:uploadType[], folder:string) => {
+            const filteredFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
+            if (filteredFiles.length === 0) return [];
+
+            const paths = await FileService.upload($apiAuth, FileToFileList(filteredFiles), folder);
+            if (paths.length === 0) {
+                toast.error('Файли не збережені, щось не так.');
+                setIsLoading(false);
+                return [];
+            }
+
+            return paths.map(file => file.url);
+        };
+
         try {
+
+            const urlsDocs = await processUpload(files, 'pdf');
+            const urlsImages = await processUpload(filesImage, 'image');
+
+            const existingUrlDocs = files
+                .filter(file => file.typeUpload === 'server')
+                .map(file => file.url)
+
+            const existingUrlImages = filesImage
+                .filter(file => file.typeUpload === 'server')
+                .map(file => file.url)
 
             // let urlsDocs: string[] = [];
             // if (uploadFiles.length > 0) {
@@ -107,12 +142,12 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
             const dataProduct: ICreateInnovation = {
                 title: dataForm.title,
                 text: dataForm.text,
-                files: ['urlsDocs'],
-                images: ['urlsImages']
+                files: [...existingUrlDocs, ...urlsDocs],
+                images: [...existingUrlImages, ...urlsImages]
             };
             console.log(dataProduct)
             InnovationsService.updateInnovation(dataProduct, innovationsId, $apiAuth).then((status) => {
-                if (status === 201) {
+                if (status === 200) {
                     toast.success('Успішно створено')
                 }
             })
@@ -126,9 +161,10 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
 
     const handleUpload = useCallback((uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
-        const newFiles = uploadedFiles.map(file => ({
+        const newFiles:uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
-            type: 'uploaded' as const,
+            typeUpload: 'uploaded' as const,
+            type: type,
             file,
             url: file.name
         }));
@@ -196,7 +232,7 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
                                                         }
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
-                                                <PreviewUpload files={files.map(file => file.name)}
+                                                <PreviewUpload files={files}
                                                                handleRemoveFile={(index) => handleRemove(index, 'file')}/>
                                             </div>
                                         </div>
@@ -210,25 +246,6 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
                                     <div className="flex flex-row gap-4 w-full items-center">
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="images" control={control}
-                                                        rules={{
-                                                            validate: async (value) => {
-                                                                if (value && value.length > 0) {
-                                                                    try {
-                                                                        // @ts-ignore
-                                                                        for (const item of value) {
-                                                                            await HandlerImageValidate(item,
-                                                                                720,
-                                                                                1280,
-                                                                                'Усі зображення має бути 400x400')
-                                                                        }
-                                                                    } catch (error) {
-                                                                        return error as string
-                                                                    }
-                                                                } else {
-                                                                    return 'Не вибрано жодного файлу';
-                                                                }
-                                                            },
-                                                        }}
                                                         render={({field}) =>
                                                             <div className="w-full">
                                                                 <div
@@ -248,7 +265,7 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
                                                         }
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
-                                                <PreviewUpload files={filesImage.map(file => file.name)}
+                                                <PreviewUpload files={filesImage}
                                                                type="image"
                                                                handleRemoveFile={(index) => handleRemove(index, 'image')}/>
                                             </div>
