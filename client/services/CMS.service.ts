@@ -4,7 +4,7 @@ import {
     getConferencesUrl,
     getConsultingUrl,
     getCooperationsUrl,
-    getInnovationsUrl,
+    getInnovationsUrl, getInternationalUrl,
     getResearchWorksUrl,
     getScienceSchoolsUrl
 } from "@/config/url.config";
@@ -17,6 +17,7 @@ import {ICreateStudent} from "@/types/Student";
 import {$api} from "@/api/interceptors";
 import {IConsulting, ICreateConsulting} from "@/types/Consulting";
 import {IActivity, ICreateActivity} from "@/types/Activity";
+import {ICreateInternational, IInternational} from "@/types/International";
 
 
 export const ConferencesService = {
@@ -146,6 +147,29 @@ export const InnovationsService = {
     },
     async removeInnovation(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getInnovationsUrl(`/${id}`))
+        return status === 200
+    },
+};
+
+export const InternationalService = {
+    async getAllInternational(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<IInternational[]>>(getInternationalUrl(`?page=${page}&limit=${limit}`))
+        return data
+    },
+    async getInternational(id: string) {
+        const {data} = await $api.get<IInternational>(getInternationalUrl(`/${id}`))
+        return data
+    },
+    async postInternational(item:ICreateCooperation, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateInternational>(getInternationalUrl(''), item)
+        return status
+    },
+    async updateInternational(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateInternational>(getInternationalUrl(`/${id}`), item)
+        return status
+    },
+    async removeInternational(id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getInternationalUrl(`/${id}`))
         return status === 200
     },
 };

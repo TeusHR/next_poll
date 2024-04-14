@@ -25,7 +25,7 @@ import {
     ActivityService,
     ConferencesService,
     CooperationService,
-    InnovationsService,
+    InnovationsService, InternationalService,
     ResearchService
 } from "@/services/CMS.service";
 import {toast} from "react-toastify";
@@ -35,6 +35,7 @@ import {stripHtml} from "../../../app/(dashboard)/cms/utils";
 import {IResearch} from "@/types/Research";
 import {IActivity} from "@/types/Activity";
 import {IInnovation} from "@/types/Innovation";
+import {IInternational} from "@/types/International";
 
 type Props<T> = {
     dataItems: T[]
@@ -56,7 +57,7 @@ type Props<T> = {
     refetch?: () => void
 }
 
-type ValidDataTypes = ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity | IInnovation;
+type ValidDataTypes = ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity | IInnovation | IInternational;
 
 const TableItems = <T extends ValidDataTypes>(
     {
@@ -358,8 +359,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
                 await ActivityService.removeActivity(idItem, apiAuth)
             else if (typeProduct === 'innovations')
                 await InnovationsService.removeInnovation(idItem, apiAuth)
-            // else if (typeProduct === 'ingredients')
-            //     await IngredientsService.removeIngredients(idProduct, apiAuth)
+            else if (typeProduct === 'international')
+                await InternationalService.removeInternational(idItem, apiAuth)
+
             toast.success('Позиція успішно видалена')
         } catch (err: any) {
             console.log(err)
