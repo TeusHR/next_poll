@@ -1,3 +1,5 @@
+import {uploadType} from "../app/(dashboard)/cms/innovations/components/InnovationsEdit";
+
 export interface ICreateLaboratory {
     title:string
     text:string
@@ -47,6 +49,6 @@ export interface ILaboratoryForm {
 export interface IDevelopmentsForm {
     title:string
     text:string
-    images:FileList
-    files:FileList
+    images:uploadType[]
+    files:uploadType[]
 }

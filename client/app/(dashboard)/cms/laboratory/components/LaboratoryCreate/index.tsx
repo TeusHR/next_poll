@@ -1,6 +1,6 @@
 'use client'
-import React, {useCallback, useState} from 'react'
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import React, {useCallback, useEffect, useState} from 'react'
+import {Controller, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
@@ -14,6 +14,8 @@ import {FileService} from "@/services/file.service";
 import {FileToFileList} from "@/utils/FIleToFileList";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
 import {ICreateLaboratory, ILaboratoryForm} from "@/types/Laboratory";
+import Title from "@/UI/Title";
+import CloseIcon from "@/UI/CloseIcon";
 
 
 const LaboratoryCreate = ({}) => {
@@ -22,6 +24,8 @@ const LaboratoryCreate = ({}) => {
         control,
         formState,
         reset,
+        getValues,
+        watch,
     } = useForm<ILaboratoryForm>({
         mode: 'all',
         defaultValues: {
@@ -34,6 +38,22 @@ const LaboratoryCreate = ({}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
 
+    const {
+        fields,
+        append,
+        remove,
+        update,
+    } = useFieldArray({control, name: "developments"});
+
+    useEffect(() => {
+        const subscription = watch((value) => {
+                if (value.developments)
+                    console.log(value.developments.map((item) => item))
+                console.log(value.developments)
+            }
+        )
+        return () => subscription.unsubscribe()
+    }, [watch]);
 
     const [files, setFiles] = useState<uploadType[]>([]);
     const [filesImage, setFilesImage] = useState<uploadType[]>([]);
@@ -45,7 +65,7 @@ const LaboratoryCreate = ({}) => {
         }
         setIsLoading(true)
 
-        const processUpload = async (files:uploadType[], folder:string) => {
+        const processUpload = async (files: uploadType[], folder: string) => {
             const filteredFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
             if (filteredFiles.length === 0) return [];
 
@@ -61,25 +81,27 @@ const LaboratoryCreate = ({}) => {
 
         try {
 
-            const urlsDocs = await processUpload(files, 'pdf');
-            const urlsImages = await processUpload(filesImage, 'image');
-
-            const dataProduct: ICreateLaboratory = {
-                title: dataForm.title,
-                text: dataForm.text,
-                files: urlsDocs,
-                images: urlsImages,
-                developments: []
-            };
-
-            console.log(dataProduct)
-            LaboratoryService.postLaboratory(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    handlerReset()
-                    toast.success('Успішно створено')
-                }
-            })
+            console.log(dataForm)
+            setIsLoading(false)
+            // const urlsDocs = await processUpload(files, 'pdf');
+            // const urlsImages = await processUpload(filesImage, 'image');
+            //
+            // const dataProduct: ICreateLaboratory = {
+            //     title: dataForm.title,
+            //     text: dataForm.text,
+            //     files: urlsDocs,
+            //     images: urlsImages,
+            //     developments: []
+            // };
+            //
+            // console.log(dataProduct)
+            // LaboratoryService.postLaboratory(dataProduct, $apiAuth).then((status) => {
+            //     if (status === 201) {
+            //         reset()
+            //         handlerReset()
+            //         toast.success('Успішно створено')
+            //     }
+            // })
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
@@ -89,14 +111,14 @@ const LaboratoryCreate = ({}) => {
 
     }
 
-    const handlerReset = () => {
-        setFiles([])
-        setFilesImage([])
-    }
+    // const handlerReset = () => {
+    //     setFiles([])
+    //     setFilesImage([])
+    // }
 
     const handleUpload = useCallback((uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
-        const newFiles:uploadType[] = uploadedFiles.map(file => ({
+        const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
             type: type,
@@ -111,6 +133,32 @@ const LaboratoryCreate = ({}) => {
         setter(currentFiles => currentFiles.filter((_, fileIndex) => index !== fileIndex));
     }, []);
 
+    const handleUploadDynamic = useCallback((uploadedFiles: File[], type: 'file' | 'image', index: number) => {
+        const newFiles: uploadType[] = uploadedFiles.map(file => ({
+            name: file.name,
+            typeUpload: 'uploaded' as const,
+            type: type,
+            file,
+            url: file.name
+        }));
+
+        const types = type === 'file' ? "files" : "images"
+        const currentFiles = getValues(`developments.${index}`);
+
+        update(index, {...currentFiles, [types]: [...currentFiles[types], ...newFiles]});
+    }, [getValues, update]);
+
+    const handleRemoveDynamic = useCallback((fileIndex: number, type: 'file' | 'image', index: number) => {
+        const types = type === 'file' ? "files" : "images"
+        const currentFiles = getValues(`developments.${index}`);
+        const updatedFiles = currentFiles[types].filter((_, idx) => idx !== fileIndex);
+
+        update(index, {...currentFiles, [types]: updatedFiles});
+    }, [getValues, update]);
+
+    const handlerRemoveLab = (index: number) => {
+        remove(index)
+    }
 
     return (
         <div className="flex flex-col gap-8 w-full">
@@ -155,9 +203,10 @@ const LaboratoryCreate = ({}) => {
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження документів
                                                                 </div>
-                                                                <DNDUpload onUpload={(files) => handleUpload(files, 'file')}
-                                                                           onChange={field.onChange}
-                                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                <DNDUpload
+                                                                    onUpload={(files) => handleUpload(files, 'file')}
+                                                                    onChange={field.onChange}
+                                                                    styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
                                                                 </DNDUpload>
                                                                 {formState.errors.files?.message &&
@@ -171,45 +220,20 @@ const LaboratoryCreate = ({}) => {
                                                                handleRemoveFile={(index) => handleRemove(index, 'file')}/>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="w-full flex flex-col gap-4">
-                                    <div className="flex flex-row gap-4 w-full items-center">
+
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="images" control={control}
-                                                        // rules={{
-                                                        //     validate: async (value) => {
-                                                        //         if (value && value.length > 0) {
-                                                        //             try {
-                                                        //                 // @ts-ignore
-                                                        //                 for (const item of value) {
-                                                        //                     await HandlerImageValidate(item,
-                                                        //                         720,
-                                                        //                         1280,
-                                                        //                         'Усі зображення має бути 400x400')
-                                                        //                 }
-                                                        //             } catch (error) {
-                                                        //                 return error as string
-                                                        //             }
-                                                        //         } else {
-                                                        //             return 'Не вибрано жодного файлу';
-                                                        //         }
-                                                        //     },
-                                                        // }}
                                                         render={({field}) =>
                                                             <div className="w-full">
                                                                 <div
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження зображень
                                                                 </div>
-                                                                <DNDUpload onUpload={(files) => handleUpload(files, 'image')}
-                                                                           onChange={field.onChange}
-                                                                           formats={[".png", ".jpeg", ".svg", ".jpg"]}
-                                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                <DNDUpload
+                                                                    onUpload={(files) => handleUpload(files, 'image')}
+                                                                    onChange={field.onChange}
+                                                                    formats={[".png", ".jpeg", ".svg", ".jpg"]}
+                                                                    styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
                                                                 </DNDUpload>
                                                                 {formState.errors.files?.message &&
@@ -223,6 +247,19 @@ const LaboratoryCreate = ({}) => {
                                                                type="image"
                                                                handleRemoveFile={(index) => handleRemove(index, 'image')}/>
                                             </div>
+                                        </div>
+
+                                        <div className="w-full flex justify-center items-center">
+                                            <Button
+                                                onClick={() => append({
+                                                    files: [],
+                                                    images: [],
+                                                    title: '',
+                                                    text: ''
+                                                })}
+                                                className="px-6 bg-fd text-xl">
+                                                Додати лабораторію
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -267,6 +304,129 @@ const LaboratoryCreate = ({}) => {
                                 Створити
                             </Button>
                         </div>
+                    </div>
+
+
+                    <div className="flex flex-wrap max-md:flex-col gap-8 max-lg:gap-4 justify-between">
+                        {fields.map((item, idx) => (
+                            <div key={item.id}
+                                 className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
+                                <div className="flex flex-col gap-4">
+                                    <div className="w-full flex flex-col gap-4">
+                                        <div className="flex flex-col gap-4 w-full">
+                                            <div className="flex w-full items-center justify-between gap-4">
+                                                <Title text={`Лабораторія ${idx + 1}`}
+                                                       style="text-[#111318] text-xl max-sm:text-base"
+                                                />
+                                                <span className="cursor-pointer"
+                                                      onClick={() => handlerRemoveLab(idx)}>
+                                                        <CloseIcon/>
+                                                </span>
+                                            </div>
+                                            <Controller name={`developments.${idx}.title`} control={control} rules={{
+                                                required: "Обов'язкове поле",
+                                                minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
+                                                maxLength: {value: 50, message: "Максимальна довжина 50 символів"},
+                                            }} render={({field}) =>
+                                                <Input className="border-none py-2"
+                                                       type="text"
+                                                       value={field.value}
+                                                       onValueChange={field.onChange}
+                                                       isRequired
+                                                       classNames={{
+                                                           inputWrapper: "border-1 border-primary-500",
+                                                           input: "focus:outline-none text-base text-primary",
+                                                           errorMessage: "text-red-600 text-sm",
+                                                           label: "text-base",
+                                                       }}
+                                                       key="title"
+                                                       label="Назва"
+                                                       labelPlacement="outside"
+                                                       placeholder="Введіть назву"
+                                                       autoComplete="off"
+                                                       isInvalid={!!formState.errors.title?.message}
+                                                       errorMessage={formState.errors.title?.message}
+                                                />
+                                            }
+                                            />
+                                            <div className="flex flex-col gap-4 w-full relative justify-end">
+                                                <Controller name={`developments.${idx}.files`} control={control}
+                                                            render={({field}) =>
+                                                                <div className="w-full">
+                                                                    <div
+                                                                        className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                        Завантаження документів
+                                                                    </div>
+                                                                    <DNDUpload
+                                                                        onUpload={(files) => handleUploadDynamic(files, 'file', idx)}
+                                                                        styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                        Скинь мені файли
+                                                                    </DNDUpload>
+                                                                    {formState.errors.files?.message &&
+                                                                        <div
+                                                                            className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                                </div>
+                                                            }
+                                                />
+                                                <div className="w-full flex flex-col gap-4 items-start">
+                                                    <PreviewUpload files={item.files}
+                                                                   handleRemoveFile={(index) => handleRemoveDynamic(index, 'file', idx)}/>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col gap-4 w-full relative justify-end">
+                                                <Controller name={`developments.${idx}.images`} control={control}
+                                                            render={({field}) =>
+                                                                <div className="w-full">
+                                                                    <div
+                                                                        className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                        Завантаження зображень
+                                                                    </div>
+                                                                    <DNDUpload
+                                                                        onUpload={(files) => handleUploadDynamic(files, 'image', idx)}
+                                                                        formats={[".png", ".jpeg", ".svg", ".jpg"]}
+                                                                        styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                        Скинь мені файли
+                                                                    </DNDUpload>
+                                                                    {formState.errors.files?.message &&
+                                                                        <div
+                                                                            className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                                </div>
+                                                            }
+                                                />
+                                                <div className="w-full flex flex-col gap-4 items-start">
+                                                    <PreviewUpload files={item.images}
+                                                                   type="image"
+                                                                   handleRemoveFile={(fileIndex) => handleRemoveDynamic(fileIndex, 'image', idx)}/>
+                                                </div>
+                                            </div>
+                                            <Controller name={`developments.${idx}.text`} control={control}
+                                                        rules={{
+                                                            required: 'Обов\'язкове поле',
+                                                        }}
+                                                        render={({field}) =>
+                                                            <>
+                                                                <div
+                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
+                                                                    Текст
+                                                                </div>
+                                                                <div className="relative w-full">
+                                                                    <EditorWrapper onChange={(field.onChange)}
+                                                                                   description={field.value}
+                                                                                   placeholder={'Напишіть текст для слайдера'}
+                                                                    />
+                                                                </div>
+                                                                {formState.errors.text?.message &&
+                                                                    <div
+                                                                        className="text-red-600 text-sm">{formState.errors.text.message}</div>}
+                                                            </>
+                                                        }
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </form>
