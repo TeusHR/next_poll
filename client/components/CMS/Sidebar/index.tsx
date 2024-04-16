@@ -49,8 +49,16 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/international',
     },
     {
-        title: 'Науково-дослідні лабораторії',
+        title: 'Наукова робота ОНТУ',
         path: '/cms/research',
+    },
+    {
+        title: 'Міжнародна діяльність ОНТУ',
+        path: '/cms/activity',
+    },
+    {
+        title: 'Науково-дослідні лабораторії',
+        path: '/cms/laboratory',
     },
     {
         title: 'Консалтинговий центр НДІ',

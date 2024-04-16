@@ -4,20 +4,22 @@ import {
     getConferencesUrl,
     getConsultingUrl,
     getCooperationsUrl,
-    getInnovationsUrl, getInternationalUrl,
+    getInnovationsUrl, getInternationalUrl, getLaboratoryUrl,
     getResearchWorksUrl,
-    getScienceSchoolsUrl
+    getScienceSchoolsUrl,
+    getStudentUrl
 } from "@/config/url.config";
 import {IConferences, ICreateConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
 import {ICreateScience} from "@/types/Science";
 import {ICooperation, ICreateCooperation} from "@/types/Cooperation";
 import {ICreateResearch, IResearch} from "@/types/Research";
 import {ICreateInnovation, IInnovation} from "@/types/Innovation";
-import {ICreateStudent} from "@/types/Student";
+import {ICreateStudent, IStudent} from "@/types/Student";
 import {$api} from "@/api/interceptors";
 import {IConsulting, ICreateConsulting} from "@/types/Consulting";
 import {IActivity, ICreateActivity} from "@/types/Activity";
 import {ICreateInternational, IInternational} from "@/types/International";
+import {ICreateLaboratory, ILaboratory} from "@/types/Laboratory";
 
 
 export const ConferencesService = {
@@ -151,6 +153,7 @@ export const InnovationsService = {
     },
 };
 
+
 export const InternationalService = {
     async getAllInternational(authAxios: AxiosInstance, page: number, limit: number) {
         const {data} = await authAxios.get<IResponseMeta<IInternational[]>>(getInternationalUrl(`?page=${page}&limit=${limit}`))
@@ -176,16 +179,44 @@ export const InternationalService = {
 
 
 export const StudentService = {
-    async postScience(item:ICreateStudent, authAxios: AxiosInstance) {
-        const {status} = await authAxios.post<ICreateStudent>(getInnovationsUrl(''), item)
+    async getStudent(authAxios: AxiosInstance) {
+        const {data} = await authAxios.get<IResponseMeta<IStudent>>(getInternationalUrl(`/`))
+        return data
+    },
+    async postStudent(item:ICreateStudent, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateStudent>(getStudentUrl(''), item)
         return status
     },
-    async updateScience(item:ICreateStudent, id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.put<ICreateStudent>(getInnovationsUrl(`/${id}`), item)
+    async updateStudent(item:ICreateStudent, id: number, authAxios: AxiosInstance) {
+        const {status} = await authAxios.put<ICreateStudent>(getStudentUrl(`/${id}`), item)
         return status
     },
-    async removeScience(id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.delete(getInnovationsUrl(`/${id}`))
+    async removeStudent(id: number, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getStudentUrl(`/${id}`))
+        return status === 200
+    },
+};
+
+
+export const LaboratoryService = {
+    async getAllLaboratory(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<ILaboratory[]>>(getLaboratoryUrl(`?page=${page}&limit=${limit}`))
+        return data
+    },
+    async getLaboratory(id: string) {
+        const {data} = await $api.get<ILaboratory>(getLaboratoryUrl(`/${id}`))
+        return data
+    },
+    async postLaboratory(item:ICreateCooperation, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateLaboratory>(getLaboratoryUrl(''), item)
+        return status
+    },
+    async updateLaboratory(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateLaboratory>(getLaboratoryUrl(`/${id}`), item)
+        return status
+    },
+    async removeLaboratory(id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getLaboratoryUrl(`/${id}`))
         return status === 200
     },
 };

@@ -4,12 +4,12 @@ import {IResponseMeta} from "@/types/Conference";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
-import {InternationalService} from "@/services/CMS.service";
+import {LaboratoryService} from "@/services/CMS.service";
 import TableSearch from "@/components/CMS/TableSearch";
 import {Button} from "@nextui-org/react";
 import TitleBack from "@/components/CMS/TitleBack";
 import TableItems from "@/components/CMS/TableItems";
-import {IInternational} from "@/types/International";
+import {ILaboratory} from "@/types/Laboratory";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
@@ -18,9 +18,9 @@ const tableColumn: { title: string, key: string }[] = [
     {title: 'Дії', key: 'action'}
 ]
 
-const InternationalTable = ({}) => {
+const LaboratoryTable = ({}) => {
 
-    const [initialInternational, setInitialInternational] = useState<IResponseMeta<IInternational[]>>()
+    const [initialLaboratory, setInitialLaboratory] = useState<IResponseMeta<ILaboratory[]>>()
 
     const searchParams = useSearchParams()
     const {status} = useSession()
@@ -30,9 +30,9 @@ const InternationalTable = ({}) => {
 
     useEffect(() => {
         if (status === 'authenticated') {
-            InternationalService.getAllInternational($apiAuth, Number(searchParams.get('page') ?? 1), 999).then(res => {
-                setInitialInternational(res)
-                setFilterInternational(res.data)
+            LaboratoryService.getAllLaboratory($apiAuth, Number(searchParams.get('page') ?? 1), 999).then(res => {
+                setInitialLaboratory(res)
+                setFilterLaboratory(res.data)
             })
         }
     }, [$apiAuth, searchParams, status]);
@@ -40,27 +40,27 @@ const InternationalTable = ({}) => {
     const router = useRouter()
     const [valueSearch,
         setValueSearch] = useState<string>('')
-    const [filterInternational,
-        setFilterInternational] = useState<IInternational[]>([])
+    const [filterLaboratory,
+        setFilterLaboratory] = useState<ILaboratory[]>([])
 
     const handleSelectCategories = useCallback(() => {
-        if(initialInternational) {
-            let filter: IInternational[] = initialInternational.data
+        if(initialLaboratory) {
+            let filter: ILaboratory[] = initialLaboratory.data
             if (valueSearch.trim() !== '') {
-                filter = initialInternational.data.filter((conferences) =>
+                filter = initialLaboratory.data.filter((conferences) =>
                     conferences.title.toLowerCase().includes(valueSearch.toLowerCase()));
             }
-            setFilterInternational(filter);
+            setFilterLaboratory(filter);
         }
 
-    }, [initialInternational, valueSearch])
+    }, [initialLaboratory, valueSearch])
 
     useEffect(() => {
         handleSelectCategories()
     }, [valueSearch, handleSelectCategories]);
 
     const openCreatePage = useCallback(() => {
-        router.push('/cms/international/new')
+        router.push('/cms/laboratory/new')
     }, [router])
 
     const topContent = useMemo(() => {
@@ -89,12 +89,12 @@ const InternationalTable = ({}) => {
     return (
         <div className="flex flex-col px-10 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
             <div className="flex items-center justify-between">
-                <TitleBack title="Міжнародні проекти" isBack={false}/>
+                <TitleBack title="Науково-дослідні лабораторії" isBack={false}/>
             </div>
-            <TableItems dataItems={filterInternational || []}
+            <TableItems dataItems={filterLaboratory || []}
                         searchInput={valueSearch}
                         rowsViewPage={10}
-                        typeProduct='international'
+                        typeProduct='innovations'
                         topContent={topContent}
                         tableColumn={tableColumn}
             />
@@ -102,4 +102,4 @@ const InternationalTable = ({}) => {
     )
 }
 
-export default InternationalTable;
+export default LaboratoryTable;
