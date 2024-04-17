@@ -10,7 +10,9 @@ export const getConsultingUrl = (str: string) => `/consulting${str}`
 
 export const getInnovationsUrl = (str: string) => `/innovations${str}`
 
-export const getLaboratoryUrl = (str: string) => `/laboratory${str}`
+export const getLaboratoryUrl = (str: string) => `/laboratories${str}`
+
+export const getLaboratoryDevelopmentsUrl = (str: string) => `/laboratory-developments${str}`
 
 export const getInternationalUrl = (str: string) => `/international-projects${str}`
 

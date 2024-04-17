@@ -333,9 +333,9 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
     );
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex transition-all flex-col gap-4">
             <EditorWrapper editor={editor}/>
-            <EditorContent editor={editor} className="text-base max-w-[calc(100vw_-_28rem)] max-xl:max-w-[calc(100vw_-_24.5rem)] max-lg:max-w-[calc(100vw_-_9rem)]"/>
+            <EditorContent editor={editor} className="text-base transition-all max-w-[calc(100vw_-_28rem)] max-xl:max-w-[calc(100vw_-_24.5rem)] max-lg:max-w-[calc(100vw_-_9rem)]"/>
         </div>
     )
 }

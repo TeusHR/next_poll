@@ -4,7 +4,7 @@ import {
     getConferencesUrl,
     getConsultingUrl,
     getCooperationsUrl,
-    getInnovationsUrl, getInternationalUrl, getLaboratoryUrl,
+    getInnovationsUrl, getInternationalUrl, getLaboratoryDevelopmentsUrl, getLaboratoryUrl,
     getResearchWorksUrl,
     getScienceSchoolsUrl,
     getStudentUrl
@@ -20,6 +20,7 @@ import {IConsulting, ICreateConsulting} from "@/types/Consulting";
 import {IActivity, ICreateActivity} from "@/types/Activity";
 import {ICreateInternational, IInternational} from "@/types/International";
 import {ICreateLaboratory, ILaboratory} from "@/types/Laboratory";
+import {ICreateDevelopments, IDevelopments} from "@/types/LaboratoryDevelopments";
 
 
 export const ConferencesService = {
@@ -208,8 +209,8 @@ export const LaboratoryService = {
         return data
     },
     async postLaboratory(item:ICreateCooperation, authAxios: AxiosInstance) {
-        const {status} = await authAxios.post<ICreateLaboratory>(getLaboratoryUrl(''), item)
-        return status
+        const {status, data} = await authAxios.post<ILaboratory>(getLaboratoryUrl(''), item)
+        return {status, data}
     },
     async updateLaboratory(item:ICreateCooperation, id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.patch<ICreateLaboratory>(getLaboratoryUrl(`/${id}`), item)
@@ -217,6 +218,30 @@ export const LaboratoryService = {
     },
     async removeLaboratory(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getLaboratoryUrl(`/${id}`))
+        return status === 200
+    },
+};
+
+
+export const LaboratoryDevelopService = {
+    async getAllLaboratoryDevelop(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<IDevelopments[]>>(getLaboratoryDevelopmentsUrl(`?page=${page}&limit=${limit}`))
+        return data
+    },
+    async getLaboratoryDevelop(id: string) {
+        const {data} = await $api.get<IDevelopments>(getLaboratoryDevelopmentsUrl(`/${id}`))
+        return data
+    },
+    async postLaboratoryDevelop(item:ICreateDevelopments, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<IDevelopments>(getLaboratoryDevelopmentsUrl(''), item)
+        return status
+    },
+    async updateLaboratoryDevelop(item:ICreateDevelopments, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateDevelopments>(getLaboratoryDevelopmentsUrl(`/${id}`), item)
+        return status
+    },
+    async removeLaboratoryDevelop(id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getLaboratoryDevelopmentsUrl(`/${id}`))
         return status === 200
     },
 };

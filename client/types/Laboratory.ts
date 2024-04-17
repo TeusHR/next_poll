@@ -1,29 +1,11 @@
-import {uploadType} from "../app/(dashboard)/cms/innovations/components/InnovationsEdit";
+import {ICreateDevelopments, IDevelopments, IDevelopmentsForm} from "@/types/LaboratoryDevelopments";
 
 export interface ICreateLaboratory {
     title:string
     text:string
     images:string[]
     files:string[]
-    developments:ICreateDevelopments[]
-}
-
-export interface ICreateDevelopments {
-    title:string
-    text:string
-    images:string[]
-    files:string[]
-}
-
-export interface IDevelopments {
-    id:string
-    title:string
-    text:string
-    images:string[]
-    files:string[]
-    laboratoryId:string
-    createdAt:string
-    updatedAt:string
+    // developments:ICreateDevelopments[]
 }
 
 
@@ -44,11 +26,4 @@ export interface ILaboratoryForm {
     images:FileList
     files:FileList
     developments:IDevelopmentsForm[]
-}
-
-export interface IDevelopmentsForm {
-    title:string
-    text:string
-    images:uploadType[]
-    files:uploadType[]
 }

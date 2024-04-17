@@ -1,12 +1,11 @@
 'use client'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {Controller, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
-import {LaboratoryService} from "@/services/CMS.service";
+import {LaboratoryDevelopService, LaboratoryService} from "@/services/CMS.service";
 import {Button, Input} from "@nextui-org/react";
-
 import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
@@ -16,6 +15,7 @@ import {uploadType} from "../../../innovations/components/InnovationsEdit";
 import {ICreateLaboratory, ILaboratoryForm} from "@/types/Laboratory";
 import Title from "@/UI/Title";
 import CloseIcon from "@/UI/CloseIcon";
+import {ICreateDevelopments} from "@/types/LaboratoryDevelopments";
 
 
 const LaboratoryCreate = ({}) => {
@@ -25,6 +25,7 @@ const LaboratoryCreate = ({}) => {
         formState,
         reset,
         getValues,
+        setValue,
         watch,
     } = useForm<ILaboratoryForm>({
         mode: 'all',
@@ -42,21 +43,12 @@ const LaboratoryCreate = ({}) => {
         fields,
         append,
         remove,
-        update,
     } = useFieldArray({control, name: "developments"});
-
-    useEffect(() => {
-        const subscription = watch((value) => {
-                if (value.developments)
-                    console.log(value.developments.map((item) => item))
-                console.log(value.developments)
-            }
-        )
-        return () => subscription.unsubscribe()
-    }, [watch]);
 
     const [files, setFiles] = useState<uploadType[]>([]);
     const [filesImage, setFilesImage] = useState<uploadType[]>([]);
+    const developments = watch("developments");
+
 
     const onSubmit: SubmitHandler<ILaboratoryForm> = async (dataForm) => {
 
@@ -83,25 +75,59 @@ const LaboratoryCreate = ({}) => {
 
             console.log(dataForm)
             setIsLoading(false)
-            // const urlsDocs = await processUpload(files, 'pdf');
-            // const urlsImages = await processUpload(filesImage, 'image');
-            //
-            // const dataProduct: ICreateLaboratory = {
-            //     title: dataForm.title,
-            //     text: dataForm.text,
-            //     files: urlsDocs,
-            //     images: urlsImages,
-            //     developments: []
-            // };
-            //
-            // console.log(dataProduct)
-            // LaboratoryService.postLaboratory(dataProduct, $apiAuth).then((status) => {
-            //     if (status === 201) {
-            //         reset()
-            //         handlerReset()
-            //         toast.success('Успішно створено')
-            //     }
-            // })
+
+
+            const urlsDocs = await processUpload(files, 'pdf');
+            const urlsImages = await processUpload(filesImage, 'image');
+
+            const dataProduct: ICreateLaboratory = {
+                title: dataForm.title,
+                text: dataForm.text,
+                files: urlsDocs,
+                images: urlsImages,
+            };
+
+            console.log(dataProduct)
+
+            let laboratoryID: string | undefined;
+
+            await LaboratoryService.postLaboratory(dataProduct, $apiAuth).then(({status, data}) => {
+                if (status === 201) {
+                    laboratoryID = data.id;
+                    reset()
+                    handlerReset()
+                    toast.success('Успішно створено')
+                }
+            })
+
+
+            if (laboratoryID) {
+                let developments: ICreateDevelopments[] = []
+                if (dataForm.developments && dataForm.developments.length > 0) {
+                    for (const development of dataForm.developments) {
+                        const devFilesUrls = await processUpload(development.files, 'pdf');
+                        const devImagesUrls = await processUpload(development.images, 'image');
+                        developments.push({
+                            ...development,
+                            files: devFilesUrls,
+                            images: devImagesUrls,
+                            laboratoryId: laboratoryID,
+                        });
+                    }
+                }
+
+                try {
+                    for (const develop of developments) {
+                        await LaboratoryDevelopService.postLaboratoryDevelop(develop, $apiAuth)
+                    }
+                } catch (error) {
+                    console.log(error)
+                } finally {
+                    handleRemoveDevelop()
+                }
+
+            }
+
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
@@ -111,10 +137,17 @@ const LaboratoryCreate = ({}) => {
 
     }
 
-    // const handlerReset = () => {
-    //     setFiles([])
-    //     setFilesImage([])
-    // }
+    const handlerReset = () => {
+        setFiles([])
+        setFilesImage([])
+    }
+
+    const handleRemoveDevelop = () => {
+        let indexDev:number[] = developments.map((_, i) => i);
+        if(indexDev) {
+            remove(indexDev);
+        }
+    }
 
     const handleUpload = useCallback((uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
@@ -144,17 +177,16 @@ const LaboratoryCreate = ({}) => {
 
         const types = type === 'file' ? "files" : "images"
         const currentFiles = getValues(`developments.${index}`);
-
-        update(index, {...currentFiles, [types]: [...currentFiles[types], ...newFiles]});
-    }, [getValues, update]);
+        setValue(`developments.${index}`, {...currentFiles, [types]: [...currentFiles[types], ...newFiles]})
+    }, [getValues, setValue]);
 
     const handleRemoveDynamic = useCallback((fileIndex: number, type: 'file' | 'image', index: number) => {
         const types = type === 'file' ? "files" : "images"
         const currentFiles = getValues(`developments.${index}`);
         const updatedFiles = currentFiles[types].filter((_, idx) => idx !== fileIndex);
 
-        update(index, {...currentFiles, [types]: updatedFiles});
-    }, [getValues, update]);
+        setValue(`developments.${index}`, {...currentFiles, [types]: updatedFiles})
+    }, [getValues, setValue]);
 
     const handlerRemoveLab = (index: number) => {
         remove(index)
@@ -307,14 +339,14 @@ const LaboratoryCreate = ({}) => {
                     </div>
 
 
-                    <div className="flex flex-wrap max-md:flex-col gap-8 max-lg:gap-4 justify-between">
+                    <div className="flex flex-wrap transition max-md:flex-col gap-8 max-lg:gap-4 justify-between">
                         {fields.map((item, idx) => (
                             <div key={item.id}
-                                 className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
-                                <div className="flex flex-col gap-4">
-                                    <div className="w-full flex flex-col gap-4">
-                                        <div className="flex flex-col gap-4 w-full">
-                                            <div className="flex w-full items-center justify-between gap-4">
+                                 className="rounded-[20px] transition w-full bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
+                                <div className="flex transition flex-col gap-4">
+                                    <div className="w-full transition flex flex-col gap-4">
+                                        <div className="flex transition flex-col gap-4 w-full">
+                                            <div className="flex  w-full items-center justify-between gap-4">
                                                 <Title text={`Лабораторія ${idx + 1}`}
                                                        style="text-[#111318] text-xl max-sm:text-base"
                                                 />
@@ -351,7 +383,7 @@ const LaboratoryCreate = ({}) => {
                                             />
                                             <div className="flex flex-col gap-4 w-full relative justify-end">
                                                 <Controller name={`developments.${idx}.files`} control={control}
-                                                            render={({field}) =>
+                                                            render={() =>
                                                                 <div className="w-full">
                                                                     <div
                                                                         className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
@@ -369,14 +401,14 @@ const LaboratoryCreate = ({}) => {
                                                             }
                                                 />
                                                 <div className="w-full flex flex-col gap-4 items-start">
-                                                    <PreviewUpload files={item.files}
+                                                    <PreviewUpload files={developments?.[idx].files || []}
                                                                    handleRemoveFile={(index) => handleRemoveDynamic(index, 'file', idx)}/>
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col gap-4 w-full relative justify-end">
                                                 <Controller name={`developments.${idx}.images`} control={control}
-                                                            render={({field}) =>
+                                                            render={() =>
                                                                 <div className="w-full">
                                                                     <div
                                                                         className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
@@ -395,7 +427,7 @@ const LaboratoryCreate = ({}) => {
                                                             }
                                                 />
                                                 <div className="w-full flex flex-col gap-4 items-start">
-                                                    <PreviewUpload files={item.images}
+                                                    <PreviewUpload files={developments?.[idx].images || []}
                                                                    type="image"
                                                                    handleRemoveFile={(fileIndex) => handleRemoveDynamic(fileIndex, 'image', idx)}/>
                                                 </div>
@@ -410,7 +442,7 @@ const LaboratoryCreate = ({}) => {
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
                                                                     Текст
                                                                 </div>
-                                                                <div className="relative w-full">
+                                                                <div className="relative transition-all w-full">
                                                                     <EditorWrapper onChange={(field.onChange)}
                                                                                    description={field.value}
                                                                                    placeholder={'Напишіть текст для слайдера'}

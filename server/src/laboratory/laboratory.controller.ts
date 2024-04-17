@@ -23,6 +23,7 @@ export class LaboratoryController {
     return this.laboratoryService.create(createLaboratoryDto);
   }
 
+  @Get()
   findAll(
     @Query("limit") limit?: string,
     @Query("page") page?: string,

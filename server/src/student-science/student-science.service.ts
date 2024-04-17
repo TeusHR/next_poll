@@ -11,12 +11,12 @@ export class StudentScienceService {
     const studentScience = await this.prismaService.studentScience.findFirst();
     let res: any;
     if (studentScience)
-      res = this.prismaService.studentScience.update({
+      res = await this.prismaService.studentScience.update({
         data: createStudentScienceDto,
         where: { id: studentScience.id },
       });
     else
-      res = this.prismaService.studentScience.create({
+      res = await this.prismaService.studentScience.create({
         data: createStudentScienceDto,
       });
 
