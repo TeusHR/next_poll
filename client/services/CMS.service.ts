@@ -233,8 +233,8 @@ export const LaboratoryDevelopService = {
         return data
     },
     async postLaboratoryDevelop(item:ICreateDevelopments, authAxios: AxiosInstance) {
-        const {status} = await authAxios.post<IDevelopments>(getLaboratoryDevelopmentsUrl(''), item)
-        return status
+        const {status, data} = await authAxios.post<IDevelopments>(getLaboratoryDevelopmentsUrl(''), item)
+        return {status, data}
     },
     async updateLaboratoryDevelop(item:ICreateDevelopments, id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.patch<ICreateDevelopments>(getLaboratoryDevelopmentsUrl(`/${id}`), item)

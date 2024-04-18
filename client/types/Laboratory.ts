@@ -1,11 +1,10 @@
-import {ICreateDevelopments, IDevelopments, IDevelopmentsForm} from "@/types/LaboratoryDevelopments";
+import {IDevelopments, IDevelopmentsForm} from "@/types/LaboratoryDevelopments";
 
 export interface ICreateLaboratory {
     title:string
     text:string
     images:string[]
     files:string[]
-    // developments:ICreateDevelopments[]
 }
 
 

@@ -94,7 +94,7 @@ const LaboratoryTable = ({}) => {
             <TableItems dataItems={filterLaboratory || []}
                         searchInput={valueSearch}
                         rowsViewPage={10}
-                        typeProduct='innovations'
+                        typeProduct='laboratory'
                         topContent={topContent}
                         tableColumn={tableColumn}
             />
