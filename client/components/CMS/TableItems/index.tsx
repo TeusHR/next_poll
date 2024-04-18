@@ -201,7 +201,7 @@ const TableItems = <T extends ValidDataTypes>(
                         <Button isIconOnly
                                 onClick={() => redirectItem(item.id,
                                     tableType === 'modal' ? item : undefined)}
-                                className="w-[32px] h-[32px] max-[580px]:max-w-[16px] max-[580px]:min-w-[16px] max-[580px]:h-[16px] max-[580px]:w-[16px] bg-[#828282] rounded-[8px]">
+                                className="w-[32px] h-[32px] bg-[#828282] rounded-[8px]">
                             <Tooltip content="Деталі">
                                 <span
                                     className="text-lg w-[20px] text-white cursor-pointer active:opacity-50">
@@ -275,13 +275,14 @@ const TableItems = <T extends ValidDataTypes>(
     return (
         <div className="w-full h-full">
             <Table
-                aria-label="all products food hub"
+                aria-label="all items"
                 selectionMode={selectionMode}
                 topContent={topContent}
                 selectedKeys={selectedKeys}
                 onSelectionChange={changeHandler}
                 topContentPlacement="inside"
                 bottomContent={bottomContent}
+                className="max-[900px]:min-w-[1000px]"
                 classNames={{
                     wrapper: `min-h-[650px] ${disableShadow ? '!shadow-none' : 'shadow-small'}`
                 }}
@@ -376,7 +377,7 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
                  className="flex flex-col items-center justify-center">
             <PopoverTrigger onClick={() => setPopoverOpen(true)}>
                 <Button isIconOnly
-                        className="w-[32px] h-[32px] max-[580px]:max-w-[16px] max-[580px]:min-w-[16px] max-[580px]:h-[16px] max-[580px]:w-[16px] bg-[#828282] rounded-[8px]">
+                        className="w-[32px] h-[32px] bg-[#828282] rounded-[8px]">
                     <Tooltip color="default" content="Видалити">
                         <span className="text-lg w-[20px] text-white cursor-pointer active:opacity-50">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path

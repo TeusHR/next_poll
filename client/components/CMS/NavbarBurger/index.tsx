@@ -35,6 +35,14 @@ const NavbarBurger = ({}) => {
     const { height } = useDimensions(containerRef);
     const [isOpen, toggleOpen] = useCycle(false, true);
 
+    useEffect(() => {
+        if (isOpen) {
+            document.body.classList.add("overflow-y-hidden");
+        } else {
+            document.body.classList.remove("overflow-y-hidden");
+        }
+    }, [isOpen])
+
     return (
         <motion.nav
             initial={false}
@@ -51,7 +59,7 @@ const NavbarBurger = ({}) => {
             />
             <motion.ul
                 variants={variants}
-                className="absolute grid w-full gap-3 px-10 py-16 max-h-screen overflow-y-auto"
+                className={`absolute grid w-full gap-3 px-10 py-16 max-h-screen ${isOpen ?  'overflow-y-auto' : 'overflow-y-hidden'}`}
             >
                 {SIDENAV_ITEMS.map((item, idx) => {
                     const isLastItem = idx === SIDENAV_ITEMS.length - 1; // Check if it's the last item
