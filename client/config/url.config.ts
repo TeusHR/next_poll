@@ -14,6 +14,8 @@ export const getLaboratoryUrl = (str: string) => `/laboratories${str}`
 
 export const getLaboratoryDevelopmentsUrl = (str: string) => `/laboratory-developments${str}`
 
+export const getDigamUrl = (str: string) => `/digam${str}`
+
 export const getInternationalUrl = (str: string) => `/international-projects${str}`
 
 export const getConferencesUrl = (str: string) => `/conferences${str}`

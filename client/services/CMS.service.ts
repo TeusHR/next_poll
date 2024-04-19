@@ -3,7 +3,7 @@ import {
     getActivitiesUrl,
     getConferencesUrl,
     getConsultingUrl,
-    getCooperationsUrl,
+    getCooperationsUrl, getDigamUrl,
     getInnovationsUrl, getInternationalUrl, getLaboratoryDevelopmentsUrl, getLaboratoryUrl,
     getResearchWorksUrl,
     getScienceSchoolsUrl,
@@ -21,6 +21,7 @@ import {IActivity, ICreateActivity} from "@/types/Activity";
 import {ICreateInternational, IInternational} from "@/types/International";
 import {ICreateLaboratory, ILaboratory} from "@/types/Laboratory";
 import {ICreateDevelopments, IDevelopments} from "@/types/LaboratoryDevelopments";
+import {ICreateDigam, IDigam} from "@/types/Digam";
 
 
 export const ConferencesService = {
@@ -243,6 +244,17 @@ export const LaboratoryDevelopService = {
     async removeLaboratoryDevelop(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getLaboratoryDevelopmentsUrl(`/${id}`))
         return status === 200
+    },
+};
+
+export const DigamService = {
+    async getDigam(authAxios: AxiosInstance) {
+        const {data} = await authAxios.get<IDigam>(getDigamUrl(''))
+        return data
+    },
+    async postDigam(item:ICreateDigam, authAxios: AxiosInstance) {
+        const {status} = await authAxios.post<ICreateDigam>(getDigamUrl(''), item)
+        return status
     },
 };
 
