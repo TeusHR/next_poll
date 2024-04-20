@@ -65,6 +65,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/consulting',
     },
     {
+        title: 'Відділ міжнародних грантів та академічної мобільності',
+        path: '/cms/digam',
+    },
+    {
         title: 'Наукова робота ОНТУ',
         path: '/cms/news',
     },

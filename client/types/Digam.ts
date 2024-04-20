@@ -1,3 +1,5 @@
+import {uploadType} from "../app/(dashboard)/cms/innovations/components/InnovationsEdit";
+
 export interface IDigam {
     id:string,
     text:string,
@@ -28,3 +30,17 @@ export interface IForeignUniversities {
     description:string,
 }
 
+
+export interface ICreateDigamForm {
+    text: string
+    filesOrg:FileList,
+    organizations: IOrganizationsForm[],
+    foreignUniversities:IForeignUniversities[]
+}
+
+
+export interface IOrganizationsForm {
+    image:uploadType,
+    title:string
+    link:string,
+}

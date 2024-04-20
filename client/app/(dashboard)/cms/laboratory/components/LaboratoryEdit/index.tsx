@@ -106,7 +106,7 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
                 toast.error('Не знайдено')
             })
             .finally(() => setIsLoading(false))
-    }, [laboratoryId]);
+    }, [laboratoryId, setValue]);
 
     useEffect(() => {
         if (laboratory) {
@@ -500,7 +500,6 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
                                                                    handleRemoveFile={(index) => handleRemoveDynamic(index, 'file', idx)}/>
                                                 </div>
                                             </div>
-
                                             <div className="flex flex-col gap-4 w-full relative justify-end">
                                                 <Controller name={`developments.${idx}.images`} control={control}
                                                             render={() =>

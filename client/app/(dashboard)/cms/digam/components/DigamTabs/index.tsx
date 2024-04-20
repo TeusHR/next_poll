@@ -17,9 +17,9 @@ const DigamTabs = ({}) => {
 
     useEffect(() => {
         if (status === 'authenticated') {
-            DigamService.getDigam($apiAuth).then(res => {
-                setInitialDigam(res)
-            })
+            // DigamService.getDigam($apiAuth).then(res => {
+            //     setInitialDigam(res)
+            // })
         }
     }, [$apiAuth, status]);
 
