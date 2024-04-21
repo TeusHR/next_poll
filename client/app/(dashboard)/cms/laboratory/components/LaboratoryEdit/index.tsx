@@ -274,7 +274,7 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
                     if (status) {
                         toast.success('Успішно видалено')
                         setLaboratory(prevState => {
-                            if (!prevState) return undefined; // Возвращаем undefined, если prevState не определен
+                            if (!prevState) return undefined;
                             const newDevelopments = prevState.developments.filter((_, idx) => idx !== index);
                             return {
                                 ...prevState,

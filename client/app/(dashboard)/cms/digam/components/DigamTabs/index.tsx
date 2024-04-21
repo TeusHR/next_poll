@@ -17,14 +17,14 @@ const DigamTabs = ({}) => {
 
     useEffect(() => {
         if (status === 'authenticated') {
-            // DigamService.getDigam($apiAuth).then(res => {
-            //     setInitialDigam(res)
-            // })
+            DigamService.getDigam($apiAuth).then(res => {
+                setInitialDigam(res)
+            })
         }
     }, [$apiAuth, status]);
 
     return (
-        <div className="flex flex-col px-10 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
+        <div className="flex flex-col px-10 max-xl:px-3 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
             <div className="flex items-center justify-between">
                 <TitleBack title="Відділ міжнародних грантів та академічної мобільності" isBack={false}/>
             </div>

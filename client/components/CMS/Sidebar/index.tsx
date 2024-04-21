@@ -97,7 +97,7 @@ const Sidebar = ({}) => {
                         <span className="font-bold text-xl hidden lg:flex">SCINT ONTU</span>
                     </Link>
 
-                    <div className="flex flex-col space-y-2  lg:px-6 ">
+                    <div className="flex flex-col space-y-2 lg:px-6 overflow-y-auto">
                     {SIDENAV_ITEMS.map((item, idx) => {
                             return <MenuItem key={idx} item={item}/>;
                         })}

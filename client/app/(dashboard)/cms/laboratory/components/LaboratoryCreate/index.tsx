@@ -376,8 +376,8 @@ const LaboratoryCreate = ({}) => {
                                                        labelPlacement="outside"
                                                        placeholder="Введіть назву"
                                                        autoComplete="off"
-                                                       isInvalid={!!formState.errors.title?.message}
-                                                       errorMessage={formState.errors.title?.message}
+                                                       isInvalid={!!formState.errors?.developments?.[idx]?.title?.message}
+                                                       errorMessage={formState.errors?.developments?.[idx]?.title?.message}
                                                 />
                                             }
                                             />
@@ -386,7 +386,7 @@ const LaboratoryCreate = ({}) => {
                                                             render={() =>
                                                                 <div className="w-full">
                                                                     <div
-                                                                        className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                        className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors?.developments?.[idx]?.files?.message ? 'text-red-600' : ''}`}>
                                                                         Завантаження документів
                                                                     </div>
                                                                     <DNDUpload
@@ -394,9 +394,9 @@ const LaboratoryCreate = ({}) => {
                                                                         styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                         Скинь мені файли
                                                                     </DNDUpload>
-                                                                    {formState.errors.files?.message &&
+                                                                    {formState.errors?.developments?.[idx]?.files?.message &&
                                                                         <div
-                                                                            className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                                            className="text-red-600 text-sm">{formState.errors?.developments?.[idx]?.files?.message}</div>}
                                                                 </div>
                                                             }
                                                 />
@@ -411,7 +411,7 @@ const LaboratoryCreate = ({}) => {
                                                             render={() =>
                                                                 <div className="w-full">
                                                                     <div
-                                                                        className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                        className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors?.developments?.[idx]?.images?.message ? 'text-red-600' : ''}`}>
                                                                         Завантаження зображень
                                                                     </div>
                                                                     <DNDUpload
@@ -420,9 +420,9 @@ const LaboratoryCreate = ({}) => {
                                                                         styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                         Скинь мені файли
                                                                     </DNDUpload>
-                                                                    {formState.errors.files?.message &&
+                                                                    {formState.errors?.developments?.[idx]?.images?.message &&
                                                                         <div
-                                                                            className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                                            className="text-red-600 text-sm">{formState.errors?.developments?.[idx]?.images?.message}</div>}
                                                                 </div>
                                                             }
                                                 />
@@ -439,7 +439,7 @@ const LaboratoryCreate = ({}) => {
                                                         render={({field}) =>
                                                             <>
                                                                 <div
-                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
+                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors?.developments?.[idx]?.text?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}>
                                                                     Текст
                                                                 </div>
                                                                 <div className="relative transition-all w-full">
@@ -448,9 +448,9 @@ const LaboratoryCreate = ({}) => {
                                                                                    placeholder={'Напишіть текст для слайдера'}
                                                                     />
                                                                 </div>
-                                                                {formState.errors.text?.message &&
+                                                                {formState.errors?.developments?.[idx]?.text?.message &&
                                                                     <div
-                                                                        className="text-red-600 text-sm">{formState.errors.text.message}</div>}
+                                                                        className="text-red-600 text-sm">{formState.errors?.developments?.[idx]?.text?.message}</div>}
                                                             </>
                                                         }
                                             />
