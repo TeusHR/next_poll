@@ -19,6 +19,9 @@ const tailwindConfig: Config = {
             },
             colors: {
                 fd:'#ffd70d'
+            },
+            grayscale: {
+              75:'75%'
             }
         },
     },

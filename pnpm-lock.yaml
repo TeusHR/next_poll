@@ -53,6 +53,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.2.4
         version: 2.2.4(@tiptap/pm@2.2.4)
+      '@types/google.maps':
+        specifier: ^3.55.7
+        version: 3.55.7
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -4582,6 +4585,10 @@ packages:
     dependencies:
       '@types/react': 18.2.74
     dev: true
+
+  /@types/google.maps@3.55.7:
+    resolution: {integrity: sha512-SlWFx0vo7RSAOC63+PTz8FeqLDaRYs7PrS/L0bZSKswxIN5TnCuckbeIwZpgD/S+DWalPteXfDbg5JsUER5Cyw==}
+    dev: false
 
   /@types/graceful-fs@4.1.9:
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
