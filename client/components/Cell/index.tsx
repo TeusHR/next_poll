@@ -10,7 +10,7 @@ const cellItemsLeft: ICellItem[] = [
     {
         text: 'Lorem ipsum dolor sit amet',
         image: '/image/helmet.png',
-        link: '/'
+        link: '/research'
     },
     {
         text: 'Lorem ipsum dolor sit amet',
@@ -23,7 +23,7 @@ const cellItemsRight: ICellItem[] = [
     {
         text: 'Lorem ipsum dolor sit amet',
         image: '/image/atom.png',
-        link: '/'
+        link: '/activity'
     },
     {
         text: 'Lorem ipsum dolor sit amet',

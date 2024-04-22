@@ -4,6 +4,8 @@ export const getAuthUrl = (str: string) => `/auth${str}`
 
 export const getFileUrl = (folder?: string) => `/upload/?folder=${folder}`
 
+export const getFeedBackUrl = (str: string) => `/feedback${str}`
+
 export const getCooperationsUrl = (str: string) => `/cooperations${str}`
 
 export const getConsultingUrl = (str: string) => `/consulting${str}`

@@ -9,34 +9,34 @@ interface ILinkListItemLeft {
 const ILinkListItemLeft: ILinkListItemLeft[] = [
     {
         text: 'НАУКОВО-ДОСЛІДНИЙ ІНСТИТУТ',
-        link: ''
+        link: '/consulting'
     },
     {
         text: 'КОНСАЛТИНГОВИЙ ЦЕНТР',
-        link: ''
+        link: '/consulting'
     },
     {
         text: 'НАУКОВО-ДОСЛІДНІ ЛАБОРАТОРІЇ',
-        link: ''
+        link: '/laboratory'
     },
     {
         text: 'НАУКОВІ ШКОЛИ',
-        link: ''
+        link: '/science'
     },
     {
         text: 'СТУДЕНТСЬКА НАУКА',
-        link: ''
+        link: '/student'
     },
     {
         text: 'ІННОВАЦІЙНІ РОЗРОБКИ',
-        link: ''
+        link: '/innovations'
     },
 ]
 
 const ILinkListItemRight: ILinkListItemLeft[] = [
     {
         text: 'ЦЕНТР МІЖНАРОДНОЇ ДІЯЛЬНОСТІ ',
-        link: ''
+        link: '/consulting'
     },
     {
         text: 'ВІДДІЛ МІЖНАРОДНИХ ГРАНТІВ ТА АКАДЕМІЧНОЇ МОБІЛЬНОСТІ',
@@ -44,19 +44,19 @@ const ILinkListItemRight: ILinkListItemLeft[] = [
     },
     {
         text: 'ЦЕНТР ЛІНГВІСТИЧНОЇ ПІДГОТОВКИ',
-        link: ''
+        link: '/consulting'
     },
     {
         text: 'ЦЕНТР УКРАЇНО-ФРАНЦУЗЬКОГО СПІВРОБІТНИЦТВА',
-        link: ''
+        link: '/consulting'
     },
     {
         text: 'ЦЕНТР УКРАЇНО-ТУРЕЦЬКОГО СПІВРОБІТНИЦТВА',
-        link: ''
+        link: '/consulting'
     },
     {
         text: 'МІЖНАРОДНІ ПРОЕКТИ',
-        link: ''
+        link: '/international'
     },
 ]
 

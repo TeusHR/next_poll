@@ -7,12 +7,8 @@ import {Input} from "@nextui-org/react";
 import {Button} from "@nextui-org/react";
 import NextImage from "next/image";
 import {Image} from "@nextui-org/react";
-
-interface IFeedbackForm {
-    name: string,
-    gmail: string,
-    text: string,
-}
+import {IFeedbackForm} from "@/types/Feedback";
+import {FeedbackService} from "@/services/client.service";
 
 const Feedback = ({}) => {
 
@@ -24,18 +20,38 @@ const Feedback = ({}) => {
         mode: "all",
         defaultValues: {
             name: '',
-            gmail: '',
+            email: '',
             text: ''
         },
     });
 
     const [isLoading, setIsLoading] = useState(false)
 
-    const onSubmit: SubmitHandler<IFeedbackForm> = data => {
-        if (!toast.isActive('feedback')) {
-            setIsLoading(true)
-
+    const onSubmit: SubmitHandler<IFeedbackForm> = async (dataForm) => {
+        if (toast.isActive('toast-register')) {
+            return;
         }
+        setIsLoading(true)
+
+        try {
+            const data: IFeedbackForm = {
+                name: dataForm.name,
+                email: dataForm.email,
+                text: dataForm.text,
+            };
+
+            FeedbackService.post(data).then((status) => {
+                if (status === 201) {
+                    toast.success('Успішно створено')
+                }
+            })
+        } catch (error) {
+            console.log(error)
+            toast.error('Щось пішло не так')
+        } finally {
+            setIsLoading(false)
+        }
+
     }
 
     return (
@@ -44,86 +60,106 @@ const Feedback = ({}) => {
                 <div
                     className="bg-white border border-primary rounded-2xl z-20 justify-end w-full max-xl:max-w-[450px] max-w-[600px] min-h-[700px] relative">
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="px-16 py-14 text-primary">
-                            <div className="text-4xl xl:text-2xl md:text-xl">
-                                <span className="font-semibold">Зворотній зв’язок</span>
+                        <div className="flex h-full flex-col">
+                            <div className="px-16 pt-14 w-full min-h-[500px] text-primary">
+                                <div className="text-4xl xl:text-2xl md:text-xl">
+                                    <span className="font-semibold">Зворотній зв’язок</span>
+                                </div>
+                                <div className="flex flex-col mt-8 gap-4">
+                                    <Controller name="name" control={control} rules={{
+                                        required: "Обов'язкове поле",
+                                        minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
+                                        maxLength: {value: 50, message: "Максимальна довжина 50 символів"},
+                                    }} render={({field}) =>
+                                        <Input className="border-none py-2"
+                                               type="text"
+                                               value={field.value}
+                                               onValueChange={field.onChange}
+                                               key="name"
+                                               classNames={{
+                                                   // inputWrapper: "bg-transparent rounded-none shadow-transparent data-[hover=true]:bg-transparent data-[focus=true]:bg-transparent",
+                                                   // input: "focus:outline-none text-xl text-primary px-2 rounded-none py-[4px] border-b-1 border-[#ccc] bg-transparent",
+                                                   input: "focus:outline-none text-xl text-primary",
+                                                   label: "text-lg text-primary",
+                                                   errorMessage: "text-red-600 text-base"
+                                               }}
+                                               variant="underlined"
+                                               max="50"
+                                               min="2"
+                                               label="Ім’я"
+                                            // placeholder="Ім’я"
+                                               autoComplete="off"
+                                               isInvalid={!!formState.errors.name?.message}
+                                               errorMessage={formState.errors.name?.message}
+                                        />
+                                    }
+                                    />
+                                    <Controller name="email" control={control} rules={{
+                                        required: "Обов'язкове поле",
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: "Невірна адреса електронної пошти"
+                                        }
+                                    }} render={({field}) =>
+                                        <Input className="border-none py-2"
+                                               type="email"
+                                               value={field.value}
+                                               onValueChange={field.onChange}
+                                               classNames={{
+                                                   input: "focus:outline-none text-xl text-primary",
+                                                   label: "text-lg text-primary",
+                                                   errorMessage: "text-red-600 text-base"
+                                               }}
+                                               variant="underlined"
+                                               key="gmail"
+                                               max="50"
+                                               min="2"
+                                               label="Пошта"
+                                               placeholder="example@gmail.com"
+                                               autoComplete="off"
+                                               isInvalid={!!formState.errors.email?.message}
+                                               errorMessage={formState.errors.email?.message}
+                                        />
+                                    }
+                                    />
+                                    <Controller name="text" control={control} rules={{
+                                        required: "Обов'язкове поле",
+                                        minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
+                                        maxLength: {value: 250, message: "Максимальна довжина 250 символів"},
+                                    }} render={({field}) =>
+                                        <Input className="border-none py-2"
+                                               type="text"
+                                               value={field.value}
+                                               onValueChange={field.onChange}
+                                               key="text"
+                                               classNames={{
+                                                   input: "focus:outline-none text-xl text-primary",
+                                                   label: "text-lg text-primary",
+                                                   errorMessage: "text-red-600 text-base"
+                                               }}
+                                               variant="underlined"
+                                               max="50"
+                                               min="2"
+                                               label="Текст"
+                                               autoComplete="off"
+                                               isInvalid={!!formState.errors.text?.message}
+                                               errorMessage={formState.errors.text?.message}
+                                        />
+                                    }
+                                    />
+                                </div>
                             </div>
-                            <div className="flex flex-col mt-16 gap-12">
-                                <Controller name="name" control={control} rules={{
-                                    required: "Обов'язкове поле",
-                                }} render={({field}) =>
-                                    <Input className="border-none py-2"
-                                           type="text"
-                                           defaultValue={field.value}
-                                           isRequired
-                                           classNames={{
-                                               inputWrapper: "border-b-1 border-primary pb-[5px]",
-                                               input: "focus:outline-none text-xl text-primary px-2",
-                                               errorMessage: "text-red-600 text-base"
-                                           }}
-                                           max="50"
-                                           min="2"
-                                           placeholder="Ім’я"
-                                           autoComplete="off"
-                                           isInvalid={!!formState.errors.name?.message}
-                                           errorMessage={formState.errors.name?.message}
-                                    />
-                                }
-                                />
-                                <Controller name="gmail" control={control} rules={{
-                                    required: "Обов'язкове поле",
-                                }} render={({field}) =>
-                                    <Input className="border-none py-2"
-                                           type="text"
-                                           defaultValue={field.value}
-                                           isRequired
-                                           classNames={{
-                                               inputWrapper: "border-b-1 border-primary pb-[5px]",
-                                               input: "focus:outline-none text-xl text-primary px-2",
-                                               errorMessage: "text-red-600 text-base"
-                                           }}
-                                           max="50"
-                                           min="2"
-                                           placeholder="Пошта"
-                                           autoComplete="off"
-                                           isInvalid={!!formState.errors.gmail?.message}
-                                           errorMessage={formState.errors.gmail?.message}
-                                    />
-                                }
-                                />
-                                <Controller name="text" control={control} rules={{
-                                    required: "Обов'язкове поле",
-                                }} render={({field}) =>
-                                    <Input className="border-none py-2"
-                                           type="text"
-                                           defaultValue={field.value}
-                                           isRequired
-                                           classNames={{
-                                               inputWrapper: "border-b-1 border-primary pb-[5px]",
-                                               input: "focus:outline-none text-xl text-primary px-2",
-                                               errorMessage: "text-red-600 text-base"
-                                           }}
-                                           max="50"
-                                           min="2"
-                                           placeholder="Текст"
-                                           autoComplete="off"
-                                           isInvalid={!!formState.errors.text?.message}
-                                           errorMessage={formState.errors.text?.message}
-                                    />
-                                }
-                                />
-                            </div>
-                        </div>
-                        <div className="flex justify-end mt-12">
-                            <Button
-                                className="bg-primary flex flex-row gap-4 p-4 px-8 h-[60px] max-sm:!text-[14px]"
-                                isLoading={isLoading}
-                                disableAnimation
-                                type="submit">
+                            <div className="flex justify-end mt-2">
+                                <Button
+                                    className="bg-primary flex flex-row gap-4 rounded-l-[4px] p-4 px-8 h-[60px] max-sm:!text-[14px]"
+                                    isLoading={isLoading}
+                                    disableAnimation
+                                    radius="none"
+                                    type="submit">
                                 <span className="uppercase text-white text-xl md:text-base">
                                         Відправити
                                 </span>
-                                <span>
+                                    <span>
                                     <Image
                                         src={'/image/arrowSubmit.svg'}
                                         as={NextImage}
@@ -132,7 +168,8 @@ const Feedback = ({}) => {
                                         height={24}
                                     />
                                     </span>
-                            </Button>
+                                </Button>
+                            </div>
                         </div>
                     </form>
                 </div>

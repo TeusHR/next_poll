@@ -9,18 +9,17 @@ const cellItemsRow: ICellItem[] = [
     {
         text: 'Міжнародний конкурс Black Sea Science 2024',
         image: '/image/manCell.png',
-
         link: '/'
     },
     {
         text: 'Конференції, семінари та конкурси',
         image: '/image/womanCell.png',
-        link: '/'
+        link: '/conference'
     },
     {
         text: 'Напрямки для співпраці',
         image: '/image/wmCell.png',
-        link: '/'
+        link: '/cooperation'
     }
 ]
 
