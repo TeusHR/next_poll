@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {ReactElement, useState} from 'react'
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {Image} from "@nextui-org/react";
@@ -8,7 +8,7 @@ import NextImage from "next/image";
 export type SideNavItem = {
     title: string;
     path: string;
-    icon?: JSX.Element;
+    icon?: ReactElement;
     submenu?: boolean;
     subMenuItems?: SideNavItem[];
 };
@@ -33,12 +33,12 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/conference',
     },
     {
-        title: 'Наукові школи',
-        path: '/cms/science',
+        title: 'Напрямки для співпраці',
+        path: '/cms/cooperation',
     },
     {
-        title: 'Відділ міжнародних грантів',
-        path: '/cms/department',
+        title: 'Наукові школи',
+        path: '/cms/science',
     },
     {
         title: 'Інноваційні розробки',
@@ -67,10 +67,6 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     {
         title: 'Відділ міжнародних грантів та академічної мобільності',
         path: '/cms/digam',
-    },
-    {
-        title: 'Наукова робота ОНТУ',
-        path: '/cms/news',
     },
     {
         title: 'Студентська наука',

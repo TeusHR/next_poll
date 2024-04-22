@@ -10,7 +10,7 @@ import {
     getStudentUrl
 } from "@/config/url.config";
 import {IConferences, ICreateConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
-import {ICreateScience} from "@/types/Science";
+import {ICreateScience, IScience} from "@/types/Science";
 import {ICooperation, ICreateCooperation} from "@/types/Cooperation";
 import {ICreateResearch, IResearch} from "@/types/Research";
 import {ICreateInnovation, IInnovation} from "@/types/Innovation";
@@ -260,15 +260,23 @@ export const DigamService = {
 
 
 export const ScienceService = {
-    async postScience(item:ICreateScience, authAxios: AxiosInstance) {
+    async getAllScience(authAxios: AxiosInstance, page: number, limit: number) {
+        const {data} = await authAxios.get<IResponseMeta<IScience[]>>(getScienceSchoolsUrl(`?page=${page}&limit=${limit}`))
+        return data
+    },
+    async getScience(id: string) {
+        const {data} = await $api.get<IScience>(getScienceSchoolsUrl(`/${id}`))
+        return data
+    },
+    async post(item:ICreateScience, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateScience>(getScienceSchoolsUrl(''), item)
         return status
     },
-    async updateScience(item:ICreateScience, id: number, authAxios: AxiosInstance) {
-        const {status} = await authAxios.put<ICreateScience>(getScienceSchoolsUrl(`/${id}`), item)
+    async updateScience(item:ICreateScience, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateScience>(getScienceSchoolsUrl(`/${id}`), item)
         return status
     },
-    async removeScience(id: number, authAxios: AxiosInstance) {
+    async removeScience(id: string, authAxios: AxiosInstance) {
         const {status} = await authAxios.delete(getScienceSchoolsUrl(`/${id}`))
         return status === 200
     },

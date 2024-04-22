@@ -26,7 +26,7 @@ import {
     ConferencesService,
     CooperationService,
     InnovationsService, InternationalService, LaboratoryService,
-    ResearchService
+    ResearchService, ScienceService
 } from "@/services/CMS.service";
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
@@ -37,6 +37,7 @@ import {IActivity} from "@/types/Activity";
 import {IInnovation} from "@/types/Innovation";
 import {IInternational} from "@/types/International";
 import {ILaboratory} from "@/types/Laboratory";
+import {IScience} from "@/types/Science";
 
 type Props<T> = {
     dataItems: T[]
@@ -58,7 +59,7 @@ type Props<T> = {
     refetch?: () => void
 }
 
-type ValidDataTypes = ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity | IInnovation | ILaboratory | IInternational;
+type ValidDataTypes = ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity | IInnovation | ILaboratory | IInternational | IScience;
 
 const TableItems = <T extends ValidDataTypes>(
     {
@@ -355,6 +356,8 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
                 await ConferencesService.removeConferences(idItem, apiAuth)
             else if (typeProduct === 'cooperation')
                 await CooperationService.removeCooperation(idItem, apiAuth)
+            else if (typeProduct === 'laboratory')
+                await ScienceService.removeScience(idItem, apiAuth)
             else if (typeProduct === 'research')
                 await ResearchService.removeResearch(idItem, apiAuth)
             else if (typeProduct === 'activity')
