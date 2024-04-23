@@ -1,33 +1,10 @@
 'use client'
-import React, {FC, useCallback, useEffect, useRef, useState} from 'react'
+import React, {FC, useCallback, useEffect, useRef} from 'react'
 import {Wrapper} from "@googlemaps/react-wrapper";
-import Loading from "@/components/Loading";
-import {$api} from "@/api/interceptors";
-import {API_URL} from "@/config/constants";
 import NextImage from "next/image";
 import {Image} from "@nextui-org/react";
 
-type Polygons = {
-    green: google.maps.LatLngLiteral[]
-    blue: google.maps.LatLngLiteral[]
-    red: google.maps.LatLngLiteral[]
-    out: google.maps.LatLngLiteral[]
-}
-
 const GoogleMap = ({}) => {
-
-
-    // return (
-    //     <>
-    //         <Image
-    //             src={'/image/googlemaps.png'}
-    //             as={NextImage}
-    //             classNames={{wrapper:"static"}}
-    //             alt={'google map'}
-    //             fill={true}
-    //         />
-    //     </>
-    // )
 
     return (
         <div className="w-full">
@@ -35,7 +12,6 @@ const GoogleMap = ({}) => {
         </div>
     )
 }
-
 
 export const GoogleMapWrapper: FC = () => {
 

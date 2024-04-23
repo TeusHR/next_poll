@@ -2,6 +2,7 @@ import React from 'react'
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";
 import Link from "next/link";
+import Search from "@/components/Search";
 
 
 const Header = ({}) => {
@@ -34,15 +35,7 @@ const Header = ({}) => {
                         </div>
                     </div>
                 </div>
-                <div className="cursor-pointer">
-                    <Image src={'/image/search.svg'}
-                           alt={'Пошук'}
-                           as={NextImage}
-                           width={34}
-                           height={34}
-                           fetchPriority={"high"}
-                    />
-                </div>
+                <Search/>
             </header>
         </>
     )
