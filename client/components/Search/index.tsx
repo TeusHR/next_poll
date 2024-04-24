@@ -2,7 +2,6 @@
 import React, {Key, useCallback, useEffect, useMemo, useState} from 'react'
 import {
     Autocomplete, AutocompleteItem, AutocompleteSection,
-    Button,
     Image,
     Modal, ModalBody,
     ModalContent,
@@ -13,10 +12,12 @@ import debounce from "lodash.debounce";
 import {useRouter} from "next/navigation";
 import {getBySearch} from "@/services/client.service";
 import {ISearchInput} from "@/types/Search";
+import {getKeyDescription} from "@/utils/PageName";
+import {stripHtml} from "../../app/(dashboard)/cms/utils";
 
 
 const Search = ({}) => {
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [searches, setSearch] = useState<ISearchInput[]>([])
@@ -63,6 +64,14 @@ const Search = ({}) => {
         router.push(`/product/${key}`)
     }, [router])
 
+    const handleModalClose = useCallback(() => {
+        setSearch([])
+
+        setTimeout(() => {
+            onClose();
+        }, 100);
+    }, [onClose]);
+
     return (
 
         <>
@@ -81,6 +90,7 @@ const Search = ({}) => {
                 backdrop="opaque"
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
+                hideCloseButton={true}
                 placement="top"
                 classNames={{
                     backdrop: "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
@@ -88,79 +98,74 @@ const Search = ({}) => {
                 }}
             >
                 <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalBody>
-                                <div>
-                                    <Autocomplete
-                                        className="w-full !h-full bg-transparent select-none !pl-12 !p-[9.5px] border data-[open=true]:border-primary-400 border-solid border-gray-300 !rounded-full bg-white"
-                                        placeholder="Пошук"
-                                        onInputChange={(e) => {
-                                            handleSearch(e);
-                                        }}
-                                        onSelectionChange={handleSelect}
-                                        shouldCloseOnBlur={false}
-                                        startContent={<SVGSearchElement/>}
-                                        classNames={{
-                                            listbox: 'relative px-12 w-full h-full',
-                                            base: "bg-transparent",
-                                            listboxWrapper: "bg-transparent",
-                                        }}
-                                        fullWidth
-                                        popoverProps={{
-                                            classNames: {
-                                                content: "px-12 py-0 bg-transparent shadow-none",
-                                            }
-                                        }}
-                                        inputProps={{
-                                            classNames: {
-                                                inputWrapper: 'bg-white select-none border-none box-shadow shadow-none  group/input data-[focus=true]:!bg-white data-[hover=true]:!bg-white gap-0 py-0 px-4  h-full min-h-0',
-                                                innerWrapper: 'gap-4'
-                                            }
-                                        }}
-                                        listboxProps={{
-                                            emptyContent: "Нічого не знайдено.",
-                                        }}
-                                        selectorIcon={<div></div>}
-                                        selectorButtonProps={{isDisabled: true}}
-                                        disableAnimation={true}
-                                        disableSelectorIconRotation={true}
-                                        aria-label="Пошук"
-                                    >
-                                        {searches.map((output) => (
-                                            <AutocompleteSection key={output.type} title={output.type}>
-                                                {output.items.map((item, index) => (
-                                                    <AutocompleteItem key={item.id}
-                                                                      textValue={item.text}
-                                                                      className="capitalize">
-                                                        <div key={`${item}-${index}`}
-                                                             className="flex gap-4 items-center">
-                                                            {/*<Image*/}
-                                                            {/*    alt={item.title}*/}
-                                                            {/*    src={item.image}*/}
-                                                            {/*    width={75}*/}
-                                                            {/*    height={75}*/}
-                                                            {/*    sizes="100vw"*/}
-                                                            {/*    style={{*/}
-                                                            {/*        height: 'auto',*/}
-                                                            {/*    }}*/}
-                                                            {/*/>*/}
-                                                            <div className="flex flex-col">
-                                                                <span className="text-small">{item.title}</span>
-                                                                <span
-                                                                    className="text-tiny text-default-400">{item.text}</span>
-                                                            </div>
-                                                        </div>
-                                                    </AutocompleteItem>
-                                                ))}
-                                            </AutocompleteSection>
-                                        ))}
-                                    </Autocomplete>
-                                </div>
-                            </ModalBody>
-
-                        </>
-                    )}
+                    <ModalBody>
+                        <Autocomplete
+                            className="w-full !h-full bg-transparent select-none !pl-12 !p-[9.5px] border data-[open=true]:border-primary-400 border-solid border-gray-300 !rounded-full bg-white"
+                            placeholder="Пошук"
+                            onInputChange={(e) => {
+                                handleSearch(e);
+                            }}
+                            onSelectionChange={handleSelect}
+                            isClearable={false}
+                            allowsCustomValue={true}
+                            shouldCloseOnBlur={false}
+                            startContent={<SVGSearchElement/>}
+                            classNames={{
+                                listbox: 'relative px-12 w-full h-full',
+                                base: "bg-transparent",
+                                listboxWrapper: "bg-transparent max-h-[60vh]",
+                            }}
+                            fullWidth
+                            onClose={() => handleModalClose()}
+                            popoverProps={{
+                                classNames: {
+                                    content: "mt-2",
+                                },
+                            }}
+                            inputProps={{
+                                classNames: {
+                                    inputWrapper: 'bg-white select-none border-none box-shadow shadow-none  group/input data-[focus=true]:!bg-white data-[hover=true]:!bg-white gap-0 py-0 px-4  h-full min-h-0',
+                                    innerWrapper: 'gap-4'
+                                }
+                            }}
+                            listboxProps={{
+                                emptyContent: "Нічого не знайдено.",
+                            }}
+                            selectorIcon={<div></div>}
+                            selectorButtonProps={{isDisabled: true}}
+                            disableAnimation={true}
+                            disableSelectorIconRotation={true}
+                            aria-label="Пошук"
+                        >
+                            {searches.map((output) => (
+                                <AutocompleteSection key={output.type}
+                                                     classNames={{
+                                                         heading: "text-lg max-lg:text-base font-bold text-primary",
+                                                         group: "pl-3"
+                                                     }}
+                                                     title={getKeyDescription(output.type)}
+                                                     showDivider>
+                                    {output.items.map((item, index) => (
+                                        <AutocompleteItem key={item.id}
+                                                          textValue={item.text}
+                                                          className="capitalize">
+                                            <div key={`${item}-${index}`}
+                                                 className="flex gap-4 items-center">
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-base max-md:text-sm">
+                                                        {item.title}
+                                                    </span>
+                                                    <span className="text-sm max-md:text-xs text-default-400">
+                                                        {stripHtml(item.text)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </AutocompleteItem>
+                                    ))}
+                                </AutocompleteSection>
+                            ))}
+                        </Autocomplete>
+                    </ModalBody>
                 </ModalContent>
             </Modal>
         </>
