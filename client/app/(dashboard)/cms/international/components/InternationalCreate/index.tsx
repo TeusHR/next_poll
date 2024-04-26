@@ -13,6 +13,7 @@ import {FileService} from "@/services/file.service";
 import {FileToFileList} from "@/utils/FIleToFileList";
 import {ICreateInternational, ICreateInternationalForm} from "@/types/International";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 const InternationalCreate = ({}) => {
@@ -63,40 +64,20 @@ const InternationalCreate = ({}) => {
             const urlsDocs = await processUpload(files, 'pdf');
             const urlsImages = await processUpload(filesImage, 'image');
 
-            // let urlsDocs: string[] = [];
-            // if (uploadFiles.length > 0) {
-            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
-            //     if (filesPath.length === 0) {
-            //         toast.error('Файли не збережені, щось не так.');
-            //         return;
-            //     }
-            //     urlsDocs = filesPath.map(file => file.url);
-            // }
-            //
-            // let urlsImages: string[] = [];
-            // if (uploadImages.length > 0) {
-            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadImages), 'image');
-            //     if (filesPath.length === 0) {
-            //         toast.error('Файли не збережені, щось не так.');
-            //         return;
-            //     }
-            //     urlsImages = filesPath.map(file => file.url);
-            // }
-
             const dataProduct: ICreateInternational = {
                 title: dataForm.title,
                 text: dataForm.text,
                 files: urlsDocs,
                 images: urlsImages
             };
-            console.log(dataProduct)
-            InternationalService.postInternational(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    handlerReset()
-                    toast.success('Успішно створено')
-                }
-            })
+
+            const status = await InternationalService.postInternational(dataProduct, $apiAuth)
+            if (status === 201) {
+                await revalidateFetch('international')
+                reset()
+                handlerReset()
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

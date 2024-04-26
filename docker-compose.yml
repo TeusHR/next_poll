@@ -6,21 +6,24 @@ services:
     container_name: db
     restart: always
     env_file:
-      - .env
+      - ./.env
     ports:
-      - "5432:5432"
+      - "5432:5555"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   front:
     container_name: front
+    restart: always
     build:
       context: ./client
       dockerfile: Dockerfile
     env_file:
-      - .env
+      - ./.env
     ports:
       - "3000:3000"
+    depends_on:
+      - back
 
   back:
     container_name: back
@@ -29,7 +32,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     env_file:
-      - .env
+      - ./.env
     ports:
       - "4000:4000"
     depends_on:

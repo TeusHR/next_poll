@@ -1,5 +1,4 @@
 #!/bin/bash
-
 mkdir -p /secrets
 
 if [ ! -f /secrets/next_auth_secret ]; then
@@ -9,5 +8,6 @@ fi
 
 export NEXTAUTH_SECRET=$(cat /secrets/next_auth_secret)
 
-# Запускаем основной процесс, переданный в CMD Dockerfile
+pnpm build
+
 exec "$@"

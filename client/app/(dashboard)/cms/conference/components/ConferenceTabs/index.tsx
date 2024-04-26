@@ -5,7 +5,6 @@ import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {ConferencesService} from "@/services/CMS.service";
 import {ILiftGroupConference} from "@/types/Conference";
-import {Tab, Tabs} from "@nextui-org/react";
 import TitleBack from "@/components/CMS/TitleBack";
 import ConferenceTable from "../ConferenceTable";
 import {LiftGroupConference} from "@/utils/ConferenceType";
@@ -42,19 +41,7 @@ const ConferenceTabs = ({}) => {
             <div className="flex items-center justify-between">
                 <TitleBack title="Конференції, семінари та конкурси" isBack={false}/>
             </div>
-            <Tabs className="w-full" classNames={{
-                tab: "!text-medium max-xl:!text-base font-bold px-[20px] z-[1] data-[hover-unselected=true]:opacity-100",
-                base: "relative",
-                panel: 'mt-[20px] p-0',
-                tabList:'bg-white',
-                cursor: "w-full text-fd bg-fd h-[3px] bottom-[-4px]",
-                tabContent: "group-data-[selected=true]:text-primary max-sm:text-[12px] max-lg:text-base text-black group-data-[hover-unselected=true]:text-primary"
-            }} variant="solid">
-                <Tab key="conference" value="confernce" title="Список">
-                    <ConferenceTable tableColumn={tableColumn} conferences={initialConference} showAdd/>
-                </Tab>
-            </Tabs>
-            {/*{JSON.stringify(initialConference)}*/}
+            <ConferenceTable tableColumn={tableColumn} conferences={initialConference} showAdd/>
         </div>
     )
 }

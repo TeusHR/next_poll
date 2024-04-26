@@ -16,6 +16,7 @@ import {uploadType} from "../../../innovations/components/InnovationsEdit";
 import Title from "@/UI/Title";
 import CloseIcon from "@/UI/CloseIcon";
 import {ICreateDevelopments, IDevelopmentsForm} from "@/types/LaboratoryDevelopments";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     laboratoryId: string
@@ -158,12 +159,11 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
                 images: [...existingUrlImages, ...urlsImages],
             };
 
-            console.log(dataProduct)
-            await LaboratoryService.updateLaboratory(dataProduct, laboratoryId, $apiAuth).then((status) => {
-                if (status === 200) {
-                    toast.success('Успішно оновлено')
-                }
-            })
+            const status = await LaboratoryService.updateLaboratory(dataProduct, laboratoryId, $apiAuth)
+            if (status === 200) {
+                await revalidateFetch('laboratory')
+                toast.success('Успішно оновлено')
+            }
 
 
             let developments: ICreateDevelopments[] = []
@@ -212,6 +212,7 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
                         }
 
                     }
+                    await revalidateFetch('laboratoryDevelopments')
                 }
             } catch (error) {
                 console.log(error)

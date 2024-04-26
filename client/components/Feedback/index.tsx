@@ -16,6 +16,7 @@ const Feedback = ({}) => {
         handleSubmit,
         control,
         formState,
+        reset
     } = useForm<IFeedbackForm>({
         mode: "all",
         defaultValues: {
@@ -42,7 +43,8 @@ const Feedback = ({}) => {
 
             FeedbackService.post(data).then((status) => {
                 if (status === 201) {
-                    toast.success('Успішно створено')
+                    reset()
+                    toast.success('Відправлено')
                 }
             })
         } catch (error) {
@@ -77,8 +79,6 @@ const Feedback = ({}) => {
                                                onValueChange={field.onChange}
                                                key="name"
                                                classNames={{
-                                                   // inputWrapper: "bg-transparent rounded-none shadow-transparent data-[hover=true]:bg-transparent data-[focus=true]:bg-transparent",
-                                                   // input: "focus:outline-none text-xl text-primary px-2 rounded-none py-[4px] border-b-1 border-[#ccc] bg-transparent",
                                                    input: "focus:outline-none text-xl text-primary",
                                                    label: "text-lg text-primary",
                                                    errorMessage: "text-red-600 text-base"
@@ -87,7 +87,6 @@ const Feedback = ({}) => {
                                                max="50"
                                                min="2"
                                                label="Ім’я"
-                                            // placeholder="Ім’я"
                                                autoComplete="off"
                                                isInvalid={!!formState.errors.name?.message}
                                                errorMessage={formState.errors.name?.message}
@@ -115,7 +114,6 @@ const Feedback = ({}) => {
                                                max="50"
                                                min="2"
                                                label="Пошта"
-                                               placeholder="example@gmail.com"
                                                autoComplete="off"
                                                isInvalid={!!formState.errors.email?.message}
                                                errorMessage={formState.errors.email?.message}

@@ -8,6 +8,7 @@ import {toast} from "react-toastify";
 import {Button, Input} from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import {ICooperation, ICreateCooperation, ICreateCooperationForm} from "@/types/Cooperation";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     cooperationId: string
@@ -60,10 +61,11 @@ const CooperationEdit: FC<Props> = ({cooperationId}) => {
                 title: dataForm.title,
                 text: dataForm.text,
             };
-            CooperationService.updateCooperation(dataProduct, cooperationId, $apiAuth).then((status) => {
-                if (status === 200)
-                    toast.success('Напрямки успішно оновлено')
-            })
+            const status = await CooperationService.updateCooperation(dataProduct, cooperationId, $apiAuth)
+            if (status === 200) {
+                await revalidateFetch('cooperation')
+                toast.success('Напрямки успішно оновлено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

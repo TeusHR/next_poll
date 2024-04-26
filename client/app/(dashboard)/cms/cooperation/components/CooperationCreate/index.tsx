@@ -8,6 +8,7 @@ import {Button, Input} from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import {CooperationService} from "@/services/CMS.service";
 import {ICreateCooperation, ICreateCooperationForm} from "@/types/Cooperation";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 const ConsultingCreate = () => {
@@ -40,13 +41,13 @@ const ConsultingCreate = () => {
                 title: dataForm.title,
                 text: dataForm.text,
             };
-            console.log(dataProduct)
-            CooperationService.post(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    toast.success('Успішно створено')
-                }
-            })
+
+            const status = await CooperationService.post(dataProduct, $apiAuth)
+            if (status === 201) {
+                await revalidateFetch('cooperation')
+                reset()
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

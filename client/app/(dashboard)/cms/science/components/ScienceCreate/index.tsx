@@ -8,6 +8,7 @@ import {Button, Input} from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import {ScienceService} from "@/services/CMS.service";
 import {ICreateScience, ICreateScienceForm} from "@/types/Science";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 
@@ -41,13 +42,13 @@ const ScienceCreate = () => {
                 title: dataForm.title,
                 text: dataForm.text,
             };
-            console.log(dataProduct)
-            ScienceService.post(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    toast.success('Успішно створено')
-                }
-            })
+
+            const status = await ScienceService.post(dataProduct, $apiAuth)
+            if (status === 201) {
+                await revalidateFetch('science')
+                reset()
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

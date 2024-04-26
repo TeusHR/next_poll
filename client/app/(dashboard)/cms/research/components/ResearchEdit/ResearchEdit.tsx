@@ -11,6 +11,7 @@ import {ResearchService} from "@/services/CMS.service";
 import {Button, Input} from "@nextui-org/react";
 import {HandlerImageValidate} from "@/utils/ImageValidate";
 import EditorWrapper from "@/components/EditorWrapper";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 type Props = {
@@ -89,13 +90,11 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                     image: urlImage ? urlImage[0].url : research.image,
                 };
 
-                console.log(dataProduct)
-
-                ResearchService.updateResearch(dataProduct, researchId, $apiAuth).then((status) => {
-                    if (status === 200) {
-                        toast.success('Оновлено')
-                    }
-                })
+                const status = await ResearchService.updateResearch(dataProduct, researchId, $apiAuth)
+                if (status === 200) {
+                    await revalidateFetch('researchWork')
+                    toast.success('Оновлено')
+                }
             }
         } catch (error) {
             console.log(error)
@@ -148,9 +147,9 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                                                                 if (value && value.length > 0) {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
-                                                                            720,
                                                                             1280,
-                                                                            'Зображення має бути 400x400')
+                                                                            720,
+                                                                            'Зображення має бути 1280x720')
                                                                         setImagePreview(result)
                                                                     } catch (error) {
                                                                         setImagePreview('')
@@ -234,7 +233,7 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Оновити
                             </Button>
                         </div>
                     </div>

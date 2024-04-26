@@ -1,9 +1,8 @@
-import React, { ReactNode } from "react";
+import React, {ReactNode} from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-
-export default function LocaleLayout({ children }: {
+export default function LocaleLayout({children}: {
     children: ReactNode,
 }) {
 

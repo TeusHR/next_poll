@@ -11,6 +11,7 @@ import EditorWrapper from "@/components/EditorWrapper";
 import {ICreateResearch, ICreateResearchForm} from "@/types/Research";
 import {FileService} from "@/services/file.service";
 import {filePath} from "../../../consulting/components/ConsultingCreate";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 const ResearchCreate = ({}) => {
@@ -55,14 +56,13 @@ const ResearchCreate = ({}) => {
                 image: urlImage[0].url,
             };
 
-            console.log(dataProduct)
-            ResearchService.postResearch(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    setImagePreview('')
-                    toast.success('Успішно створено')
-                }
-            })
+            const status = await ResearchService.postResearch(dataProduct, $apiAuth)
+            if (status === 201) {
+                await revalidateFetch('researchWork')
+                reset()
+                setImagePreview('')
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
@@ -116,9 +116,9 @@ const ResearchCreate = ({}) => {
                                                                 if (value && value.length > 0) {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
-                                                                            720,
                                                                             1280,
-                                                                            'Зображення має бути 400x400')
+                                                                            720,
+                                                                            'Зображення має бути 1280x720')
                                                                         setImagePreview(result)
                                                                     } catch (error) {
                                                                         return error as string

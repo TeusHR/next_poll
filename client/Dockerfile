@@ -4,17 +4,14 @@ RUN npm install -g pnpm@8.15.5
 
 WORKDIR /front
 
-COPY scripts/entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
 COPY package*.json ./
 
 RUN pnpm install
 
 COPY . .
 
-RUN pnpm build
+RUN chmod +x /front/scripts/entrypoint.sh
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/front/scripts/entrypoint.sh"]
 
 CMD ["pnpm", "start"]

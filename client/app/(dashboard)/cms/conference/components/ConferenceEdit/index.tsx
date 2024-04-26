@@ -17,6 +17,7 @@ import EditorWrapper from "@/components/EditorWrapper";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import {FileToFileList} from "@/utils/FIleToFileList";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     conferenceId: string
@@ -66,11 +67,11 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             setValue('type', new Set([conference.type]))
             setValue('date', moment(conference.date).format('YYYY-MM-DD'))
             setValue('text', conference.text)
-            const serverFiles:uploadType[] = conference.files.map(url => (
+            const serverFiles: uploadType[] = conference.files.map(url => (
                 {
                     name: renderFileName(url),
                     typeUpload: "server" as const,
-                    type:'file',
+                    type: 'file',
                     url: url,
                 }
             ));
@@ -118,10 +119,11 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                 text: dataForm.text,
                 files: allFilesUrls,
             };
-            ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth).then((status) => {
-                if (status === 200)
-                    toast.success('Конференцію успішно створено')
-            })
+            const status = await ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth)
+            if (status === 200) {
+                await revalidateFetch('conference')
+                toast.success('Конференцію успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
@@ -131,7 +133,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
     }
 
     const onUpload = (files: File[], type: 'file' | 'image') => {
-        const newFiles:uploadType[] = files.map(file => ({
+        const newFiles: uploadType[] = files.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
             type: type,

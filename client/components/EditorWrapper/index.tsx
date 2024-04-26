@@ -10,7 +10,6 @@ import MenuButton, {EditorMenuButton} from "@/components/EditorWrapper/MenuButto
 import {Document} from "@tiptap/extension-document";
 import {Underline} from "@tiptap/extension-underline";
 import {Color} from "@tiptap/extension-color";
-import {TextBox} from "@/components/EditorWrapper/extension/textBox";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import {UniqueID} from "@tiptap/extension-unique-id";
 import EditorFontSize from "@/components/EditorWrapper/components/FontSize/EditorFontSize";
@@ -292,7 +291,6 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
             FontSize,
             Underline,
             Color,
-            TextBox,
         ],
         editorProps: {
             attributes: {

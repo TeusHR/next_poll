@@ -1,18 +1,329 @@
 import {AxiosInstance} from "axios";
-import {IResponseMeta} from "@/types/Conference";
-import {getFeedBackUrl} from "@/config/url.config";
+import {IConferences, IResponseMeta} from "@/types/Conference";
+import {
+    getActivitiesUrl,
+    getConferencesUrl,
+    getConsultingUrl, getCooperationsUrl, getDigamUrl,
+    getFeedBackUrl, getInnovationsUrl, getInternationalUrl, getLaboratoryDevelopmentsUrl, getLaboratoryUrl,
+    getResearchWorksUrl, getScienceSchoolsUrl, getStudentUrl
+} from "@/config/url.config";
 import {$api} from "@/api/interceptors";
 import {IFeedbackForm} from "@/types/Feedback";
-import {API_URL} from "@/config/constants";
+import {API_URL, LOCAL_API_URL} from "@/config/constants";
 import {ISearch} from "@/types/Search";
+import {IResearch} from "@/types/Research";
+import {getContentType, getEmptyResponse} from "@/api/api.helpers";
+import {IActivity} from "@/types/Activity";
+import {IConsulting} from "@/types/Consulting";
+import {ICooperation} from "@/types/Cooperation";
+import {IDigam} from "@/types/Digam";
+import {IInternational} from "@/types/International";
+import {ILaboratory} from "@/types/Laboratory";
+import {IDevelopments} from "@/types/LaboratoryDevelopments";
+import {IScience} from "@/types/Science";
+import {IStudent} from "@/types/Student";
+import {IInnovation} from "@/types/Innovation";
 
+
+export const ResearchWorkService = {
+    async getAll(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getResearchWorksUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['researchWork']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<IResearch[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<IResearch>()
+        }
+    }
+}
+
+export const CooperationService = {
+    async getAll(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getCooperationsUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['cooperation']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<ICooperation[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<ICooperation>()
+        }
+    }
+}
+
+export const InnovationService = {
+    async getAll(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getInnovationsUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['innovation']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<IInnovation[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<IInnovation>()
+        }
+    }
+}
+
+export const InternationalService = {
+    async getAll(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getInternationalUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['international']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<IInternational[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<IInternational>()
+        }
+    }
+}
+
+export const ScienceService = {
+    async getAll(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getScienceSchoolsUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['science']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<IScience[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<IScience>()
+        }
+    }
+}
+
+export const LaboratoryService = {
+    async getAllLaboratories(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getLaboratoryUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['laboratory']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<ILaboratory[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<ILaboratory>()
+        }
+    },
+    async getAllLaboratoryDevelopments(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getLaboratoryDevelopmentsUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['laboratoryDevelopments']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<IDevelopments[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<IDevelopments>()
+        }
+    }
+}
+
+export const ActivityService = {
+    async getAll(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
+        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getActivitiesUrl(`?${searchParams.toString()}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['activity']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<IActivity[]> = await res.json()
+
+            return data
+        } catch (e) {
+            return getEmptyResponse<IActivity>()
+        }
+    }
+}
+
+export const ConferencesService = {
+    async getAll() {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getConferencesUrl('')}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['conference']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: {items: IConferences[], month: string}[] = await res.json()
+
+            return data
+        } catch (e) {
+            return []
+        }
+    }
+}
+
+export const ConsultingService = {
+    async getAll() {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getConsultingUrl('')}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['consulting']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IConsulting = await res.json()
+
+            return data
+        } catch (e) {
+            return null
+        }
+    }
+}
+
+export const DIGAMService = {
+    async getAll() {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getDigamUrl('')}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['digam']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IDigam = await res.json()
+
+            return data
+        } catch (e) {
+            return null
+        }
+    }
+}
+
+export const StudentService = {
+    async getAll() {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getStudentUrl('')}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['studentScience']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IStudent = await res.json()
+
+            return data
+        } catch (e) {
+            return null
+        }
+    }
+}
 
 export const FeedbackService = {
     async getAll(authAxios: AxiosInstance, page: number, limit: number) {
         const {data} = await authAxios.get<IResponseMeta<IFeedbackForm[]>>(getFeedBackUrl(`?page=${page}&limit=${limit}`))
         return data
     },
-    async post(item:IFeedbackForm) {
+    async post(item: IFeedbackForm) {
         const {status} = await $api.post<IFeedbackForm>(getFeedBackUrl(''), item)
         return status
     },

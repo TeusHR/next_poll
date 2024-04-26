@@ -13,6 +13,7 @@ import EditorWrapper from "@/components/EditorWrapper";
 import {FileService} from "@/services/file.service";
 import {ICreateInternational, IInternational, IUpdateInternationalForm} from "@/types/International";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     internationalId: string
@@ -120,12 +121,12 @@ const InternationalEdit: FC<Props> = ({internationalId}) =>{
                 files: [...existingUrlDocs, ...urlsDocs],
                 images: [...existingUrlImages, ...urlsImages]
             };
-            console.log(dataProduct)
-            InternationalService.updateInternational(dataProduct, internationalId, $apiAuth).then((status) => {
-                if (status === 200) {
-                    toast.success('Успішно створено')
-                }
-            })
+
+            const status = await InternationalService.updateInternational(dataProduct, internationalId, $apiAuth)
+            if (status === 200) {
+                await revalidateFetch('international')
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

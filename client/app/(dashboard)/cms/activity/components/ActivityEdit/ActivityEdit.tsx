@@ -11,6 +11,7 @@ import {Button, Input} from "@nextui-org/react";
 import {HandlerImageValidate} from "@/utils/ImageValidate";
 import EditorWrapper from "@/components/EditorWrapper";
 import {IActivity, ICreateActivity, IUpdateActivityForm} from "@/types/Activity";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 type Props = {
@@ -89,13 +90,11 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                     image: urlImage ? urlImage[0].url : activity.image,
                 };
 
-                console.log(dataProduct)
-
-                ActivityService.updateActivity(dataProduct, activityId, $apiAuth).then((status) => {
-                    if (status === 200) {
-                        toast.success('Оновлено')
-                    }
-                })
+                const status = await ActivityService.updateActivity(dataProduct, activityId, $apiAuth)
+                if (status === 200) {
+                    await revalidateFetch('activity')
+                    toast.success('Оновлено')
+                }
             }
         } catch (error) {
             console.log(error)
@@ -148,9 +147,9 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                                                                 if (value && value.length > 0) {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
-                                                                            720,
                                                                             1280,
-                                                                            'Зображення має бути 400x400')
+                                                                            720,
+                                                                            'Зображення має бути 1280x720')
                                                                         setImagePreview(result)
                                                                     } catch (error) {
                                                                         setImagePreview('')

@@ -15,6 +15,7 @@ import {FileService} from "@/services/file.service";
 import {FileToFileList} from "@/utils/FIleToFileList";
 import CloseIcon from "@/UI/CloseIcon";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     consulting:IConsulting | undefined
@@ -97,12 +98,12 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                 images: images,
             };
 
-            console.log(dataProduct)
-            ConsultingService.postConsulting(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    toast.success('Успішно створено')
-                }
-            })
+            const status = await ConsultingService.postConsulting(dataProduct, $apiAuth)
+
+            if (status === 201) {
+                await revalidateFetch('consulting')
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

@@ -7,8 +7,8 @@ import {toast} from "react-toastify";
 import {Button} from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import {StudentService} from "@/services/CMS.service";
-import {uploadType} from "../../../innovations/components/InnovationsEdit";
 import {ICreateStudent, IStudent} from "@/types/Student";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     student:IStudent | undefined
@@ -63,31 +63,15 @@ const StudentCreate:FC<Props> = ({student}) => {
         setIsLoading(true)
 
         try {
-            // const uploadFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
-            //
-            // const filesPath = uploadFiles.length > 0
-            //     ? await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'image')
-            //     : [];
-            //
-            // if (filesPath.length === 0 && uploadFiles.length > 0) {
-            //     toast.error('Файли не збережені, щось не так.');
-            //     setIsLoading(false);
-            //     return;
-            // }
-            //
-            // const serverUploadedFiles  = files.filter(file => file.typeUpload === 'server').map(file => file)
-            // const images = createImagesList(filesPath, dataForm, serverUploadedFiles);
-
             const dataProduct: ICreateStudent = {
                 text: dataForm.text,
             };
 
-            console.log(dataProduct)
-            StudentService.postStudent(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    toast.success('Успішно створено')
-                }
-            })
+            const status = await StudentService.postStudent(dataProduct, $apiAuth)
+            if (status === 201) {
+                await revalidateFetch('studentScience')
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

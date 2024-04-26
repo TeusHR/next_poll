@@ -23,6 +23,7 @@ import Title from "@/UI/Title";
 import {DigamService} from "@/services/CMS.service";
 import {FileService} from "@/services/file.service";
 import {FileToFileList} from "@/utils/FIleToFileList";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 type Props = {
@@ -164,12 +165,12 @@ const DigamCreate: FC<Props> = ({digam}) => {
                 foreignUniversities: foreignUniversities,
             };
 
-            console.log(dataProduct)
-            DigamService.postDigam(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    toast.success('Успішно створено')
-                }
-            })
+            const status = await DigamService.postDigam(dataProduct, $apiAuth)
+
+            if (status === 201) {
+                await revalidateFetch('digam')
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

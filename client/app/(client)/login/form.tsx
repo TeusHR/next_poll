@@ -47,7 +47,7 @@ const Form: FC = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="border rounded-xl px-10 py-5 flex flex-col gap-5 w-1/4">
-            <h1 className="text-center font-bold">Auth</h1>
+            <h1 className="text-center font-bold">Авторизація</h1>
             <Controller name="email" control={control} rules={{ required: "Field is required" }}
                         render={({ field }) => <div>
                             <label htmlFor="email" className="ml-3">Email</label>
@@ -59,13 +59,13 @@ const Form: FC = () => {
 
             <Controller name="password" control={control} rules={{ required: "Field is required" }}
                         render={({ field }) => <div>
-                            <label htmlFor="password" className="ml-3">Password</label>
+                            <label htmlFor="password" className="ml-3">Пароль</label>
                             <Input id="password" name="password" type="password" value={field.value}
                                    onValueChange={field.onChange}
                                    className={cn("border rounded-xl border-transparent", { "border-red-400": errors.password?.message?.length })}/>
                             <span className="text-red-400 text-sm ml-3">{errors.password?.message}</span>
                         </div>}/>
-            <Button type="submit" isLoading={isLoading}>Login</Button>
+            <Button type="submit" isLoading={isLoading}>Вхід в систему</Button>
         </form>
     );
 };

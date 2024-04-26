@@ -11,6 +11,7 @@ import EditorWrapper from "@/components/EditorWrapper";
 import {FileService} from "@/services/file.service";
 import {filePath} from "../../../consulting/components/ConsultingCreate";
 import {ICreateActivity, ICreateActivityForm} from "@/types/Activity";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 const ActivityCreate = ({}) => {
@@ -55,14 +56,13 @@ const ActivityCreate = ({}) => {
                 image: urlImage[0].url,
             };
 
-            console.log(dataProduct)
-            ActivityService.postActivity(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    setImagePreview('')
-                    toast.success('Успішно створено')
-                }
-            })
+            const status  = await ActivityService.postActivity(dataProduct, $apiAuth)
+            if (status === 201) {
+                await revalidateFetch('activity')
+                reset()
+                setImagePreview('')
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
@@ -116,9 +116,9 @@ const ActivityCreate = ({}) => {
                                                                 if (value && value.length > 0) {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
-                                                                            720,
                                                                             1280,
-                                                                            'Зображення має бути 400x400')
+                                                                            720,
+                                                                            'Зображення має бути 1280x720')
                                                                         setImagePreview(result)
                                                                     } catch (error) {
                                                                         return error as string

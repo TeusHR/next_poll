@@ -8,6 +8,7 @@ import {toast} from "react-toastify";
 import {Button, Input} from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import {ICreateScience, ICreateScienceForm, IScience} from "@/types/Science";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     scienceId: string
@@ -60,10 +61,11 @@ const ScienceEdit: FC<Props> = ({scienceId}) => {
                 title: dataForm.title,
                 text: dataForm.text,
             };
-            ScienceService.updateScience(dataProduct, scienceId, $apiAuth).then((status) => {
-                if (status === 200)
-                    toast.success('Напрямки успішно оновлено')
-            })
+            const status = await ScienceService.updateScience(dataProduct, scienceId, $apiAuth)
+            if (status === 200) {
+                await revalidateFetch('science')
+                toast.success('Напрямки успішно оновлено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')

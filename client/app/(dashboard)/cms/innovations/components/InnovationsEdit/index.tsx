@@ -12,6 +12,7 @@ import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
 import {FileService} from "@/services/file.service";
+import revalidateFetch from "@/services/revalidateFetch";
 
 type Props = {
     innovationsId: string
@@ -21,11 +22,11 @@ export type uploadType = {
     name: string,
     typeUpload: "server" | "uploaded",
     type: "file" | "image",
-    file?:File,
+    file?: File,
     url: string,
 }
 
-const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
+const InnovationsEdit: FC<Props> = ({innovationsId}) => {
 
     const {
         handleSubmit,
@@ -60,20 +61,20 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
         if (innovations) {
             setValue('title', innovations.title)
             setValue('text', innovations.text)
-            const serverFiles:uploadType[] = innovations.files.map(url => (
+            const serverFiles: uploadType[] = innovations.files.map(url => (
                 {
                     name: renderName(url),
                     typeUpload: "server" as const,
-                    type:'file',
+                    type: 'file',
                     url: url,
                 }
             ));
             setFiles(serverFiles);
-            const serverImage:uploadType[] = innovations.images.map(url => (
+            const serverImage: uploadType[] = innovations.images.map(url => (
                 {
                     name: renderName(url),
                     typeUpload: "server" as const,
-                    type:'image' as const,
+                    type: 'image' as const,
                     url: url,
                 }
             ));
@@ -92,7 +93,7 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
         }
         setIsLoading(true)
 
-        const processUpload = async (files:uploadType[], folder:string) => {
+        const processUpload = async (files: uploadType[], folder: string) => {
             const filteredFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
             if (filteredFiles.length === 0) return [];
 
@@ -119,38 +120,18 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
                 .filter(file => file.typeUpload === 'server')
                 .map(file => file.url)
 
-            // let urlsDocs: string[] = [];
-            // if (uploadFiles.length > 0) {
-            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
-            //     if (filesPath.length === 0) {
-            //         toast.error('Файли не збережені, щось не так.');
-            //         return;
-            //     }
-            //     urlsDocs = filesPath.map(file => file.url);
-            // }
-            //
-            // let urlsImages: string[] = [];
-            // if (uploadImages.length > 0) {
-            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(uploadImages), 'image');
-            //     if (filesPath.length === 0) {
-            //         toast.error('Файли не збережені, щось не так.');
-            //         return;
-            //     }
-            //     urlsImages = filesPath.map(file => file.url);
-            // }
-
             const dataProduct: ICreateInnovation = {
                 title: dataForm.title,
                 text: dataForm.text,
                 files: [...existingUrlDocs, ...urlsDocs],
                 images: [...existingUrlImages, ...urlsImages]
             };
-            console.log(dataProduct)
-            InnovationsService.updateInnovation(dataProduct, innovationsId, $apiAuth).then((status) => {
-                if (status === 200) {
-                    toast.success('Успішно створено')
-                }
-            })
+
+            const status = await InnovationsService.updateInnovation(dataProduct, innovationsId, $apiAuth)
+            if (status === 200) {
+                await revalidateFetch('innovation')
+                toast.success('Успішно створено')
+            }
         } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
@@ -161,7 +142,7 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
 
     const handleUpload = useCallback((uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
-        const newFiles:uploadType[] = uploadedFiles.map(file => ({
+        const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
             type: type,
@@ -220,9 +201,10 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження документів
                                                                 </div>
-                                                                <DNDUpload onUpload={(files) => handleUpload(files, 'file')}
-                                                                           onChange={field.onChange}
-                                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                <DNDUpload
+                                                                    onUpload={(files) => handleUpload(files, 'file')}
+                                                                    onChange={field.onChange}
+                                                                    styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
                                                                 </DNDUpload>
                                                                 {formState.errors.files?.message &&
@@ -252,10 +234,11 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) =>{
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження зображень
                                                                 </div>
-                                                                <DNDUpload onUpload={(files) => handleUpload(files, 'image')}
-                                                                           onChange={field.onChange}
-                                                                           formats={[".png", ".jpeg", ".svg", ".jpg"]}
-                                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                <DNDUpload
+                                                                    onUpload={(files) => handleUpload(files, 'image')}
+                                                                    onChange={field.onChange}
+                                                                    formats={[".png", ".jpeg", ".svg", ".jpg"]}
+                                                                    styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
                                                                 </DNDUpload>
                                                                 {formState.errors.files?.message &&

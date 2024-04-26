@@ -1,17 +1,17 @@
 'use client'
-import React, {FC, useCallback, useEffect, useRef} from 'react'
+import React, {FC, memo, useCallback, useEffect, useRef} from 'react'
 import {Wrapper} from "@googlemaps/react-wrapper";
 import NextImage from "next/image";
 import {Image} from "@nextui-org/react";
 
-const GoogleMap = ({}) => {
+const GoogleMap = memo(function GoogleMap () {
 
     return (
         <div className="w-full">
             <GoogleMapWrapper/>
         </div>
     )
-}
+})
 
 export const GoogleMapWrapper: FC = () => {
 

@@ -18,6 +18,7 @@ import {typeConference} from "@/utils/ConferenceType";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import {FileToFileList} from "@/utils/FIleToFileList";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 const ConferenceCreate = ({}) => {
@@ -36,27 +37,10 @@ const ConferenceCreate = ({}) => {
             type: new Set<string>(["SEMINAR"]),
         }
     })
-
-    // const [conferecePreview,
-    //     setConferencePreview] = useState<IConferences>({
-    //     country: "",
-    //     createdAt: "",
-    //     date: "",
-    //     files: [],
-    //     id: "",
-    //     text: "",
-    //     title: "",
-    //     type: 'SEMINAR',
-    //     updatedAt: ""
-    // })
-
-    // const [conferenceFiles, setConferenceFiles] = useState('')
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
 
     const [isLoading, setIsLoading] = useState(false)
-    // const [uploadFiles, setUploadFiles] = useState<File[]>([])
-    // const [previewUpload, setPreviewUpload] = useState<string[]>([])
     const [files, setFiles] = useState<uploadType[]>([]);
 
     const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
@@ -81,16 +65,6 @@ const ConferenceCreate = ({}) => {
 
             let urlsFiles: string[] = filesPath.map(file => file.url);
 
-            // let urlsFiles: string[] = []
-            // if (files.length > 0) {
-            //     const filesPath = await FileService.upload($apiAuth, FileToFileList(files), 'pdf');
-            //     if (filesPath.length === 0) {
-            //         toast.error('Файли не збережені, щось не так.');
-            //         return;
-            //     }
-            //     urlsFiles = filesPath.map(file => file.url);
-            // }
-
             const dataProduct: ICreateConferences = {
                 type: Array.from(dataForm.type).toString(),
                 country: Array.from(dataForm.country).toString(),
@@ -100,13 +74,13 @@ const ConferenceCreate = ({}) => {
                 files: urlsFiles,
             };
 
-            ConferencesService.postConferences(dataProduct, $apiAuth).then((status) => {
-                if (status === 201) {
-                    reset()
-                    setFiles([])
-                    toast.success('Конференцію успішно створено')
-                }
-            })
+            const status = await ConferencesService.postConferences(dataProduct, $apiAuth)
+            if (status === 201) {
+                reset()
+                await revalidateFetch('conference')
+                setFiles([])
+                toast.success('Конференцію успішно створено')
+            }
         }
         catch (error) {
             console.log(error)

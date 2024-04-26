@@ -2,7 +2,6 @@
 const nextConfig = {
     optimizeFonts: false,
     env: {
-        BACKEND_URL: "http://localhost:4000",
         LOCAL_BACKEND_URL: "http://localhost:4000",
     },
     webpack: (config) => {
@@ -16,8 +15,8 @@ const nextConfig = {
                 destination: 'http://localhost:4000/uploads/:path*'
             },
             {
-                source: '/v2/api/:path*',
-                destination: 'http://localhost:4000/v2/api/:path*'
+                source: '/v1/api/:path*',
+                destination: 'http://localhost:4000/v1/api/:path*'
             }
         ]
     }

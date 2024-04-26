@@ -21,7 +21,7 @@ const useAxiosAuth = (isRequired = true) => {
                 (response) => response,
                 async (error) => {
                     const prevRequest = error.config
-                    if (error.response.status === 401 && !prevRequest.sent && session?.backendTokens.refreshToken) {
+                    if (error?.response?.status === 401 && !prevRequest.sent && session?.backendTokens.refreshToken) {
                         prevRequest.sent = true
 
                         const {data} = await $api.post('/auth/refresh', {}, {

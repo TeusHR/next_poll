@@ -16,6 +16,7 @@ import {ICreateLaboratory, ILaboratoryForm} from "@/types/Laboratory";
 import Title from "@/UI/Title";
 import CloseIcon from "@/UI/CloseIcon";
 import {ICreateDevelopments} from "@/types/LaboratoryDevelopments";
+import revalidateFetch from "@/services/revalidateFetch";
 
 
 const LaboratoryCreate = ({}) => {
@@ -91,14 +92,15 @@ const LaboratoryCreate = ({}) => {
 
             let laboratoryID: string | undefined;
 
-            await LaboratoryService.postLaboratory(dataProduct, $apiAuth).then(({status, data}) => {
-                if (status === 201) {
-                    laboratoryID = data.id;
-                    reset()
-                    handlerReset()
-                    toast.success('Успішно створено')
-                }
-            })
+            const {status, data} = await LaboratoryService.postLaboratory(dataProduct, $apiAuth)
+
+            if (status === 201) {
+                laboratoryID = data.id;
+                await revalidateFetch('laboratory')
+                reset()
+                handlerReset()
+                toast.success('Успішно створено')
+            }
 
 
             if (laboratoryID) {
@@ -120,6 +122,7 @@ const LaboratoryCreate = ({}) => {
                     for (const develop of developments) {
                         await LaboratoryDevelopService.postLaboratoryDevelop(develop, $apiAuth)
                     }
+                    await revalidateFetch('laboratoryDevelopments')
                 } catch (error) {
                     console.log(error)
                 } finally {
