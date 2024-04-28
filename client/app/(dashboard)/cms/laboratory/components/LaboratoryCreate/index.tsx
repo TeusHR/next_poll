@@ -17,6 +17,7 @@ import Title from "@/UI/Title";
 import CloseIcon from "@/UI/CloseIcon";
 import {ICreateDevelopments} from "@/types/LaboratoryDevelopments";
 import revalidateFetch from "@/services/revalidateFetch";
+import {HandlerImageValidate} from "@/utils/ImageValidate";
 
 
 const LaboratoryCreate = ({}) => {
@@ -28,6 +29,7 @@ const LaboratoryCreate = ({}) => {
         getValues,
         setValue,
         watch,
+        setError,
     } = useForm<ILaboratoryForm>({
         mode: 'all',
         defaultValues: {
@@ -146,14 +148,29 @@ const LaboratoryCreate = ({}) => {
     }
 
     const handleRemoveDevelop = () => {
-        let indexDev:number[] = developments.map((_, i) => i);
-        if(indexDev) {
+        let indexDev: number[] = developments.map((_, i) => i);
+        if (indexDev) {
             remove(indexDev);
         }
     }
 
-    const handleUpload = useCallback((uploadedFiles: File[], type: 'file' | 'image') => {
+    const handleUpload = useCallback(async (uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
+
+        if (type === 'image') {
+            try {
+                for (const item of uploadedFiles) {
+                    await HandlerImageValidate(item,
+                        1920,
+                        1080,
+                        'Усі зображення мають бути 1920x1080')
+                }
+            } catch (error) {
+                setError('images', {type: 'custom', message: error as string})
+                return error as string
+            }
+        }
+
         const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
@@ -161,8 +178,9 @@ const LaboratoryCreate = ({}) => {
             file,
             url: file.name
         }));
+
         setter(prev => [...prev, ...newFiles]);
-    }, []);
+    }, [setError]);
 
     const handleRemove = useCallback((index: number, type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
@@ -258,22 +276,25 @@ const LaboratoryCreate = ({}) => {
 
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="images" control={control}
+                                                        rules={{
+                                                            required: "Обов'язкове поле",
+                                                        }}
                                                         render={({field}) =>
                                                             <div className="w-full">
                                                                 <div
-                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.images?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження зображень
                                                                 </div>
                                                                 <DNDUpload
                                                                     onUpload={(files) => handleUpload(files, 'image')}
                                                                     onChange={field.onChange}
-                                                                    formats={[".png", ".jpeg", ".svg", ".jpg"]}
+                                                                    formats={[".png", ".jpeg", ".jpg"]}
                                                                     styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
                                                                 </DNDUpload>
-                                                                {formState.errors.files?.message &&
+                                                                {formState.errors.images?.message &&
                                                                     <div
-                                                                        className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                                        className="text-red-600 text-sm">{formState.errors.images.message}</div>}
                                                             </div>
                                                         }
                                             />

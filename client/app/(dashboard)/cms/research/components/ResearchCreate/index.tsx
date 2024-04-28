@@ -116,9 +116,9 @@ const ResearchCreate = ({}) => {
                                                                 if (value && value.length > 0) {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
-                                                                            1280,
-                                                                            720,
-                                                                            'Зображення має бути 1280x720')
+                                                                            400,
+                                                                            210,
+                                                                            'Зображення має бути 400x210')
                                                                         setImagePreview(result)
                                                                     } catch (error) {
                                                                         return error as string

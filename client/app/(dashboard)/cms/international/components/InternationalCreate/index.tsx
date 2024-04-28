@@ -14,6 +14,7 @@ import {FileToFileList} from "@/utils/FIleToFileList";
 import {ICreateInternational, ICreateInternationalForm} from "@/types/International";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
 import revalidateFetch from "@/services/revalidateFetch";
+import {HandlerImageValidate} from "@/utils/ImageValidate";
 
 
 const InternationalCreate = ({}) => {
@@ -22,6 +23,7 @@ const InternationalCreate = ({}) => {
         control,
         formState,
         reset,
+        setError,
     } = useForm<ICreateInternationalForm>({
         mode: 'all',
         defaultValues: {
@@ -92,17 +94,33 @@ const InternationalCreate = ({}) => {
         setFilesImage([])
     }
 
-    const handleUpload = useCallback((uploadedFiles: File[], type: 'file' | 'image') => {
+    const handleUpload = useCallback(async (uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
-        const newFiles:uploadType[] = uploadedFiles.map(file => ({
+
+        if (type === 'image') {
+            try {
+                for (const item of uploadedFiles) {
+                    await HandlerImageValidate(item,
+                        1920,
+                        1080,
+                        'Усі зображення мають бути 1920x1080')
+                }
+            } catch (error) {
+                setError('images', {type: 'custom', message: error as string})
+                return error as string
+            }
+        }
+
+        const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
             type: type,
             file,
             url: file.name
         }));
+
         setter(prev => [...prev, ...newFiles]);
-    }, []);
+    }, [setError]);
 
     const handleRemove = useCallback((index: number, type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
@@ -179,40 +197,24 @@ const InternationalCreate = ({}) => {
                                     <div className="flex flex-row gap-4 w-full items-center">
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="images" control={control}
-                                                        // rules={{
-                                                        //     validate: async (value) => {
-                                                        //         if (value && value.length > 0) {
-                                                        //             try {
-                                                        //                 // @ts-ignore
-                                                        //                 for (const item of value) {
-                                                        //                     await HandlerImageValidate(item,
-                                                        //                         720,
-                                                        //                         1280,
-                                                        //                         'Усі зображення має бути 400x400')
-                                                        //                 }
-                                                        //             } catch (error) {
-                                                        //                 return error as string
-                                                        //             }
-                                                        //         } else {
-                                                        //             return 'Не вибрано жодного файлу';
-                                                        //         }
-                                                        //     },
-                                                        // }}
+                                                        rules={{
+                                                            required: "Обов'язкове поле",
+                                                        }}
                                                         render={({field}) =>
                                                             <div className="w-full">
                                                                 <div
-                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
+                                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.images?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження зображень
                                                                 </div>
                                                                 <DNDUpload onUpload={(files) => handleUpload(files, 'image')}
                                                                            onChange={field.onChange}
-                                                                           formats={[".png", ".jpeg", ".svg", ".jpg"]}
+                                                                           formats={[".png", ".jpeg", ".jpg"]}
                                                                            styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
                                                                 </DNDUpload>
-                                                                {formState.errors.files?.message &&
+                                                                {formState.errors.images?.message &&
                                                                     <div
-                                                                        className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                                        className="text-red-600 text-sm">{formState.errors.images.message}</div>}
                                                             </div>
                                                         }
                                             />

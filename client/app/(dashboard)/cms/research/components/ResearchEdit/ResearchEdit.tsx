@@ -143,18 +143,21 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="image" control={control}
                                                         rules={{
+                                                            required: "Обов'язкове поле",
                                                             validate: async (value) => {
+                                                                setImagePreview('')
                                                                 if (value && value.length > 0) {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
-                                                                            1280,
-                                                                            720,
-                                                                            'Зображення має бути 1280x720')
+                                                                            400,
+                                                                            210,
+                                                                            'Зображення має бути 400x210')
                                                                         setImagePreview(result)
                                                                     } catch (error) {
-                                                                        setImagePreview('')
                                                                         return error as string
                                                                     }
+                                                                } else {
+                                                                    return 'Не вибрано жодного файлу';
                                                                 }
                                                             },
                                                         }}

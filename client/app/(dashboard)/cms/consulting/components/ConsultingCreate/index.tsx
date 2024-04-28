@@ -29,6 +29,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
         control,
         formState,
         setValue,
+        setError,
     } = useForm<ICreateConsultingForm>({
         mode: 'all',
         defaultValues: {
@@ -127,12 +128,26 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
         return [...ServerImages, ...images]
     };
 
-    const onUpload = (files: File[], type: 'file' | 'image') => {
-        const newFiles:uploadType[] = files.map(file => ({
+    const onUpload = async (files: File[], type: 'file' | 'image') => {
+        if (type === 'image') {
+            try {
+                for (const item of files) {
+                    await HandlerImageValidate(item,
+                        400,
+                        400,
+                        'Усі зображення мають бути 400x400')
+                }
+            } catch (error) {
+                setError('images', {type: 'custom', message: error as string})
+                return error as string
+            }
+        }
+
+        const newFiles: uploadType[] = files.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
+            type: type,
             file,
-            type,
             url: file.name
         }));
         setFiles(prev => [...prev, ...newFiles]);
@@ -190,25 +205,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="files" control={control}
                                                         rules={{
-                                                            validate: async (value) => {
-                                                                // setImageUpload([])
-                                                                if (value && value.length > 0) {
-                                                                    try {
-                                                                        // @ts-ignore
-                                                                        for (const item of value) {
-                                                                            await HandlerImageValidate(item,
-                                                                                720,
-                                                                                1280,
-                                                                                'Усі зображення має бути 400x400')
-                                                                            // setImageUpload(prev => [...prev, result])
-                                                                        }
-                                                                    } catch (error) {
-                                                                        return error as string
-                                                                    }
-                                                                } else {
-                                                                    return 'Не вибрано жодного файлу';
-                                                                }
-                                                            },
+                                                            required: "Обов'язкове поле",
                                                         }}
                                                         render={({field}) =>
                                                             <div className="w-full">
@@ -216,9 +213,9 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                                                                     className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}>
                                                                     Завантаження файлів
                                                                 </div>
-                                                                <DNDUpload onUpload={(files) => onUpload(files, 'file')}
+                                                                <DNDUpload onUpload={(files) => onUpload(files, 'image')}
                                                                            onChange={field.onChange}
-                                                                           formats={[".png", ".jpeg", ".svg", ".jpg"]}
+                                                                           formats={[".png", ".jpeg", ".jpg"]}
                                                                            styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
                                                                     Скинь мені файли
                                                                 </DNDUpload>
