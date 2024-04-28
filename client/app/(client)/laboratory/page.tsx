@@ -33,7 +33,15 @@ const Laboratory = ({}) => {
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
                 <div className="flex flex-col gap-14 max-sm:gap-5">
                     {laboratory.map((item, index) =>
-                        <NewsItem title={item.title} image={item.image}
+                        <NewsItem title={item.title}
+                                  imageObj={
+                                      {
+                                          image: item.image,
+                                          width: 400,
+                                          height: 210,
+                                          imageStyle: `max-h-[210px]`
+                                      }
+                                  }
                                   key={index}
                                   text={item.text}
                                   date={"28 січня"}
