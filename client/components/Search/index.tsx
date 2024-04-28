@@ -13,7 +13,7 @@ import {useRouter} from "next/navigation";
 import {getBySearch} from "@/services/client.service";
 import {ISearchInput} from "@/types/Search";
 import {getKeyDescription} from "@/utils/PageName";
-import {stripHtml} from "../../app/(dashboard)/cms/utils";
+import {stripHtml} from "@/utils/StripHtml";
 
 
 const Search = ({}) => {

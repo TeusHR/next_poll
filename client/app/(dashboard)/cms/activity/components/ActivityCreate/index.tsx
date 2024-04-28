@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -32,6 +32,7 @@ const ActivityCreate = ({}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [imagePreview, setImagePreview] = useState<string>('')
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const onSubmit: SubmitHandler<ICreateActivityForm> = async (dataForm) => {
 
@@ -60,6 +61,8 @@ const ActivityCreate = ({}) => {
             if (status === 201) {
                 await revalidateFetch('activity')
                 reset()
+                if(inputRef.current)
+                    inputRef.current.value = ""
                 setImagePreview('')
                 toast.success('Успішно створено')
             }
@@ -119,6 +122,7 @@ const ActivityCreate = ({}) => {
                                                                             400,
                                                                             210,
                                                                             'Зображення має бути 400x210')
+
                                                                         setImagePreview(result)
                                                                     } catch (error) {
                                                                         return error as string
@@ -144,8 +148,9 @@ const ActivityCreate = ({}) => {
                                                                             }}
                                                                             placeholder="Виберіть файл"
                                                                             type="file"
+                                                                            ref={inputRef}
                                                                             accept="image/png, image/jpeg, image/svg"
-                                                                            key="title"
+                                                                            key="image"
                                                                             autoComplete="off"
                                                                         />
                                                                         <div

@@ -21,7 +21,9 @@ const Cell = async ({style}: Props) => {
                     {researchWorks.data.map((researchWork, index) => <CellItem key={researchWork.id}
                                                                                text={researchWork.title}
                                                                                image={index % 2 === 0 ? '/image/helmet.png' : '/image/atom.png'}
-                                                                               link={`research/${researchWork.id}`}/>)}
+                                                                               // link={`research/${researchWork.id}`}
+                                                                               link={`research`}
+                    />)}
                 </div>
                 <div className="flex flex-col gap-12 max-xl:gap-6 mt-6 w-full justify-end">
                     <span>
@@ -30,7 +32,9 @@ const Cell = async ({style}: Props) => {
                     {activities.data.map((item, index) =>
                         <CellItem key={item.id} text={item.title}
                                   image={index % 2 !== 0 ? '/image/helmet.png' : '/image/atom.png'}
-                                  link={`international/${item.id}`}/>)
+                                  link={`international`}
+                                  // link={`international/${item.id}`}
+                        />)
                     }
                 </div>
             </div>

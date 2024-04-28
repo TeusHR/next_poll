@@ -31,7 +31,7 @@ import {
 import {toast} from "react-toastify";
 import {IConsulting} from "@/types/Consulting";
 import {ICooperation} from "@/types/Cooperation";
-import {stripHtml} from "../../../app/(dashboard)/cms/utils";
+import {stripHtml} from "@/utils/StripHtml";
 import {IResearch} from "@/types/Research";
 import {IActivity} from "@/types/Activity";
 import {IInnovation} from "@/types/Innovation";

@@ -1,26 +1,24 @@
 import React from 'react'
-import Title from "components/UI/Title";
+import Title from "@/UI/Title";
 import NewsItem from "@/components/NewsItem";
-import {ResearchWorkService} from "@/services/client.service";
+import {ActivityService} from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
 
-
-
-const Research = async ({
+const Activity = async ({
                             searchParams,
                         }: { searchParams?: { page?: string; }; }) => {
 
     const currentPage = Number(searchParams?.page) || 1;
-    const researchWorks = await ResearchWorkService.getAll(currentPage, 8, 'createdAt')
+    const activity = await ActivityService.getAll(currentPage, 8, 'createdAt')
 
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
             <div className="flex flex-col gap-14 max-sm:gap-8">
-                <Title text="Наукова робота ОНТУ"
+                <Title text="Міжнародна діяльність ОНТУ"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
                 <div className="flex flex-col gap-14">
-                    {researchWorks.data.map((item, index) =>
+                    {activity.data.map((item, index) =>
                         <NewsItem title={item.title}
                                   imageObj={
                                       {
@@ -34,12 +32,12 @@ const Research = async ({
                                   text={item.text}
                                   date={item.createAt}
                                   index={index}
-                                  lengthArr={researchWorks.data.length}/>
+                                  lengthArr={activity.data.length}/>
                     )}
                 </div>
                 <div className="my-0 mx-auto">
-                    <PaginationCustom total={researchWorks.meta.total}
-                                      rowsPerPage={researchWorks.meta.perPage}
+                    <PaginationCustom total={activity.meta.total}
+                                      rowsPerPage={activity.meta.perPage}
                     />
                 </div>
             </div>
@@ -47,4 +45,4 @@ const Research = async ({
     )
 }
 
-export default Research;
+export default Activity;

@@ -5,7 +5,7 @@ export const getQueryString = (name: string, value: string, searchParams: URLSea
     return `${pathname}?${params.toString()}`
 }
 
-export const stripHtml = (html:any)  =>{
+export const stripHtml = (html: any) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || "";
+    return doc.body.textContent || ""
 }

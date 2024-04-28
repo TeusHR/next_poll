@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -32,6 +32,7 @@ const ResearchCreate = ({}) => {
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [imagePreview, setImagePreview] = useState<string>('')
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const onSubmit: SubmitHandler<ICreateResearchForm> = async (dataForm) => {
 
@@ -60,6 +61,8 @@ const ResearchCreate = ({}) => {
             if (status === 201) {
                 await revalidateFetch('researchWork')
                 reset()
+                if(inputRef.current)
+                    inputRef.current.value = ""
                 setImagePreview('')
                 toast.success('Успішно створено')
             }
@@ -142,10 +145,11 @@ const ResearchCreate = ({}) => {
                                                                             onChange={(event) => {
                                                                                 field.onChange(event.target.files as FileList);
                                                                             }}
+                                                                            ref={inputRef}
                                                                             placeholder="Виберіть файл"
                                                                             type="file"
                                                                             accept="image/png, image/jpeg, image/svg"
-                                                                            key="title"
+                                                                            key="image"
                                                                             autoComplete="off"
                                                                         />
                                                                         <div

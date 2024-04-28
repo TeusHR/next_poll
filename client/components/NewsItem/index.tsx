@@ -1,12 +1,23 @@
+'use client'
 import React from 'react'
 import Title from "components/UI/Title";
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";
 import ButtonDetails from "components/UI/ButtonDetails";
+import {stripHtml} from "@/utils/StripHtml";
+import moment from 'moment';
+import 'moment/locale/uk';
+
+type imageProps = {
+    image: string,
+    width: number,
+    height: number,
+    imageStyle: string,
+}
 
 type Props = {
     title: string,
-    image: string,
+    imageObj: imageProps,
     text: string,
     date: string,
     index: number,
@@ -16,7 +27,22 @@ type Props = {
     showDate?: boolean
 }
 
-const NewsItem = ({title, image, text, date, index, lengthArr, buttonDetails, link = '/', showDate = true}: Props) => {
+
+export const formattedDate = (date: string): string => {
+    return moment(date).locale('uk').format('DD MMMM')
+}
+
+const NewsItem = ({
+                      title,
+                      imageObj,
+                      text,
+                      date,
+                      index,
+                      lengthArr,
+                      buttonDetails,
+                      link = '/',
+                      showDate = true
+                  }: Props) => {
 
 
     return (
@@ -28,26 +54,29 @@ const NewsItem = ({title, image, text, date, index, lengthArr, buttonDetails, li
                     <>
                         <span className="text-[#D9D9D9]">&#8226;</span>
                         <span>
-                            {date}
+                            {formattedDate(date)}
                         </span>
-                    </> :
-                    ''}
+                    </> : <></>
+                }
             </div>
             <div
                 className="flex flex-row max-md:flex-col max-md:items-center gap-4 text-xl max-sm:text-base items-start">
-                <Image src={image}
-                       width={600}
-                       height={210}
-                       classNames={{wrapper: "w-full min-w-[230px]"}}
+                <Image src={imageObj.image}
+                       width={imageObj.width}
+                       height={imageObj.height}
+                       classNames={{
+                           wrapper: "w-full min-w-[230px]",
+                           img: imageObj.imageStyle,
+                       }}
                        alt={'preview'}
                        radius="none"
                        as={NextImage}
                        fetchPriority={"high"}
                 />
                 <div className="flex flex-col gap-6">
-                                    <span>
-                                        {text}
-                                    </span>
+                    <span>
+                        {stripHtml(text)}
+                    </span>
                     {buttonDetails &&
                         <ButtonDetails link={link}>
                             <svg width="11" height="11" viewBox="0 0 11 11" fill="none"
