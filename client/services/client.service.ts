@@ -23,6 +23,7 @@ import {IDevelopments} from "@/types/LaboratoryDevelopments";
 import {IScience} from "@/types/Science";
 import {IStudent} from "@/types/Student";
 import {IInnovation} from "@/types/Innovation";
+import {notFound} from "next/navigation";
 
 
 export const ResearchWorkService = {
@@ -237,11 +238,32 @@ export const ConferencesService = {
             if (!res.ok)
                 throw new Error('Failed to fetch data')
 
-            const data: {items: IConferences[], month: string}[] = await res.json()
+            const data: { items: IConferences[], month: string }[] = await res.json()
 
             return data
         } catch (e) {
             return []
+        }
+    },
+    async get(id: string) {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getConferencesUrl(`/${id}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['conference']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IConferences = await res.json()
+
+            return data
+        } catch (e) {
+            return null
         }
     }
 }

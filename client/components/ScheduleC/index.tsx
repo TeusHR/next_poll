@@ -15,10 +15,10 @@ const ConferenceItem = async () => {
                     <div key={conference.month}
                          className="flex flex-row max-md:flex-col gap-y-4 gap-x-96 max-xl:gap-x-16 max-lg:gap-x-6 max-xl:justify-between text-[#111318] text-xl">
                         <Title text={conference.month}
-                               style={"text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-bold"}/>
-                        <div className="flex flex-col gap-9">
+                               style={"text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-bold min-w-[300px]"}/>
+                        <div className="flex flex-col gap-9 w-full">
                             {conference.items.map(item => <div key={item.id}
-                                                               className="flex flex-row max-sm:flex-col gap-y-6 gap-x-36 max-xl:gap-x-8">
+                                                               className="flex flex-row justify-between max-sm:flex-col gap-y-6 gap-x-24 max-xl:gap-x-8">
                                 <div className="flex flex-col gap-2">
                                     <div className="flex flex-row gap-2">
                                         <span>{item.date}</span>
