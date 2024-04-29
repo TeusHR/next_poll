@@ -133,8 +133,8 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
             try {
                 for (const item of files) {
                     await HandlerImageValidate(item,
-                        400,
-                        400,
+                        1280,
+                        700,
                         'Усі зображення мають бути 400x400')
                 }
             } catch (error) {

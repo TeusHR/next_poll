@@ -148,8 +148,8 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                                                                 if (value && value.length > 0) {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
-                                                                            400,
-                                                                            210,
+                                                                            1280,
+                                                                            700,
                                                                             'Зображення має бути 400x210')
                                                                         setImagePreview(result)
                                                                     } catch (error) {

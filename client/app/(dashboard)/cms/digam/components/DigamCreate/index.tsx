@@ -185,8 +185,8 @@ const DigamCreate: FC<Props> = ({digam}) => {
 
             for (const item of files) {
                 await HandlerImageValidate(item,
-                    200,
-                    150,
+                    1280,
+                    700,
                     'Усі зображення мають бути 200х150')
             }
 
