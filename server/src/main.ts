@@ -13,9 +13,16 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const whitelist = [process.env.NEXTAUTH_URL, "http://front:3000"];
+
   app.enableCors({
     credentials: true,
-    origin: "*",
+    origin: function (origin, callback) {
+      if (process.env.NODE_ENV !== "production") return callback(null, true);
+      if (!origin || whitelist.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
   });
   app.use(json({ limit: "50mb" }));
   app.use(urlencoded({ extended: true, limit: "50mb" }));

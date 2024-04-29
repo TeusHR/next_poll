@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    output: "standalone",
     optimizeFonts: false,
-    env: {
-        LOCAL_BACKEND_URL: "http://localhost:4000",
-    },
     webpack: (config) => {
         config.resolve.alias.canvas = false;
         return config;
@@ -12,11 +10,11 @@ const nextConfig = {
         return [
             {
                 source: '/uploads/:path*',
-                destination: 'http://localhost:4000/uploads/:path*'
+                destination: `${process.env.LOCAL_BACKEND_URL}/uploads/:path*`
             },
             {
                 source: '/v1/api/:path*',
-                destination: 'http://localhost:4000/v1/api/:path*'
+                destination: `${process.env.LOCAL_BACKEND_URL}/v1/api/:path*`
             }
         ]
     }

@@ -34,7 +34,7 @@ const EditorFontSize = ({defaultSize, itemFontSize, editor}: Props) => {
             setSelectSize(edit.fontSize ? String(parseFloat(edit.fontSize) * 16) : defaultSize)
         }
         //ts-ignore
-    }, [defaultSize, edit.fontSize]);
+    }, [defaultSize, selectSize, edit.fontSize]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // const debounceUpdate = useCallback(

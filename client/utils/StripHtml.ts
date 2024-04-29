@@ -1,3 +1,4 @@
+import sanitizeHtml from 'sanitize-html'
 export const getQueryString = (name: string, value: string, searchParams: URLSearchParams, pathname: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set(name, value)
@@ -6,6 +7,10 @@ export const getQueryString = (name: string, value: string, searchParams: URLSea
 }
 
 export const stripHtml = (html: any) => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || ""
+    return sanitizeHtml(html, {
+        allowedTags: [],
+        allowedAttributes: {}
+    });
+    // const doc = new DOMParser().parseFromString(html, 'text/html');
+    // return doc.body.textContent || ""
 }

@@ -43,7 +43,7 @@ const LaboratoryItem = ({}) => {
                                   }
                                   key={index}
                                   text={item.text}
-                                  date={"28 січня"}
+                                  date={new Date().toISOString()}
                                   index={index}
                                   buttonDetails
                                   link={'/'}
