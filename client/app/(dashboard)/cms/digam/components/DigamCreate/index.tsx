@@ -558,8 +558,8 @@ function NestedFieldArray({
                                     message: "Мінімальна довжина 3 символи"
                                 },
                                 maxLength: {
-                                    value: 50,
-                                    message: "Максимальна довжина 50 символів"
+                                    value: 80,
+                                    message: "Максимальна довжина 80 символів"
                                 },
                             }} render={({field}) =>
                             <Input className="border-none py-2"
@@ -591,10 +591,6 @@ function NestedFieldArray({
                                 minLength: {
                                     value: 3,
                                     message: "Мінімальна довжина 3 символи"
-                                },
-                                maxLength: {
-                                    value: 50,
-                                    message: "Максимальна довжина 50 символів"
                                 },
                             }} render={({field}) =>
                             <Input className="border-none py-2"
