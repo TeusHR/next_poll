@@ -7,7 +7,6 @@ import {notFound} from "next/navigation";
 
 const Conference = async ({params}: { params: { id: string } }) => {
     const conference = await ConferencesService.get(params.id || '')
-    console.log(conference)
 
     if (conference === null)
         return notFound();

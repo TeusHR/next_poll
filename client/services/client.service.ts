@@ -98,6 +98,27 @@ export const InnovationService = {
         } catch (e) {
             return getEmptyResponse<IInnovation>()
         }
+    },
+    async get(id: string) {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getInnovationsUrl(`/${id}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['conference']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IInnovation = await res.json()
+
+            return data
+        } catch (e) {
+            return null
+        }
     }
 }
 
@@ -122,6 +143,27 @@ export const InternationalService = {
             return data
         } catch (e) {
             return getEmptyResponse<IInternational>()
+        }
+    },
+    async get(id: string) {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getInternationalUrl(`/${id}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['conference']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IInternational = await res.json()
+
+            return data
+        } catch (e) {
+            return null
         }
     }
 }

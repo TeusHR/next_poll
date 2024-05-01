@@ -7,8 +7,9 @@ import ButtonDetails from "components/UI/ButtonDetails";
 import {stripHtml} from "@/utils/StripHtml";
 import moment from 'moment';
 import 'moment/locale/uk';
+import LightBoxImage from "@/components/LightBoxImage";
 
-type imageProps = {
+export type imageProps = {
     image: string,
     width: number,
     height: number,
@@ -24,7 +25,11 @@ type Props = {
     lengthArr: number,
     buttonDetails?: boolean,
     link?: string,
-    showDate?: boolean
+    showDate?: boolean,
+    lightBoxImage?: {
+        show: boolean,
+        images: string[]
+    },
 }
 
 
@@ -41,7 +46,8 @@ const NewsItem = ({
                       lengthArr,
                       buttonDetails,
                       link = '/',
-                      showDate = true
+                      showDate = true,
+                      lightBoxImage,
                   }: Props) => {
 
 
@@ -61,18 +67,20 @@ const NewsItem = ({
             </div>
             <div
                 className="flex flex-row max-md:flex-col max-md:items-center gap-4 text-xl max-sm:text-base items-start">
-                <Image src={imageObj.image}
-                       width={imageObj.width}
-                       height={imageObj.height}
-                       classNames={{
-                           wrapper: "w-full min-w-[230px]",
-                           img: imageObj.imageStyle,
-                       }}
-                       alt={'preview'}
-                       radius="none"
-                       as={NextImage}
-                       fetchPriority={"high"}
-                />
+                {lightBoxImage?.show
+                    ? <LightBoxImage images={lightBoxImage.images} imageObj={imageObj}/>
+                    : <Image src={imageObj.image}
+                             width={imageObj.width}
+                             height={imageObj.height}
+                             classNames={{
+                                 wrapper: "w-full min-w-[230px]",
+                                 img: imageObj.imageStyle,
+                             }}
+                             alt={'preview'}
+                             radius="none"
+                             as={NextImage}
+                             fetchPriority={"high"}
+                    />}
                 <div className="flex flex-col gap-6">
                     <span>
                         {stripHtml(text)}
