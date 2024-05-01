@@ -7,9 +7,9 @@ export default function LocaleLayout({children}: {
 }) {
 
     return (
-        <div className="bg-white w-full text-primary flex flex-col min-h-full">
+        <div className="bg-white w-full text-primary flex flex-col min-h-screen">
             <Header/>
-            <main>
+            <main className="flex-auto">
                 {children}
             </main>
             <Footer/>

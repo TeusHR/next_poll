@@ -51,6 +51,10 @@ const NewsItem = ({
                   }: Props) => {
 
 
+    const imageSrc = imageObj.image ? imageObj.image : '/image/noImage.jpg';
+
+    const lightBoxImages = lightBoxImage?.images.length ? lightBoxImage.images : ['/image/noImage.jpg'];
+
     return (
         <React.Fragment>
             <div className="flex flex-row gap-3 items-center">
@@ -68,19 +72,27 @@ const NewsItem = ({
             <div
                 className="flex flex-row max-md:flex-col max-md:items-center gap-4 text-xl max-sm:text-base items-start">
                 {lightBoxImage?.show
-                    ? <LightBoxImage images={lightBoxImage.images} imageObj={imageObj}/>
-                    : <Image src={imageObj.image}
-                             width={imageObj.width}
-                             height={imageObj.height}
-                             classNames={{
-                                 wrapper: "w-full min-w-[230px]",
-                                 img: imageObj.imageStyle,
-                             }}
-                             alt={'preview'}
-                             radius="none"
-                             as={NextImage}
-                             fetchPriority={"high"}
-                    />}
+                    ?
+                    <LightBoxImage images={lightBoxImages} imageObj={{
+                        image: imageSrc,
+                        width: 400,
+                        height: 210,
+                        imageStyle: `max-h-[210px]`
+                    }}/>
+                    :
+                    <Image src={imageObj.image}
+                           width={imageObj.width}
+                           height={imageObj.height}
+                           classNames={{
+                               wrapper: "w-full min-w-[230px]",
+                               img: imageObj.imageStyle,
+                           }}
+                           alt={'preview'}
+                           radius="none"
+                           as={NextImage}
+                           fetchPriority={"high"}
+                    />
+                }
                 <div className="flex flex-col gap-6">
                     <span>
                         {stripHtml(text)}

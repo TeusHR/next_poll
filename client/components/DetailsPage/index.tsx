@@ -5,14 +5,13 @@ import Document from "@/components/Document";
 import {IInnovation} from "@/types/Innovation";
 import {stripHtml} from "@/utils/StripHtml";
 import {IInternational} from "@/types/International";
-
-const images =  ['/image/MainAfter.webp', "/image/MainAfter.webp", "/image/MainAfter.webp"]
+import {ILaboratory} from "@/types/Laboratory";
 
 type Props<T> = {
-    data:T
+    data: T
 }
 
-const DetailsPage:FC<Props<IInnovation | IInternational>> = ({data}) => {
+const DetailsPage: FC<Props<IInnovation | IInternational | ILaboratory>> = ({data}) => {
 
 
     return (
@@ -23,9 +22,10 @@ const DetailsPage:FC<Props<IInnovation | IInternational>> = ({data}) => {
                 <div className="text-xl font-normal">
                     {stripHtml(data.text)}
                 </div>
-                <div>
+                {data.images.length > 0 && <div>
                     <SliderImage images={data.images}/>
                 </div>
+                }
                 <div className="flex flex-col gap-4 w-max">
                     {data.files.map(item => (<Document key={item} link={item}/>))}
                 </div>

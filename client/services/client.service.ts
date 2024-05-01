@@ -23,7 +23,6 @@ import {IDevelopments} from "@/types/LaboratoryDevelopments";
 import {IScience} from "@/types/Science";
 import {IStudent} from "@/types/Student";
 import {IInnovation} from "@/types/Innovation";
-import {notFound} from "next/navigation";
 
 
 export const ResearchWorkService = {
@@ -216,6 +215,27 @@ export const LaboratoryService = {
             return getEmptyResponse<ILaboratory>()
         }
     },
+    async get(id: string) {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getLaboratoryUrl(`/${id}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['conference']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: ILaboratory = await res.json()
+
+            return data
+        } catch (e) {
+            return null
+        }
+    },
     async getAllLaboratoryDevelopments(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
         const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
         try {
@@ -236,6 +256,27 @@ export const LaboratoryService = {
             return data
         } catch (e) {
             return getEmptyResponse<IDevelopments>()
+        }
+    },
+    async getDevelopment(id: string) {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getLaboratoryDevelopmentsUrl(`/${id}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['conference']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IDevelopments = await res.json()
+
+            return data
+        } catch (e) {
+            return null
         }
     }
 }
