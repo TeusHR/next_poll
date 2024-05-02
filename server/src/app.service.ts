@@ -100,7 +100,10 @@ export class AppService {
   }
 
   async saveFiles(files: Express.Multer.File[], folder: string = "default") {
-    const uploadFolder = join(path, "server", "uploads", folder);
+    const uploadFolder =
+      process.env.NODE_ENV === "production"
+        ? join(path, "uploads", folder)
+        : join(path, "server", "uploads", folder);
     await ensureDir(uploadFolder);
 
     if (files.filter((file) => file).length === 0) return [];
@@ -124,7 +127,10 @@ export class AppService {
   }
 
   async download(folderName: string = "default", fileName: string) {
-    const filePath = join(path, "server", "uploads", folderName, fileName);
+    const filePath =
+      process.env.NODE_ENV === "production"
+        ? join(path, "uploads", folderName, fileName)
+        : join(path, "server", "uploads", folderName, fileName);
 
     const isExist = await checkFileExists(filePath);
     if (!isExist) throw new NotFoundException("File not found");

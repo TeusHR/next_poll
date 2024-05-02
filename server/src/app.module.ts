@@ -30,7 +30,10 @@ import { PrismaService } from "./prisma.service";
   imports: [
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: join(path, "server", "uploads"),
+      rootPath:
+        process.env.NODE_ENV === "production"
+          ? join(path, "uploads")
+          : join(path, "server", "uploads"),
       serveRoot: "/uploads",
       serveStaticOptions: { fallthrough: false, maxAge: 1000 * 3600 * 24 },
     }),
@@ -50,7 +53,10 @@ import { PrismaService } from "./prisma.service";
         from: process.env.SMTP_USER,
       },
       template: {
-        dir: join(path, "server", "templates"),
+        dir:
+          process.env.NODE_ENV === "production"
+            ? join(path, "templates")
+            : join(path, "server", "templates"),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,

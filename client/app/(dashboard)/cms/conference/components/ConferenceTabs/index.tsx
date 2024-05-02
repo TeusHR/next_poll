@@ -8,7 +8,6 @@ import {ILiftGroupConference} from "@/types/Conference";
 import TitleBack from "@/components/CMS/TitleBack";
 import ConferenceTable from "../ConferenceTable";
 import {LiftGroupConference} from "@/utils/ConferenceType";
-import {API_URL} from "@/config/constants";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
@@ -30,7 +29,6 @@ const ConferenceTabs = ({}) => {
     const $apiAuth = useAxiosAuth()
 
     useEffect(() => {
-        console.log(API_URL, $apiAuth)
         if (status === 'authenticated') {
             ConferencesService.getAllConference($apiAuth, Number(searchParams.get('page') ?? 1), 6).then(res => {
                 setInitialConference(LiftGroupConference(res))

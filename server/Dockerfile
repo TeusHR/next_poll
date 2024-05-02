@@ -13,16 +13,16 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN addgroup --system --gid 1001 nestjs
+RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-RUN mkdir -p /app/secrets && chown -R nestjs:nestjs /app/secrets
+RUN mkdir -p /app/secrets && chown -R nestjs:nodejs /app/secrets
 
 COPY --from=base /app ./
 COPY ./scripts/entrypoint.sh /app/scripts/entrypoint.sh
 RUN chmod +x /app/scripts/entrypoint.sh
 
-RUN chown -R nestjs:nestjs /app
+RUN chown -R nestjs:nodejs /app
 
 USER nestjs
 

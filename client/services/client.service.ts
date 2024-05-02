@@ -9,7 +9,7 @@ import {
 } from "@/config/url.config";
 import {$api} from "@/api/interceptors";
 import {IFeedbackForm} from "@/types/Feedback";
-import {API_URL, LOCAL_API_URL} from "@/config/constants";
+import {LOCAL_API_URL} from "@/config/constants";
 import {ISearch} from "@/types/Search";
 import {IResearch} from "@/types/Research";
 import {getContentType, getEmptyResponse} from "@/api/api.helpers";
@@ -437,7 +437,7 @@ export const FeedbackService = {
 
 export async function getBySearch(search: string, limit = 15): Promise<ISearch[]> {
     try {
-        const response = await fetch(`${API_URL}/search/${search}`, {
+        const response = await fetch(`${LOCAL_API_URL}/search/${search}`, {
             next: {
                 revalidate: 60,
             },

@@ -25,7 +25,7 @@ export class FeedbackService {
         from: process.env.SMTP_USER,
         subject: "Форма зворотного зв'язку",
         template: "feedback",
-        context: feedback,
+        context: { ...feedback, logo: `${process.env.NEXTAUTH_URL}/logo.svg` },
       })
       .catch((err) => {
         this.logger.error("CONTACTS EMAIL ERROR", err);

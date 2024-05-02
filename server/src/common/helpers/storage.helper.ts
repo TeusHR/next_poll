@@ -39,7 +39,10 @@ export const createFile = async (
   data: string,
 ): Promise<void> => {
   const isDirExist = await checkDirExists(filePath);
-  const absoluteDirPath = pathNode.join(path, "server", filePath);
+  const absoluteDirPath =
+    process.env.NODE_ENV === "production"
+      ? pathNode.join(path, filePath)
+      : pathNode.join(path, "server", filePath);
 
   if (!isDirExist) await fs.promises.mkdir(absoluteDirPath);
 
@@ -52,8 +55,14 @@ export const createFile = async (
 
 export const renameFile = async (oldFile: string, newFilePath: string) => {
   try {
-    const oldAbsoluteFilePath = pathNode.join(path, "server", oldFile);
-    const newAbsoluteFilePath = pathNode.join(path, "server", newFilePath);
+    const oldAbsoluteFilePath =
+      process.env.NODE_ENV === "production"
+        ? pathNode.join(path, oldFile)
+        : pathNode.join(path, "server", oldFile);
+    const newAbsoluteFilePath =
+      process.env.NODE_ENV === "production"
+        ? pathNode.join(path, newFilePath)
+        : pathNode.join(path, "server", newFilePath);
     await fs.promises.rename(oldAbsoluteFilePath, newAbsoluteFilePath);
   } catch (e) {
     throw new Error(`Error renaming file: ${e.message}`);
@@ -63,7 +72,9 @@ export const renameFile = async (oldFile: string, newFilePath: string) => {
 export const readFileContents = async (filePath: string): Promise<string> => {
   try {
     return await fs.promises.readFile(
-      pathNode.join(path, "server", filePath),
+      process.env.NODE_ENV === "production"
+        ? pathNode.join(path, filePath)
+        : pathNode.join(path, "server", filePath),
       "utf8",
     );
   } catch (err) {
@@ -79,7 +90,9 @@ export const getFileCreationDate = async (
 ): Promise<Date | null> => {
   try {
     const stats = await fs.promises.stat(
-      pathNode.join(path, "server", filePath),
+      process.env.NODE_ENV === "production"
+        ? pathNode.join(path, filePath)
+        : pathNode.join(path, "server", filePath),
     );
     return stats.birthtime;
   } catch (err) {
@@ -116,7 +129,11 @@ const deleteFile = async (
 ): Promise<void> => {
   try {
     let filepath = filePath;
-    if (isImagePath) filepath = join(path, "server", ...filePath.split("/"));
+    if (isImagePath)
+      filepath =
+        process.env.NODE_ENV === "production"
+          ? join(path, ...filePath.split("/"))
+          : join(path, "server", ...filePath.split("/"));
     return await fs.promises.unlink(filepath);
   } catch (_) {}
 };
