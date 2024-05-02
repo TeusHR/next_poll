@@ -2,6 +2,7 @@ import React from 'react'
 import Title from "@/UI/Title";
 import {StudentService} from "@/services/client.service";
 import {notFound} from "next/navigation";
+import {stripHtml} from "@/utils/StripHtml";
 
 const Student = async ({}) => {
     const student = await StudentService.getAll()
@@ -15,7 +16,7 @@ const Student = async ({}) => {
                 <Title text="Студентська наука"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
                 <div className="text-xl max-sm:text-base">
-                    {student.text}
+                    {stripHtml(student.text)}
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ import Document from "@/components/Document";
 import {ConferencesService} from "@/services/client.service";
 import {StringConferenceType} from "@/utils/ConferenceType";
 import {notFound} from "next/navigation";
+import {stripHtml} from "@/utils/StripHtml";
 
 const Conference = async ({params}: { params: { id: string } }) => {
     const conference = await ConferencesService.get(params.id || '')
@@ -26,7 +27,7 @@ const Conference = async ({params}: { params: { id: string } }) => {
                     </div>}
                 </div>
                 <div className="text-xl">
-                    {conference.text}
+                    {stripHtml(conference.text)}
                 </div>
                 <div className="flex flex-col relative w-max">
                     {conference.files.map(item => (<Document key={item} link={item}/>))}
