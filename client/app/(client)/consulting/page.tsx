@@ -4,7 +4,6 @@ import NextImage from "next/image";
 import {Image} from "@nextui-org/react";
 import {ConsultingService} from "@/services/client.service";
 import {notFound} from "next/navigation";
-import {stripHtml} from "@/utils/StripHtml";
 
 
 const Consulting = async ({}) => {
@@ -42,8 +41,8 @@ const Consulting = async ({}) => {
                         <div className="flex flex-col gap-14 max-sm:gap-10">
                             <Title text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                                    style="text-[#111318] text-3xl max-xl:text-2xl font-semibold"/>
-                            <div>
-                                {stripHtml(consulting.text)}
+                            <div dangerouslySetInnerHTML={{ __html: consulting.text }}>
+
                             </div>
                         </div>
                     </div>))}

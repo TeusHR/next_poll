@@ -134,11 +134,11 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
                 for (const item of files) {
                     await HandlerImageValidate(item,
                         1280,
-                        700,
-                        'Усі зображення мають бути 400x400')
+                        720,
+                        'Усі зображення мають бути 1280x720')
                 }
             } catch (error) {
-                setError('images', {type: 'custom', message: error as string})
+                setError('files', {type: 'custom', message: error as string})
                 return error as string
             }
         }
@@ -150,6 +150,7 @@ const ConsultingCreate:FC<Props> = ({consulting}) => {
             file,
             url: file.name
         }));
+        console.log(newFiles)
         setFiles(prev => [...prev, ...newFiles]);
     };
 

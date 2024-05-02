@@ -3,7 +3,6 @@ import Title from "@/components/UI/Title";
 import SliderImage from "@/components/SliderImage";
 import Document from "@/components/Document";
 import {IInnovation} from "@/types/Innovation";
-import {stripHtml} from "@/utils/StripHtml";
 import {IInternational} from "@/types/International";
 import {ILaboratory} from "@/types/Laboratory";
 
@@ -19,9 +18,7 @@ const DetailsPage: FC<Props<IInnovation | IInternational | ILaboratory>> = ({dat
             <Title text={data.title}
                    style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
             <div className="flex flex-col gap-14">
-                <div className="text-xl font-normal">
-                    {stripHtml(data.text)}
-                </div>
+                <div className="text-xl font-normal" dangerouslySetInnerHTML={{ __html: data.text }}></div>
                 {data.images.length > 0 && <div>
                     <SliderImage images={data.images}/>
                 </div>

@@ -4,7 +4,6 @@ import CountryCoop from "@/components/CountryCoop";
 import MemberOrganizations from "@/components/MemberOrganizations";
 import {DIGAMService} from "@/services/client.service";
 import {notFound} from "next/navigation";
-import {stripHtml} from "@/utils/StripHtml";
 
 
 const Department = async ({}) => {
@@ -18,9 +17,7 @@ const Department = async ({}) => {
             <div className="flex flex-col gap-14 max-sm:gap-8">
                 <Title text="Відділ міжнародних грантів та академічної мобільності"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
-                <div className="text-base">
-                    {stripHtml(digam.text)}
-                </div>
+                <div className="text-base" dangerouslySetInnerHTML={{ __html: digam.text }}></div>
                 <MemberOrganizations organizations={digam.organizations}/>
                 <CountryCoop foreignUniversities={digam.foreignUniversities}/>
             </div>

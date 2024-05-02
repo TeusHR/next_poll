@@ -2,7 +2,6 @@ import React from 'react'
 import Title from "@/UI/Title";
 import {StudentService} from "@/services/client.service";
 import {notFound} from "next/navigation";
-import {stripHtml} from "@/utils/StripHtml";
 
 const Student = async ({}) => {
     const student = await StudentService.getAll()
@@ -15,9 +14,7 @@ const Student = async ({}) => {
             <div className="flex flex-col gap-14 max-sm:gap-8">
                 <Title text="Студентська наука"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
-                <div className="text-xl max-sm:text-base">
-                    {stripHtml(student.text)}
-                </div>
+                <div className="text-xl max-sm:text-base" dangerouslySetInnerHTML={{ __html: student.text }}></div>
             </div>
         </div>
     )

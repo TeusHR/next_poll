@@ -1,6 +1,5 @@
 import React from 'react'
 import Title from "components/UI/Title";
-import {stripHtml} from "@/utils/StripHtml";
 
 type Props = {
     title: string,
@@ -20,9 +19,7 @@ const DirectItem = ({title, text, index}: Props) => {
             </div>
             <div className="flex flex-col gap-6 text-xl">
                 <Title text={title} style="text-[#2E2C39] text-3xl max-xl:text-2xl max-sm:text-xl font-semibold"/>
-                <span>
-                  {stripHtml(text)}
-                </span>
+                <div dangerouslySetInnerHTML={{ __html: text }}></div>
             </div>
         </div>
     )

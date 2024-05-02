@@ -150,8 +150,8 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
                                                                             1280,
-                                                                            700,
-                                                                            'Зображення має бути 400x210')
+                                                                            720,
+                                                                            'Усі зображення мають бути 1280x720')
                                                                         setImagePreview(result)
                                                                     } catch (error) {
                                                                         return error as string

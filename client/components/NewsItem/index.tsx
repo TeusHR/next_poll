@@ -4,7 +4,6 @@ import Title from "components/UI/Title";
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";
 import ButtonDetails from "components/UI/ButtonDetails";
-import {stripHtml} from "@/utils/StripHtml";
 import moment from 'moment';
 import 'moment/locale/uk';
 import LightBoxImage from "@/components/LightBoxImage";
@@ -94,9 +93,9 @@ const NewsItem = ({
                     />
                 }
                 <div className="flex flex-col gap-6">
-                    <span>
-                        {stripHtml(text)}
-                    </span>
+                    <div dangerouslySetInnerHTML={{ __html: text }}>
+
+                    </div>
                     {buttonDetails &&
                         <ButtonDetails link={link}>
                             <svg width="11" height="11" viewBox="0 0 11 11" fill="none"
