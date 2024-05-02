@@ -186,8 +186,8 @@ const DigamCreate: FC<Props> = ({digam}) => {
             for (const item of files) {
                 await HandlerImageValidate(item,
                     1280,
-                    700,
-                    'Усі зображення мають бути 200х150')
+                    720,
+                    'Усі зображення мають бути 1280х720')
             }
 
             const newFiles: uploadType[] = files.map(file => ({
