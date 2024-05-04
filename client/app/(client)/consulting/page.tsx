@@ -2,9 +2,10 @@ import React from 'react'
 import Title from "components/UI/Title";
 import NextImage from "next/image";
 import {Image} from "@nextui-org/react";
-import {ConsultingService} from "@/services/client.service";
+import {ConsultingService, TrainingService} from "@/services/client.service";
 import {notFound} from "next/navigation";
 import {Metadata} from "next";
+import NewsItem from "@/components/NewsItem";
 
 export const metadata: Metadata = {
     title: "Консалтинговий центр НДІ",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 
 const Consulting = async ({}) => {
     const consulting = await ConsultingService.getAll()
+    const training = await TrainingService.getAll()
 
     if (consulting === null)
         return notFound();
@@ -54,15 +56,38 @@ const Consulting = async ({}) => {
                         </div>
                     </div>))}
 
-                <div className="flex flex-col gap-14 max-sm:gap-8">
+                {training && <div className="flex flex-col gap-14 max-sm:gap-8">
                     <div className="flex flex-col gap-3">
-                        <Title text="Lorem ipsum dolor sit amet"
+                        <Title text="Тренінг"
                                style="text-[#111318] text-5xl max-xl:text-3xl font-semibold"/>
                         <span className="border border-[#6E8880]"></span>
                     </div>
                     <div className="flex flex-col gap-14">
+                        {training.map((item, index) =>
+                            <NewsItem title={item.title}
+                                      imageObj={
+                                          {
+                                              image: item.images[0],
+                                              width: 400,
+                                              height: 210,
+                                              imageStyle: `max-h-[210px]`
+                                          }
+                                      }
+                                      lightBoxImage={{
+                                          show: true,
+                                          images: item.images
+                                      }}
+                                      key={index}
+                                      text={item.text}
+                                      date={new Date().toISOString()}
+                                      index={index}
+                                      buttonDetails
+                                      link={`/trainings/${item.id}`}
+                                      lengthArr={training.length}
+                            />
+                        )}
                     </div>
-                </div>
+                </div>}
             </div>
         </div>
     )

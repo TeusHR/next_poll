@@ -261,7 +261,21 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
         setter(currentFiles => currentFiles.filter((_, fileIndex) => index !== fileIndex));
     }, []);
 
-    const handleUploadDynamic = useCallback((uploadedFiles: File[], type: 'file' | 'image', index: number) => {
+    const handleUploadDynamic = useCallback(async (uploadedFiles: File[], type: 'file' | 'image', index: number) => {
+        if (type === 'image') {
+            try {
+                for (const item of uploadedFiles) {
+                    await HandlerImageValidate(item,
+                        1920,
+                        1080,
+                        'Усі зображення мають бути 1920x1080')
+                }
+            } catch (error) {
+                setError(`developments.${index}.images`, {type: 'custom', message: error as string})
+                return error as string
+            }
+        }
+        
         const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
@@ -273,7 +287,7 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
         const types = type === 'file' ? "files" : "images"
         const currentFiles = getValues(`developments.${index}`);
         setValue(`developments.${index}`, {...currentFiles, [types]: [...currentFiles[types], ...newFiles]})
-    }, [getValues, setValue]);
+    }, [getValues, setError, setValue]);
 
     const handleRemoveDynamic = useCallback((fileIndex: number, type: 'file' | 'image', index: number) => {
         const types = type === 'file' ? "files" : "images"

@@ -2,9 +2,9 @@
 import React, {useEffect, useState} from 'react'
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
-import {ConsultingService} from "@/services/CMS.service";
+import {ConsultingService, TrainingService} from "@/services/CMS.service";
 import TitleBack from "@/components/CMS/TitleBack";
-import {IConsulting} from "@/types/Consulting";
+import {IConsulting, ITraining} from "@/types/Consulting";
 import ConsultingCreate from "../ConsultingCreate";
 
 
@@ -12,6 +12,7 @@ import ConsultingCreate from "../ConsultingCreate";
 const ConsultingTabs = ({}) => {
 
     const [initialConsulting, setInitialConsulting] = useState<IConsulting>()
+    const [initialTraining, setInitialTraining] = useState<ITraining[]>([])
 
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
@@ -21,6 +22,9 @@ const ConsultingTabs = ({}) => {
             ConsultingService.getConsulting($apiAuth).then(res => {
                 setInitialConsulting(res)
             })
+            TrainingService.getTrainingAll($apiAuth).then(res => {
+                setInitialTraining(res.data)
+            })
         }
     }, [$apiAuth, status]);
 
@@ -29,7 +33,7 @@ const ConsultingTabs = ({}) => {
             <div className="flex items-center justify-between">
                 <TitleBack title="Консалтинговий центр НДІ" isBack={false}/>
             </div>
-            <ConsultingCreate consulting={initialConsulting}/>
+            <ConsultingCreate consulting={initialConsulting} training={initialTraining}/>
         </div>
     )
 }

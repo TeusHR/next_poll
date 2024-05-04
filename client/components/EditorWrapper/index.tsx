@@ -326,7 +326,7 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
             if (editor) {
                 onChange(editor.getHTML());
             }
-        }, 350),
+        }, 0),
         [editor]
     );
 

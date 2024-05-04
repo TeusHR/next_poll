@@ -5,7 +5,7 @@ import {
     getConferencesUrl,
     getConsultingUrl, getCooperationsUrl, getDigamUrl,
     getFeedBackUrl, getInnovationsUrl, getInternationalUrl, getLaboratoryDevelopmentsUrl, getLaboratoryUrl,
-    getResearchWorksUrl, getScienceSchoolsUrl, getStudentUrl
+    getResearchWorksUrl, getScienceSchoolsUrl, getStudentUrl, getTrainingUrl
 } from "@/config/url.config";
 import {$api} from "@/api/interceptors";
 import {IFeedbackForm} from "@/types/Feedback";
@@ -14,7 +14,7 @@ import {ISearch} from "@/types/Search";
 import {IResearch} from "@/types/Research";
 import {getContentType, getEmptyResponse} from "@/api/api.helpers";
 import {IActivity} from "@/types/Activity";
-import {IConsulting} from "@/types/Consulting";
+import {IConsulting, ITraining} from "@/types/Consulting";
 import {ICooperation} from "@/types/Cooperation";
 import {IDigam} from "@/types/Digam";
 import {IInternational} from "@/types/International";
@@ -367,6 +367,51 @@ export const ConsultingService = {
                 throw new Error('Failed to fetch data')
 
             const data: IConsulting = await res.json()
+
+            return data
+        } catch (e) {
+            return null
+        }
+    }
+}
+
+export const TrainingService = {
+    async getAll() {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getTrainingUrl('')}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['training']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: IResponseMeta<ITraining[]> = await res.json()
+
+            return data.data
+        } catch (e) {
+            return []
+        }
+    },
+    async get(id: string) {
+        try {
+            const res = await fetch(`${LOCAL_API_URL}${getTrainingUrl(`/${id}`)}`, {
+                method: 'GET',
+                headers: getContentType(),
+                next: {
+                    tags: ['training']
+                },
+                cache: 'force-cache'
+            })
+
+            if (!res.ok)
+                throw new Error('Failed to fetch data')
+
+            const data: ITraining = await res.json()
 
             return data
         } catch (e) {

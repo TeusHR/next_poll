@@ -7,7 +7,7 @@ import {
     getInnovationsUrl, getInternationalUrl, getLaboratoryDevelopmentsUrl, getLaboratoryUrl,
     getResearchWorksUrl,
     getScienceSchoolsUrl,
-    getStudentUrl
+    getStudentUrl, getTrainingUrl
 } from "@/config/url.config";
 import {IConferences, ICreateConferences, IGroupConference, IResponseMeta} from "@/types/Conference";
 import {ICreateScience, IScience} from "@/types/Science";
@@ -16,7 +16,7 @@ import {ICreateResearch, IResearch} from "@/types/Research";
 import {ICreateInnovation, IInnovation} from "@/types/Innovation";
 import {ICreateStudent, IStudent} from "@/types/Student";
 import {$api} from "@/api/interceptors";
-import {IConsulting, ICreateConsulting} from "@/types/Consulting";
+import {IConsulting, ICreateConsulting, ICreateTraining, ITraining} from "@/types/Consulting";
 import {IActivity, ICreateActivity} from "@/types/Activity";
 import {ICreateInternational, IInternational} from "@/types/International";
 import {ICreateLaboratory, ILaboratory} from "@/types/Laboratory";
@@ -55,6 +55,26 @@ export const ConsultingService = {
     },
     async postConsulting(item:ICreateConsulting, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateConsulting>(getConsultingUrl(''), item)
+        return status
+    },
+};
+
+
+export const TrainingService = {
+    async getTrainingAll(authAxios: AxiosInstance) {
+        const {data} = await authAxios.get<IResponseMeta<ITraining[]>>(getTrainingUrl('?column=createdAt&order=asc'))
+        return data
+    },
+    async removeTraining(id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.delete(getTrainingUrl(`/${id}`))
+        return status === 200
+    },
+    async postTraining(item:ICreateTraining, authAxios: AxiosInstance) {
+        const {status, data}  = await authAxios.post<ITraining>(getTrainingUrl(''), item)
+        return {status, data}
+    },
+    async updateTraining(item:ICreateTraining, id: string, authAxios: AxiosInstance) {
+        const {status} = await authAxios.patch<ICreateTraining>(getTrainingUrl(`/${id}`), item)
         return status
     },
 };
