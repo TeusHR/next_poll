@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
             description: stripHtml(trainings.text, 197),
             openGraph: {
                 title: trainings.title,
-                url: `/innovations/${id}/`,
+                url: `/trainings/${id}/`,
                 images
             },
         }
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
             title: "Сторінка не знайдена",
             openGraph: {
                 title: 'Сторінка не знайдена',
-                url: `/innovations/${id}/`,
+                url: `/trainings/${id}/`,
             },
         }
     }
