@@ -3,16 +3,18 @@ import Title from "components/UI/Title";
 import NewsItem from "@/components/NewsItem";
 import {ResearchWorkService} from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Наукова робота ОНТУ",
+    openGraph: {
+        url: '/research/',
+    },
+}
 
-
-const Research = async ({
-                            searchParams,
-                        }: { searchParams?: { page?: string; }; }) => {
-
+const Research = async ({searchParams}: { searchParams?: { page?: string; }; }) => {
     const currentPage = Number(searchParams?.page) || 1;
     const researchWorks = await ResearchWorkService.getAll(currentPage, 8, 'createdAt')
-
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">

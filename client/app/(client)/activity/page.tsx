@@ -3,14 +3,19 @@ import Title from "@/UI/Title";
 import NewsItem from "@/components/NewsItem";
 import {ActivityService} from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
+import {Metadata} from "next";
 
-const Activity = async ({
-                            searchParams,
-                        }: { searchParams?: { page?: string; }; }) => {
+export const metadata: Metadata = {
+    title: "Міжнародна діяльність ОНТУ",
+    openGraph: {
+        url: '/activity/',
+    },
+}
 
+
+const Activity = async ({ searchParams }: { searchParams?: { page?: string; }; }) => {
     const currentPage = Number(searchParams?.page) || 1;
     const activity = await ActivityService.getAll(currentPage, 8, 'createdAt')
-
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">

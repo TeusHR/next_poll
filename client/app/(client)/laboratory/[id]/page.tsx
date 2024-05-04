@@ -4,15 +4,60 @@ import NewsItem from "@/components/NewsItem";
 import {LaboratoryService} from "@/services/client.service";
 import {notFound} from "next/navigation";
 import {ILaboratory} from "@/types/Laboratory";
+import {Metadata} from "next";
+import {stripHtml} from "@/utils/StripHtml";
 
+type Params = {
+    params: { id: string },
+    searchParams?: { develop?: string; };
+}
 
-const LaboratoryItem = async ({params, searchParams}
-                                  :
-                                  {
-                                      params: { id: string },
-                                      searchParams?: { develop?: string; };
-                                  }) => {
+export async function generateMetadata({params, searchParams}: Params): Promise<Metadata> {
+    const id = params.id
 
+    try {
+        const isDevelop = searchParams?.develop || 'false';
+        const laboratory = isDevelop === 'true'
+            ? await LaboratoryService.getDevelopment(params.id || '')
+            : await LaboratoryService.get(params.id || '')
+
+        if (!laboratory)
+            throw new Error("Could not find laboratory");
+        const images = laboratory.images.length ?
+            {
+                url: new URL(laboratory.images[0], process.env.NEXTAUTH_URL),
+                width: 1920,
+                height: 1080,
+                alt: `${laboratory.title} | SCINT ONTU`
+            }
+            : {
+                url: "/image/logo.svg",
+                width: 200,
+                height: 146,
+                alt: "SCINT ONTU логотип"
+            }
+
+        return {
+            title: laboratory.title,
+            description: stripHtml(laboratory.text, 197),
+            openGraph: {
+                title: laboratory.title,
+                url: `/laboratory/${id}/`,
+                images
+            },
+        }
+    } catch (e) {
+        return {
+            title: "Сторінка не знайдена",
+            openGraph: {
+                title: 'Сторінка не знайдена',
+                url: `/laboratory/${id}/`,
+            },
+        }
+    }
+}
+
+const LaboratoryItem = async ({params, searchParams}: Params) => {
     const isDevelop = searchParams?.develop || 'false';
     const laboratory = isDevelop === 'true'
         ? await LaboratoryService.getDevelopment(params.id || '')
@@ -20,7 +65,6 @@ const LaboratoryItem = async ({params, searchParams}
 
     if (laboratory === null)
         return notFound();
-
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">

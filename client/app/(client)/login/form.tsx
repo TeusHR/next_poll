@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Button, Input } from "@nextui-org/react";
 import cn from "classnames";
-import { signIn } from "next-auth/react";
+import {signIn} from "next-auth/react";
 import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -20,7 +20,6 @@ const Form: FC = () => {
     })
 
     const router = useRouter()
-
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl')
 
@@ -35,9 +34,9 @@ const Form: FC = () => {
 
         if (res) {
             if (res.status === 401) {
-                toast.error("Invalid email or password")
+                toast.error("Неправильний email або пароль")
             } else if (res.error) {
-                toast.error("Try again later")
+                toast.error("Спробуйте пізніше")
             } else if (res.ok) {
                 router.push(callbackUrl || '/cms')
             }

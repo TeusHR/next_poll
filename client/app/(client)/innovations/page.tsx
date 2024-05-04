@@ -3,11 +3,16 @@ import Title from "components/UI/Title";
 import NewsItem from "@/components/NewsItem";
 import {InnovationService} from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Інноваційні розробки",
+    openGraph: {
+        url: '/innovations/',
+    },
+}
 
-const Innovations = async ({
-                               searchParams,
-                           }: { searchParams?: { page?: string; }; }) => {
+const Innovations = async ({searchParams }: { searchParams?: { page?: string; }; }) => {
     const currentPage = Number(searchParams?.page) || 1;
     const innovations = await InnovationService.getAll(currentPage, 8, 'createdAt')
 

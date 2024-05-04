@@ -30,8 +30,6 @@ type Props = {
     digam: IDigam | undefined
 }
 
-export type filePath = { url: string, name: string }
-
 const DigamCreate: FC<Props> = ({digam}) => {
     const {
         handleSubmit,
@@ -52,15 +50,12 @@ const DigamCreate: FC<Props> = ({digam}) => {
         append,
         remove
     } = useFieldArray({control, name: "organizations"});
-    // const organizations = watch("organizations");
 
     const {
         fields: fieldsForeign,
         append: appendForeign,
         remove: removeForeign
     } = useFieldArray({control, name: "foreignUniversities"});
-    // const foreignUniversities = watch("foreignUniversities");
-
 
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
@@ -139,8 +134,6 @@ const DigamCreate: FC<Props> = ({digam}) => {
                 .map(file => file.url)
 
             const collection = [...existingUrlImages, ...urlsImage];
-
-
             const organizations: IOrganizations[] = dataForm.organizations.map((item, idx) => {
                 return {
                     image: collection[idx],
@@ -169,7 +162,7 @@ const DigamCreate: FC<Props> = ({digam}) => {
 
             if (status === 201) {
                 await revalidateFetch('digam')
-                toast.success('Успішно створено')
+                toast.success('Дані оновлено')
             }
         } catch (error) {
             console.log(error)
@@ -182,7 +175,6 @@ const DigamCreate: FC<Props> = ({digam}) => {
 
     const onUpload = async (files: File[], type: 'file' | 'image') => {
         try {
-
             for (const item of files) {
                 await HandlerImageValidate(item,
                     1280,
@@ -199,8 +191,6 @@ const DigamCreate: FC<Props> = ({digam}) => {
             }));
 
             setFiles(prev => [...prev, ...newFiles]);
-
-
         } catch (error) {
             setError('filesOrg', {type: 'custom', message: error as string})
             return error as string
@@ -208,7 +198,7 @@ const DigamCreate: FC<Props> = ({digam}) => {
 
     };
 
-    const handleRemoveFile = useCallback((index: number, type: 'file' | 'image') => {
+    const handleRemoveFile = useCallback((index: number) => {
         setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
         remove(index)
     }, [remove]);
@@ -216,36 +206,16 @@ const DigamCreate: FC<Props> = ({digam}) => {
     useEffect(() => {
         if (files.length > 0) {
             for (let i = 0; i < files.length - fields.length; i++) {
-                append({image: '', title: 'test', link: ''})
+                append({image: '', title: '', link: ''})
             }
         }
     }, [append, fields.length, files]);
 
     const handlerRemoveForeign = async (index: number) => {
         removeForeign(index)
-
-        // if (laboratory) {
-        //     const isDevelop = laboratory?.developments[index];
-        //     if (isDevelop) {
-        //         await LaboratoryDevelopService.removeLaboratoryDevelop(isDevelop.id, $apiAuth).then((status) => {
-        //             if (status) {
-        //                 toast.success('Успішно видалено')
-        //                 setLaboratory(prevState => {
-        //                     if (!prevState) return undefined; // Возвращаем undefined, если prevState не определен
-        //                     const newDevelopments = prevState.developments.filter((_, idx) => idx !== index);
-        //                     return {
-        //                         ...prevState,
-        //                         developments: newDevelopments
-        //                     };
-        //                 });
-        //             }
-        //         })
-        //     }
-        // }
     }
 
     const handlerPushForeign = (countryIdx: number) => {
-
         const currentForeignUniversities = getValues('foreignUniversities');
         if (countryIdx >= 0 && countryIdx < currentForeignUniversities.length) {
             currentForeignUniversities[countryIdx].item.push({
@@ -437,7 +407,7 @@ const DigamCreate: FC<Props> = ({digam}) => {
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Зберегти
                             </Button>
                         </div>
                     </div>

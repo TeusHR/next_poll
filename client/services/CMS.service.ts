@@ -25,7 +25,7 @@ import {ICreateDigam, IDigam} from "@/types/Digam";
 
 
 export const ConferencesService = {
-    async getAllConference(authAxios: AxiosInstance, page: number, limit: number) {
+    async getAllConference(authAxios: AxiosInstance) {
         const {data} = await authAxios.get<IGroupConference[]>(getConferencesUrl(''))
         return data
     },
@@ -249,8 +249,12 @@ export const LaboratoryDevelopService = {
 
 export const DigamService = {
     async getDigam(authAxios: AxiosInstance) {
-        const {data} = await authAxios.get<IDigam>(getDigamUrl(''))
-        return data
+        try {
+            const {data} = await authAxios.get<IDigam>(getDigamUrl(''))
+            return data
+        } catch (_) {
+            return null
+        }
     },
     async postDigam(item:ICreateDigam, authAxios: AxiosInstance) {
         const {status} = await authAxios.post<ICreateDigam>(getDigamUrl(''), item)

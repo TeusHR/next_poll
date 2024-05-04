@@ -20,6 +20,7 @@ const Search = ({}) => {
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(false)
     const [searches, setSearch] = useState<ISearchInput[]>([])
     const router = useRouter()
 
@@ -30,7 +31,9 @@ const Search = ({}) => {
     const editRequestHandler = useMemo(
         () =>
             debounce(async (searchTerm: string) => {
-                fetchSearch(searchTerm)
+                setIsLoading(true)
+                await fetchSearch(searchTerm)
+                setIsLoading(false)
             }, 600),
         []
     );
@@ -44,16 +47,12 @@ const Search = ({}) => {
 
     const fetchSearch = async (search: string) => {
         const searchOutput = await getBySearch(search);
-        console.log(searchOutput)
         if (searchOutput) {
-
-
             const newSearches = Object.keys(searchOutput).map(key => ({
                 type: key,
                 // @ts-ignore
                 items: searchOutput[key] ?? [],
             }));
-            console.log("Transformed searches array:", newSearches);
             setSearch(newSearches);
         } else {
             setSearch([]);
@@ -73,11 +72,8 @@ const Search = ({}) => {
     }, [onClose]);
 
     return (
-
         <>
-            <div className="cursor-pointer"
-                 onClick={onOpen}
-            >
+            <div className="cursor-pointer" onClick={onOpen}>
                 <Image src={'/image/search.svg'}
                        alt={'Пошук'}
                        as={NextImage}
@@ -105,6 +101,7 @@ const Search = ({}) => {
                             onInputChange={(e) => {
                                 handleSearch(e);
                             }}
+                            isLoading={isLoading}
                             onSelectionChange={handleSelect}
                             isClearable={false}
                             allowsCustomValue={true}
@@ -137,6 +134,9 @@ const Search = ({}) => {
                             disableSelectorIconRotation={true}
                             aria-label="Пошук"
                         >
+                            {/*{(item) => (*/}
+
+                            {/*)}*/}
                             {searches.map((output) => (
                                 <AutocompleteSection key={output.type}
                                                      classNames={{

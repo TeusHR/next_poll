@@ -4,7 +4,32 @@ import CountryCoop from "@/components/CountryCoop";
 import MemberOrganizations from "@/components/MemberOrganizations";
 import {DIGAMService} from "@/services/client.service";
 import {notFound} from "next/navigation";
+import {Metadata} from "next";
+import {stripHtml} from "@/utils/StripHtml";
 
+export async function generateMetadata(): Promise<Metadata> {
+    try {
+        const digam = await DIGAMService.getAll()
+        if (!digam)
+            throw new Error("Could not find digam");
+
+        return {
+            title: "Відділ міжнародних грантів та академічної мобільності",
+            description: stripHtml(digam.text, 197),
+            openGraph: {
+                url: '/department/',
+            },
+        }
+    } catch (e) {
+        return {
+            title: "Сторінка не знайдена",
+            openGraph: {
+                title: 'Сторінка не знайдена',
+                url: `/department/`,
+            },
+        }
+    }
+}
 
 const Department = async ({}) => {
     const digam = await DIGAMService.getAll()
@@ -17,7 +42,7 @@ const Department = async ({}) => {
             <div className="flex flex-col gap-14 max-sm:gap-8">
                 <Title text="Відділ міжнародних грантів та академічної мобільності"
                        style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
-                <div className="text-base" dangerouslySetInnerHTML={{ __html: digam.text }}></div>
+                <div className="text-base" dangerouslySetInnerHTML={{__html: digam.text}}></div>
                 <MemberOrganizations organizations={digam.organizations}/>
                 <CountryCoop foreignUniversities={digam.foreignUniversities}/>
             </div>

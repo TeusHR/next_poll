@@ -29,7 +29,7 @@ export class ConferenceService {
       where: { id },
     });
     if (!conference) throw new NotFoundException();
-    return conference;
+    return { ...conference, date: moment(conference.date).format("D MMMM") };
   }
 
   async update(id: string, updateConferenceDto: UpdateConferenceDto) {

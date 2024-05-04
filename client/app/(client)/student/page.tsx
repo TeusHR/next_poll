@@ -2,6 +2,32 @@ import React from 'react'
 import Title from "@/UI/Title";
 import {StudentService} from "@/services/client.service";
 import {notFound} from "next/navigation";
+import {Metadata} from "next";
+import {stripHtml} from "@/utils/StripHtml";
+
+export async function generateMetadata(): Promise<Metadata> {
+    try {
+        const student = await StudentService.getAll()
+        if (!student)
+            throw new Error("Could not find student");
+
+        return {
+            title: "Студентська наука",
+            description: stripHtml(student.text, 197),
+            openGraph: {
+                url: '/student/',
+            },
+        }
+    } catch (e) {
+        return {
+            title: "Сторінка не знайдена",
+            openGraph: {
+                title: 'Сторінка не знайдена',
+                url: `/student/`,
+            },
+        }
+    }
+}
 
 const Student = async ({}) => {
     const student = await StudentService.getAll()

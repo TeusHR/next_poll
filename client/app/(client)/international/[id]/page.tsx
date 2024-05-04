@@ -2,8 +2,55 @@ import React from 'react'
 import DetailsPage from "@/components/DetailsPage";
 import {InternationalService} from "@/services/client.service";
 import {notFound} from "next/navigation";
+import {Metadata} from "next";
+import {stripHtml} from "@/utils/StripHtml";
 
-const InternationalItem = async ({params}: { params: { id: string } }) => {
+type Params = { params: { id: string } }
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+    const id = params.id
+
+    try {
+        const international = await InternationalService.get(params.id || '')
+
+        if (!international)
+            throw new Error("Could not find innovation");
+
+        const images = international.images.length ?
+            {
+                url: new URL(international.images[0], process.env.NEXTAUTH_URL),
+                width: 1920,
+                height: 1080,
+                alt: `${international.title} | SCINT ONTU`
+            }
+            :{
+                url: "/image/logo.svg",
+                width: 200,
+                height: 146,
+                alt: "SCINT ONTU логотип"
+            }
+
+        return {
+            title: international.title,
+            description: stripHtml(international.text, 197),
+            openGraph: {
+                title: international.title,
+                url: `/international/${id}/`,
+                images
+            },
+        }
+    } catch (e) {
+        return {
+            title: "Сторінка не знайдена",
+            openGraph: {
+                title: 'Сторінка не знайдена',
+                url: `/international/${id}/`,
+            },
+        }
+    }
+}
+
+const InternationalItem = async ({params}: Params) => {
     const international = await InternationalService.get(params.id || '')
 
     if (international === null)

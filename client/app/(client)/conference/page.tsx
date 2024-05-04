@@ -3,10 +3,17 @@ import Title from "@/UI/Title";
 import {ConferencesService} from "@/services/client.service";
 import {StringConferenceType} from "@/utils/ConferenceType";
 import ButtonDetails from "@/UI/ButtonDetails";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Заходи",
+    openGraph: {
+        url: '/conference/',
+    },
+}
 
 const Conference = async () => {
     const conferences = await ConferencesService.getAll()
-
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4 flex flex-col gap-14 max-sm:gap-8">

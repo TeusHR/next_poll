@@ -1,13 +1,18 @@
 import React from 'react'
 import Title from "@/UI/Title";
 import NewsItem from "@/components/NewsItem";
-import {InnovationService, LaboratoryService} from "@/services/client.service";
+import {LaboratoryService} from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Науково-дослідні лабораторії",
+    openGraph: {
+        url: '/laboratory/',
+    },
+}
 
-const Laboratory = async ({
-                              searchParams,
-                          }: { searchParams?: { page?: string; }; }) => {
+const Laboratory = async ({searchParams}: { searchParams?: { page?: string; }; }) => {
     const currentPage = Number(searchParams?.page) || 1;
     const laboratory = await LaboratoryService.getAllLaboratories(currentPage, 8, 'createdAt')
 

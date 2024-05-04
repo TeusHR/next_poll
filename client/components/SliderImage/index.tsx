@@ -16,6 +16,7 @@ type Props = {
 }
 
 const SliderImage = ({images}: Props) => {
+    const [swiper, setSwiper] = useState<SwiperTypes>();
     const [lightboxController, setLightboxController] = useState({
         toggler: false,
         slide: 1
@@ -29,9 +30,6 @@ const SliderImage = ({images}: Props) => {
             });
     }
 
-    const [swiper, setSwiper] = useState<SwiperTypes>();
-
-
     return (
         <div className="flex mx-auto my-0 w-full h-full max-w-[1300px] max-h-[650px] select-none">
             <FsLightbox
@@ -41,9 +39,15 @@ const SliderImage = ({images}: Props) => {
             <Swiper
                 pagination={{
                     clickable: true,
+                    enabled: images.length > 1
+                }}
+                loop
+                autoplay={{
+                    delay: 5000,
+                    pauseOnMouseEnter: true
                 }}
                 onSwiper={setSwiper}
-                navigation={true}
+                navigation={images.length > 1}
                 modules={[Pagination, Autoplay, Navigation]}
                 className="w-full rounded-[16px]"
             >

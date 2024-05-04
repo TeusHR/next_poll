@@ -4,7 +4,14 @@ import NextImage from "next/image";
 import {Image} from "@nextui-org/react";
 import {ConsultingService} from "@/services/client.service";
 import {notFound} from "next/navigation";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Консалтинговий центр НДІ",
+    openGraph: {
+        url: '/consulting/',
+    },
+}
 
 const Consulting = async ({}) => {
     const consulting = await ConsultingService.getAll()
@@ -41,7 +48,7 @@ const Consulting = async ({}) => {
                         <div className="flex flex-col gap-14 max-sm:gap-10">
                             <Title text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                                    style="text-[#111318] text-3xl max-xl:text-2xl font-semibold"/>
-                            <div dangerouslySetInnerHTML={{ __html: consulting.text }}>
+                            <div dangerouslySetInnerHTML={{__html: consulting.text}}>
 
                             </div>
                         </div>
@@ -54,23 +61,6 @@ const Consulting = async ({}) => {
                         <span className="border border-[#6E8880]"></span>
                     </div>
                     <div className="flex flex-col gap-14">
-                        {/*{consulting.map((item, index) =>*/}
-                        {/*    <NewsItem title={item.title}*/}
-                        {/*              imageObj={{*/}
-                        {/*                  image: item.image,*/}
-                        {/*                  width: 400,*/}
-                        {/*                  height: 400,*/}
-                        {/*                  imageStyle:`max-h-[400px]`*/}
-                        {/*              }}*/}
-                        {/*              key={index}*/}
-                        {/*              text={item.text}*/}
-                        {/*              date={new Date().toISOString()}*/}
-                        {/*              index={index}*/}
-                        {/*              buttonDetails*/}
-                        {/*              link={'/'}*/}
-                        {/*              showDate={false}*/}
-                        {/*              lengthArr={consulting.length}/>*/}
-                        {/*)}*/}
                     </div>
                 </div>
             </div>

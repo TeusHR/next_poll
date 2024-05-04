@@ -4,8 +4,39 @@ import Document from "@/components/Document";
 import {ConferencesService} from "@/services/client.service";
 import {StringConferenceType} from "@/utils/ConferenceType";
 import {notFound} from "next/navigation";
+import {Metadata} from "next";
+import {stripHtml} from "@/utils/StripHtml";
 
-const Conference = async ({params}: { params: { id: string } }) => {
+type Params = { params: { id: string } }
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+    const id = params.id
+
+    try {
+        const conference = await ConferencesService.get(params.id || '')
+        if (!conference)
+            throw new Error("Could not find conference");
+
+        return {
+            title: conference.title,
+            description: stripHtml(conference.text, 197),
+            openGraph: {
+                title: conference.title,
+                url: `/conference/${id}/`,
+            },
+        }
+    } catch (e) {
+        return {
+            title: "Сторінка не знайдена",
+            openGraph: {
+                title: 'Сторінка не знайдена',
+                url: `/conference/${id}/`,
+            },
+        }
+    }
+}
+
+const Conference = async ({params}: Params) => {
     const conference = await ConferencesService.get(params.id || '')
 
     if (conference === null)

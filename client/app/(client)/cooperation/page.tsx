@@ -1,14 +1,18 @@
 import React from 'react'
 import Title from "@/UI/Title";
 import DirectItem from "@/components/DirectItem";
-import {ConsultingService, CooperationService} from "@/services/client.service";
+import {CooperationService} from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Напрямки для співпраці",
+    openGraph: {
+        url: '/cooperation/',
+    },
+}
 
-
-const Cooperation = async ({
-                               searchParams,
-                           }: { searchParams?: { page?: string; }; }) => {
+const Cooperation = async ({searchParams}: { searchParams?: { page?: string; }; }) => {
     const currentPage = Number(searchParams?.page) || 1;
     const cooperation = await CooperationService.getAll(currentPage, 8, 'createdAt')
 
@@ -21,7 +25,8 @@ const Cooperation = async ({
                 {cooperation.data.map((item, index) =>
 
                     <React.Fragment key={index}>
-                        <DirectItem title={item.title} text={item.text} index={(currentPage - 1) * cooperation.meta.perPage + index + 1} />
+                        <DirectItem title={item.title} text={item.text}
+                                    index={(currentPage - 1) * cooperation.meta.perPage + index + 1}/>
                         {index !== cooperation.data.length - 1 && <span className="border border-[#6E8880]"></span>}
                     </React.Fragment>
                 )}

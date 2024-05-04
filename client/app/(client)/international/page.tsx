@@ -3,7 +3,14 @@ import Title from "components/UI/Title";
 import NewsItem from "@/components/NewsItem";
 import {InternationalService} from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Міжнародні проекти",
+    openGraph: {
+        url: '/international/',
+    },
+}
 
 const International = async ({
                            searchParams,
