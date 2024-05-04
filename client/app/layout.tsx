@@ -11,7 +11,7 @@ const inter = Inter({subsets: ["latin"]});
 export async function generateMetadata(): Promise<Metadata> {
     return {
         metadataBase: new URL('uk', process.env.NEXTAUTH_URL),
-        description: 'Офіційний сайт ОНТУ: наукова робота, міжнародні програми, конференції, семінари...',
+        description: 'Наукова робота та міжнародна діяльність Одеського національного технологічного університету',
         title: {
             default: 'SCINT',
             template: '%s | SCINT'

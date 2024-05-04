@@ -42,7 +42,7 @@ export default function Home() {
                 <Partners/>
             </div>
             <Suspense>
-                <Feedback/>
+                <Feedback apiKey={process.env.GOOGLE_MAPS_API_KEY || ''}/>
             </Suspense>
         </>
     );

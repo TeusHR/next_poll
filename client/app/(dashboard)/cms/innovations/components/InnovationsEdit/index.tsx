@@ -132,7 +132,7 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) => {
             const status = await InnovationsService.updateInnovation(dataProduct, innovationsId, $apiAuth)
             if (status === 200) {
                 await revalidateFetch('innovation')
-                toast.success('Успішно створено')
+                toast.success('Запис оновлено')
             }
         } catch (error) {
             console.log(error)
@@ -311,7 +311,7 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) => {
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Оновити
                             </Button>
                         </div>
                     </div>

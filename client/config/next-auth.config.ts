@@ -80,7 +80,6 @@ export const nextAuthConfig: NextAuthOptions = {
                     })
                     return data
                 } catch (e) {
-                    // console.log(e)
                     return null
                 }
             }

@@ -9,9 +9,25 @@ export function getKeyDescription(key: keyof ISearch): string {
         internationalProjects: "Міжнародні проекти",
         laboratories: "Науково-дослідні лабораторії",
         laboratoryDevelopments: "Розробки лабораторії",
-        researchWork: "Наукова робота ОНТУ",
+        researchWorks: "Наукова робота ОНТУ",
         scienceSchools: "Студентська наука",
-        trainings: "Описание тренингов"
+        trainings: "Опис тренінгів"
+    };
+    return descriptions[key] || `${key}`;
+}
+
+export function getKeyLink(key: keyof ISearch, id: string): string {
+    const descriptions: { [key in keyof ISearch]?: string } = {
+        activities: "/activity",
+        conferences: `/conference/${id}`,
+        cooperations: "/cooperation",
+        innovations: `/innovations/${id}`,
+        internationalProjects: `/international/${id}`,
+        laboratories: `/laboratory/${id}`,
+        laboratoryDevelopments: `/laboratory/${id}?develop=true`,
+        researchWork: "/research",
+        scienceSchools: "/student",
+        trainings: `/training/${id}`
     };
     return descriptions[key] || `${key}`;
 }

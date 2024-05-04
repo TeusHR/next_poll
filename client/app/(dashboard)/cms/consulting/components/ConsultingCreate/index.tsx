@@ -256,11 +256,10 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
             file,
             url: file.name
         }));
-        console.log(newFiles)
         setFiles(prev => [...prev, ...newFiles]);
     };
 
-    const handleRemoveFile = useCallback((index: number, type: 'file' | 'image') => {
+    const handleRemoveFile = useCallback((index: number) => {
         setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
         remove(index)
     }, [remove]);
@@ -318,7 +317,7 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
                 return error as string
             }
         }
-        
+
         const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
@@ -390,7 +389,7 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
                                                 <PreviewUpload files={files}
-                                                               handleRemoveFile={(index) => handleRemoveFile(index, 'file')}/>
+                                                               handleRemoveFile={(index) => handleRemoveFile(index)}/>
                                             </div>
                                         </div>
                                         <div className="w-full flex justify-center items-center">
@@ -456,7 +455,7 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
                                                     />
                                                 </div>
                                                 <span className="cursor-pointer pt-[20px]"
-                                                      onClick={() => handleRemoveFile(index, "file")}>
+                                                      onClick={() => handleRemoveFile(index)}>
                                                         <CloseIcon/>
                                                     </span>
                                             </div>

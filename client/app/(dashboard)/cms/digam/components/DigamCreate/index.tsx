@@ -258,7 +258,7 @@ const DigamCreate: FC<Props> = ({digam}) => {
                                             />
                                             <div className="w-full flex flex-col gap-4 items-start">
                                                 <PreviewUpload files={files}
-                                                               handleRemoveFile={(index) => handleRemoveFile(index, 'file')}/>
+                                                               handleRemoveFile={(index) => handleRemoveFile(index)}/>
                                             </div>
                                             <div className="w-full flex justify-center items-center">
                                                 <div>
@@ -361,7 +361,7 @@ const DigamCreate: FC<Props> = ({digam}) => {
                                                     />
                                                 </div>
                                                 <span className="cursor-pointer pt-[20px]"
-                                                      onClick={() => handleRemoveFile(idx, "file")}>
+                                                      onClick={() => handleRemoveFile(idx)}>
                                                         <CloseIcon/>
                                                 </span>
                                             </div>

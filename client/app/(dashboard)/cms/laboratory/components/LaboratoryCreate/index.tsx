@@ -75,8 +75,6 @@ const LaboratoryCreate = ({}) => {
         };
 
         try {
-
-            console.log(dataForm)
             setIsLoading(false)
 
 
@@ -90,8 +88,6 @@ const LaboratoryCreate = ({}) => {
                 images: urlsImages,
             };
 
-            console.log(dataProduct)
-
             let laboratoryID: string | undefined;
 
             const {status, data} = await LaboratoryService.postLaboratory(dataProduct, $apiAuth)
@@ -101,7 +97,7 @@ const LaboratoryCreate = ({}) => {
                 await revalidateFetch('laboratory')
                 reset()
                 handlerReset()
-                toast.success('Успішно створено')
+                toast.success('Запис успішно створено')
             }
 
 

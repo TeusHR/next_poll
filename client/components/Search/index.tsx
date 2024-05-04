@@ -12,7 +12,7 @@ import debounce from "lodash.debounce";
 import {useRouter} from "next/navigation";
 import {getBySearch} from "@/services/client.service";
 import {ISearchInput} from "@/types/Search";
-import {getKeyDescription} from "@/utils/PageName";
+import {getKeyDescription, getKeyLink} from "@/utils/PageName";
 import {stripHtml} from "@/utils/StripHtml";
 
 
@@ -23,10 +23,6 @@ const Search = ({}) => {
     const [isLoading, setIsLoading] = useState(false)
     const [searches, setSearch] = useState<ISearchInput[]>([])
     const router = useRouter()
-
-    const handleSearch = (term: string) => {
-        setSearchTerm(term);
-    }
 
     const editRequestHandler = useMemo(
         () =>
@@ -39,9 +35,8 @@ const Search = ({}) => {
     );
 
     useEffect(() => {
-        if (searchTerm !== '') {
+        if (searchTerm !== '')
             editRequestHandler(searchTerm)
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm]);
 
@@ -60,7 +55,11 @@ const Search = ({}) => {
     };
 
     const handleSelect = useCallback((key: Key) => {
-        router.push(`/product/${key}`)
+        if (key) {
+            const [type, id] = key.toString().split(' ')
+            setSearchTerm('')
+            router.push(getKeyLink(type, id))
+        }
     }, [router])
 
     const handleModalClose = useCallback(() => {
@@ -98,18 +97,19 @@ const Search = ({}) => {
                         <Autocomplete
                             className="w-full !h-full bg-transparent select-none !pl-12 !p-[9.5px] border data-[open=true]:border-primary-400 border-solid border-gray-300 !rounded-full bg-white"
                             placeholder="Пошук"
-                            onInputChange={(e) => {
-                                handleSearch(e);
-                            }}
+                            onInputChange={setSearchTerm}
+                            inputValue={searchTerm}
+                            items={searches}
                             isLoading={isLoading}
                             onSelectionChange={handleSelect}
+                            onSelect={() => {}}
                             isClearable={false}
                             allowsCustomValue={true}
                             shouldCloseOnBlur={false}
                             startContent={<SVGSearchElement/>}
                             classNames={{
                                 listbox: 'relative px-12 w-full h-full',
-                                base: "bg-transparent",
+                                base: "bg-transparent outline-none",
                                 listboxWrapper: "bg-transparent max-h-[60vh]",
                             }}
                             fullWidth
@@ -134,20 +134,19 @@ const Search = ({}) => {
                             disableSelectorIconRotation={true}
                             aria-label="Пошук"
                         >
-                            {/*{(item) => (*/}
-
-                            {/*)}*/}
-                            {searches.map((output) => (
+                            {(output) => (
                                 <AutocompleteSection key={output.type}
                                                      classNames={{
                                                          heading: "text-lg max-lg:text-base font-bold text-primary",
                                                          group: "pl-3"
                                                      }}
+                                                     onSelect={() => {}}
                                                      title={getKeyDescription(output.type)}
                                                      showDivider>
                                     {output.items.map((item, index) => (
-                                        <AutocompleteItem key={item.id}
+                                        <AutocompleteItem key={`${output.type} ${item.id}`}
                                                           textValue={item.text}
+                                                          onSelect={() => {}}
                                                           className="capitalize">
                                             <div key={`${item}-${index}`}
                                                  className="flex gap-4 items-center">
@@ -163,7 +162,7 @@ const Search = ({}) => {
                                         </AutocompleteItem>
                                     ))}
                                 </AutocompleteSection>
-                            ))}
+                            )}
                         </Autocomplete>
                     </ModalBody>
                 </ModalContent>

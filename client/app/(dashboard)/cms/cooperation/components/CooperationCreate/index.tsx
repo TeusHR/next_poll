@@ -46,7 +46,7 @@ const ConsultingCreate = () => {
             if (status === 201) {
                 await revalidateFetch('cooperation')
                 reset()
-                toast.success('Успішно створено')
+                toast.success('Запис успішно створено')
             }
         } catch (error) {
             console.log(error)

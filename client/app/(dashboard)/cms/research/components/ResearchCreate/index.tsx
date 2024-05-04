@@ -64,7 +64,7 @@ const ResearchCreate = ({}) => {
                 if(inputRef.current)
                     inputRef.current.value = ""
                 setImagePreview('')
-                toast.success('Успішно створено')
+                toast.success('Запис успішно створено')
             }
         } catch (error) {
             console.log(error)

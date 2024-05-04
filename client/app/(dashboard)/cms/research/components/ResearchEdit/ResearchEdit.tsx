@@ -93,7 +93,7 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                 const status = await ResearchService.updateResearch(dataProduct, researchId, $apiAuth)
                 if (status === 200) {
                     await revalidateFetch('researchWork')
-                    toast.success('Оновлено')
+                    toast.success('Запис оновлено')
                 }
             }
         } catch (error) {

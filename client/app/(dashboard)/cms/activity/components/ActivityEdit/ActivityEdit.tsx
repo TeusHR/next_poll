@@ -19,7 +19,6 @@ type Props = {
 }
 
 const ActivityEdit: FC<Props> = ({activityId}) => {
-
     const {
         handleSubmit,
         control,
@@ -63,20 +62,16 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
     }
 
     const onSubmit: SubmitHandler<IUpdateActivityForm> = async (dataForm) => {
+        if (toast.isActive('toast-register') || status !== 'authenticated') return;
 
-        if (toast.isActive('toast-register') || status !== 'authenticated') {
-            return;
-        }
         setIsLoading(true)
-
         try {
             if (activity) {
-
                 let urlImage: filePath[] | undefined
 
-                if (dataForm.image) {
+                if (dataForm.image)
                     urlImage = await FileService.upload($apiAuth, dataForm.image, 'image')
-                }
+
 
                 if (urlImage && urlImage.length === 0) {
                     toast.error('Зображення не було завантажено.');
@@ -93,7 +88,7 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                 const status = await ActivityService.updateActivity(dataProduct, activityId, $apiAuth)
                 if (status === 200) {
                     await revalidateFetch('activity')
-                    toast.success('Оновлено')
+                    toast.success('Запис оновлено')
                 }
             }
         } catch (error) {
@@ -102,7 +97,6 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
         } finally {
             setIsLoading(false)
         }
-
     }
 
     return (
@@ -235,7 +229,7 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Оновити
                             </Button>
                         </div>
                     </div>

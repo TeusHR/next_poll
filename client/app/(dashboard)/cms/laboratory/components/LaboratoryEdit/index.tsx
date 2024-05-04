@@ -111,12 +111,6 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
             .finally(() => setIsLoading(false))
     }, [laboratoryId, setValue]);
 
-    useEffect(() => {
-        if (laboratory) {
-            console.log(laboratory)
-        }
-    }, [laboratory, setValue]);
-
     const renderName = (fileName: string): string => {
         return fileName.replace('/uploads/pdf/', '').replace('/uploads/image/', '');
     }
@@ -164,7 +158,7 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
             const status = await LaboratoryService.updateLaboratory(dataProduct, laboratoryId, $apiAuth)
             if (status === 200) {
                 await revalidateFetch('laboratory')
-                toast.success('Успішно оновлено')
+                toast.success('Запис оновлено')
             }
 
 

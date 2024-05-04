@@ -47,7 +47,7 @@ const ScienceCreate = () => {
             if (status === 201) {
                 await revalidateFetch('science')
                 reset()
-                toast.success('Успішно створено')
+                toast.success('Запис успішно створено')
             }
         } catch (error) {
             console.log(error)

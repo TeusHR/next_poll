@@ -1,6 +1,7 @@
 import React from 'react'
 import {Input} from "@nextui-org/react";
 import {SVGSearchElement} from "@/UI/SearchIcon";
+import cn from "classnames";
 
 
 type  Props = {
@@ -27,13 +28,15 @@ const TableSearch = ({
 
 
     return (
-        <div className={wrapperClassName}>
+        <div className={cn('h-fit', wrapperClassName)}>
             <Input type="text"
                    onChange={(e) => {
                        handleSearch(e.target.value);
                    }}
                    value={valueInput}
-                   className="w-full !h-full !p-1 focus:text-fd border border-solid border-gray-300 !rounded-lg bg-white"
+                   classNames={{
+                       inputWrapper: "w-full !h-full !p-1 focus:text-fd border border-solid border-primary-500 !rounded-lg"
+                   }}
                    placeholder={placeholder}
                    startContent={
                        inputStartElement && <div className="text-center pointer-events-none">

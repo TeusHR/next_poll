@@ -54,23 +54,17 @@ export const UniquiIDFT = Node.create<UniqueIDOptions>({
     onCreate() {
         const { view, state } = this.editor
         const { tr, doc } = state
-        const { types, attributeName,
-            // generateID
-        } = this.options
+        const { types, attributeName} = this.options
         const nodesWithoutId = findChildren(doc, node => {
-            console.log(node.type)
             return types.includes(node.type.name)
                 && node.attrs[attributeName] === null
         })
-        console.log(nodesWithoutId)
 
         nodesWithoutId.forEach(({ node, pos }) => {
             tr.setNodeMarkup(pos, undefined, {
                 ...node.attrs,
-                // [attributeName]: generateID(),
             })
         })
-        console.log(tr)
         view.dispatch(tr)
     },
 

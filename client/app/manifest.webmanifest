@@ -1,0 +1,8 @@
+{
+    "name": "SCINT ONTU",
+    "short_name": "SCINT",
+    "start_url": "/",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

@@ -78,7 +78,7 @@ const InternationalCreate = ({}) => {
                 await revalidateFetch('international')
                 reset()
                 handlerReset()
-                toast.success('Успішно створено')
+                toast.success('Запис успішно створено')
             }
         } catch (error) {
             console.log(error)

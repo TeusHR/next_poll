@@ -5,7 +5,6 @@ import ConferenceCreate from "../components/ConferenceCreate/page";
 import ConferenceEdit from "../components/ConferenceEdit";
 
 const CMSConference =  async ({params}: { params: { id: string } }) => {
-
     if (params.id === 'new') {
         return (
             <div>
@@ -20,7 +19,6 @@ const CMSConference =  async ({params}: { params: { id: string } }) => {
             </div>
         )
     }
-
 
     return (
         <div>

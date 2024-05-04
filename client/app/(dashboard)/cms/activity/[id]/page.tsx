@@ -20,7 +20,6 @@ const CMSActivity  =  async ({params}: { params: { id: string } }) =>{
         )
     }
 
-
     return (
         <div>
             <div className="flex flex-col px-12 py-12 max-xl:px-4">

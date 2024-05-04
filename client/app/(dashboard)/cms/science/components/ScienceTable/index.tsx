@@ -94,7 +94,7 @@ const ScienceTable = ({}) => {
     return (
         <div className="flex flex-col px-10 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
             <div className="flex items-center justify-between">
-                <TitleBack title="Напрямки для співпраці" isBack={false}/>
+                <TitleBack title="Наукові школи" isBack={false}/>
             </div>
             <TableItems dataItems={filterConsulting || []}
                         searchInput={valueSearch}

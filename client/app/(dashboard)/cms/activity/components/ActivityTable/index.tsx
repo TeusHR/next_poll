@@ -67,7 +67,7 @@ const ActivityTable = ({}) => {
         return (
             <div className="flex flex-col gap-4 items-center">
                 <div className="gap-8 max-lg:gap-4 flex items-center justify-start w-full max-lg:items-start">
-                    <div className="w-full flex gap-8 max-lg:gap-4 max-lg:grid max-lg:grid-cols-2 max-lg:items-start">
+                    <div className="w-full flex gap-8 max-lg:gap-4 items-center max-lg:grid max-lg:grid-cols-2 max-lg:items-start">
                         <TableSearch handleSearch={setValueSearch} valueInput={valueSearch}
                                      wrapperClassName="w-full max-w-[300px] min-w-[150px]"/>
                     </div>
@@ -85,7 +85,7 @@ const ActivityTable = ({}) => {
             </div>
         )
     }, [valueSearch, showAdd, openCreatePage])
-    
+
     return (
         <div className="flex flex-col px-10 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
             <div className="flex items-center justify-between">

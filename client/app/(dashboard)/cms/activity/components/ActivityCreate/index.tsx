@@ -15,7 +15,6 @@ import revalidateFetch from "@/services/revalidateFetch";
 
 
 const ActivityCreate = ({}) => {
-
     const {
         handleSubmit,
         control,
@@ -36,13 +35,10 @@ const ActivityCreate = ({}) => {
 
     const onSubmit: SubmitHandler<ICreateActivityForm> = async (dataForm) => {
 
-        if (toast.isActive('toast-register') || status !== 'authenticated') {
-            return;
-        }
+        if (toast.isActive('toast-register') || status !== 'authenticated') return;
+
         setIsLoading(true)
-
         try {
-
             const urlImage: filePath[] = await FileService.upload($apiAuth, dataForm.image, 'image')
 
             if (urlImage.length === 0) {
@@ -57,14 +53,13 @@ const ActivityCreate = ({}) => {
                 image: urlImage[0].url,
             };
 
-            const status  = await ActivityService.postActivity(dataProduct, $apiAuth)
+            const status = await ActivityService.postActivity(dataProduct, $apiAuth)
             if (status === 201) {
                 await revalidateFetch('activity')
                 reset()
-                if(inputRef.current)
-                    inputRef.current.value = ""
+                if (inputRef.current) inputRef.current.value = ""
                 setImagePreview('')
-                toast.success('Успішно створено')
+                toast.success('Запис успішно створено')
             }
         } catch (error) {
             console.log(error)
@@ -72,7 +67,6 @@ const ActivityCreate = ({}) => {
         } finally {
             setIsLoading(false)
         }
-
     }
 
     return (

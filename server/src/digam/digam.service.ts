@@ -9,7 +9,6 @@ export class DIGAMService {
   async createOrUpdate(createDIGAMDto: CreateDIGAMDto) {
     const DIGAM = await this.prismaService.dIGAM.findFirst();
     let res: any;
-    console.log(DIGAM);
     if (DIGAM)
       res = this.prismaService.dIGAM.update({
         data: createDIGAMDto,

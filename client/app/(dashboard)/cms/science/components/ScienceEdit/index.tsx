@@ -64,7 +64,7 @@ const ScienceEdit: FC<Props> = ({scienceId}) => {
             const status = await ScienceService.updateScience(dataProduct, scienceId, $apiAuth)
             if (status === 200) {
                 await revalidateFetch('science')
-                toast.success('Напрямки успішно оновлено')
+                toast.success('Запис оновлено')
             }
         } catch (error) {
             console.log(error)

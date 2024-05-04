@@ -1,5 +1,5 @@
 import { NodeType } from '@tiptap/pm/model'
-import {getNodeType, isNodeActive, RawCommands} from "@tiptap/react";
+import {getNodeType, isNodeActive} from "@tiptap/react";
 
 export interface ItoggleWrap {
     typeOrName: string | NodeType,
@@ -20,9 +20,6 @@ declare module '@tiptap/react' {
 export const toggleWrap = ({typeOrName, attributes = {}}:ItoggleWrap) => ({ state, commands }:{ state:any, commands:any }):any => {
     const type = getNodeType(typeOrName, state.schema)
     const isActive = isNodeActive(state, type, attributes)
-
-    console.log(type)
-    console.log(isActive)
 
     if (isActive) {
         return commands.lift(type)

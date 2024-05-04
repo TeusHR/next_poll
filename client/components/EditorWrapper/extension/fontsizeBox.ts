@@ -37,10 +37,7 @@ export const FontSizeBox = Node.create<FontsizeBox>({
         ];
     },
 
-    renderHTML({HTMLAttributes, node}) {
-        console.log(node, 'node')
-        console.log(HTMLAttributes)
-        console.log(this.options.HTMLAttributes)
+    renderHTML({HTMLAttributes}) {
         return ['span', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
     },
 

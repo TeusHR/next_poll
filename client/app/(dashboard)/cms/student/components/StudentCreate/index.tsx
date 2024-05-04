@@ -57,7 +57,7 @@ const StudentCreate:FC<Props> = ({student}) => {
             const status = await StudentService.postStudent(dataProduct, $apiAuth)
             if (status === 201) {
                 await revalidateFetch('studentScience')
-                toast.success('Успішно створено')
+                toast.success('Дані оновлено')
             }
         } catch (error) {
             console.log(error)
@@ -107,7 +107,7 @@ const StudentCreate:FC<Props> = ({student}) => {
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Зберегти
                             </Button>
                         </div>
                     </div>

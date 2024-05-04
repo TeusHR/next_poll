@@ -127,7 +127,7 @@ const InternationalEdit: FC<Props> = ({internationalId}) =>{
             const status = await InternationalService.updateInternational(dataProduct, internationalId, $apiAuth)
             if (status === 200) {
                 await revalidateFetch('international')
-                toast.success('Успішно створено')
+                toast.success('Запис оновлено')
             }
         } catch (error) {
             console.log(error)
@@ -304,7 +304,7 @@ const InternationalEdit: FC<Props> = ({internationalId}) =>{
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Оновити
                             </Button>
                         </div>
                     </div>

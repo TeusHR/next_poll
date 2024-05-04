@@ -44,15 +44,11 @@ const ConferenceCreate = ({}) => {
     const [files, setFiles] = useState<uploadType[]>([]);
 
     const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
+        if (toast.isActive('toast-register') || status !== 'authenticated') return;
 
-        if (toast.isActive('toast-register') || status !== 'authenticated') {
-            return;
-        }
         setIsLoading(true)
-
         try {
             const uploadFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
-
             const filesPath = uploadFiles.length > 0
                 ? await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf')
                 : [];
@@ -64,7 +60,6 @@ const ConferenceCreate = ({}) => {
             }
 
             let urlsFiles: string[] = filesPath.map(file => file.url);
-
             const dataProduct: ICreateConferences = {
                 type: Array.from(dataForm.type).toString(),
                 country: Array.from(dataForm.country).toString(),
@@ -81,18 +76,16 @@ const ConferenceCreate = ({}) => {
                 setFiles([])
                 toast.success('Конференцію успішно створено')
             }
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error)
             toast.error('Щось пішло не так')
         } finally {
             setIsLoading(false)
         }
-
     }
 
     const onUpload = (files: File[], type: 'file' | 'image') => {
-        const newFiles:uploadType[] = files.map(file => ({
+        const newFiles: uploadType[] = files.map(file => ({
             name: file.name,
             typeUpload: 'uploaded' as const,
             type: type,
@@ -112,7 +105,6 @@ const ConferenceCreate = ({}) => {
         <div className="flex flex-col gap-8 w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex gap-12 max-2xl:gap-4 flex-col">
-                    {/*<div className="max-2xl:row-start-1 max-2xl:col-start-1 max-2xl:row-end-2 max-2xl:col-end-3">*/}
                     <div className="rounded-[20px] bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
                         <div className="flex flex-col gap-4">
                             <div className="w-full flex flex-col gap-4">
@@ -123,12 +115,6 @@ const ConferenceCreate = ({}) => {
                                             required: "Обов'язкове поле",
                                             minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
                                             maxLength: {value: 50, message: "Максимальна довжина 50 символів"},
-                                            // validate: (value) => {
-                                            //     if (/^\d+$/.test(value))
-                                            //         return true
-                                            //     else
-                                            //         return 'Тільки цифри'
-                                            // }
                                         }} render={({field}) =>
                                             <Input className="border-none py-2"
                                                    type="text"
@@ -152,14 +138,7 @@ const ConferenceCreate = ({}) => {
                                         }
                                         />
                                         <Controller name="date" control={control}
-                                                    rules={{
-                                                        required: "Обов'язкове поле",
-                                                        // validate: (value) => {
-                                                        //     if (value)
-                                                        //         if (String(value).length > 10)
-                                                        //             return 'Число має бути менше 10 цифр'
-                                                        // },
-                                                    }}
+                                                    rules={{required: "Обов'язкове поле"}}
                                                     render={({field}) =>
                                                         <Input className="border-none py-2"
                                                                type="date"
@@ -239,27 +218,23 @@ const ConferenceCreate = ({}) => {
                                 <div className="flex flex-row gap-4 w-full relative">
                                     <div className="flex flex-col gap-4 w-full relative justify-end">
                                         <Controller name="files" control={control}
-                                        //             rules={{
-                                        //     required: 'Обов\'язкове поле',
-                                        // }}
-                                        render={({field}) =>
-                                            <div className="w-full">
-                                                <div
-                                                    className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}
-                                                    // className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''} after:content-['*'] after:text-[#F3005E] after:ml-0.5`}
-                                                >
-                                                    Завантаження файлів
-                                                </div>
-                                                <DNDUpload onUpload={(files) => onUpload(files, 'file')}
-                                                           onChange={field.onChange}
-                                                           styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
-                                                    Скинь мені файли
-                                                </DNDUpload>
-                                                {formState.errors.files?.message &&
-                                                    <div
-                                                        className="text-red-600 text-sm">{formState.errors.files.message}</div>}
-                                            </div>
-                                        }
+                                                    render={({field}) =>
+                                                        <div className="w-full">
+                                                            <div
+                                                                className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? 'text-red-600' : ''}`}
+                                                            >
+                                                                Завантаження файлів
+                                                            </div>
+                                                            <DNDUpload onUpload={(files) => onUpload(files, 'file')}
+                                                                       onChange={field.onChange}
+                                                                       styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
+                                                                Скинь мені файли
+                                                            </DNDUpload>
+                                                            {formState.errors.files?.message &&
+                                                                <div
+                                                                    className="text-red-600 text-sm">{formState.errors.files.message}</div>}
+                                                        </div>
+                                                    }
                                         />
                                         <div className="w-full flex flex-col gap-4 items-start">
                                             <PreviewUpload files={files} handleRemoveFile={handleRemoveFile}/>
@@ -269,16 +244,15 @@ const ConferenceCreate = ({}) => {
                             </div>
                         </div>
                     </div>
-                    {/*</div>*/}
                     <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col gap-4">
                         <div className="flex">
                             <div className="w-full flex flex-col gap-4">
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex flex-col gap-4 items-start w-full relative">
                                         <Controller name="text" control={control}
-                                                        rules={{
-                                                required: 'Обов\'язкове поле',
-                                            }}
+                                                    rules={{
+                                                        required: 'Обов\'язкове поле',
+                                                    }}
                                                     render={({field}) =>
                                                         <>
                                                             <div
@@ -312,7 +286,6 @@ const ConferenceCreate = ({}) => {
 
                 </div>
             </form>
-            {/*{!missArticle && <PreviewProduct product={productPreview}/>}*/}
         </div>
     )
 }

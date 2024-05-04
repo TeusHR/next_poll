@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {FC, useState} from 'react'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {toast} from "react-toastify";
 import GoogleMap from "@/components/GoogleMap";
@@ -10,7 +10,7 @@ import {Image} from "@nextui-org/react";
 import {IFeedbackForm} from "@/types/Feedback";
 import {FeedbackService} from "@/services/client.service";
 
-const Feedback = ({}) => {
+const Feedback: FC<{ apiKey: string }> = ({apiKey}) => {
 
     const {
         handleSubmit,
@@ -172,7 +172,7 @@ const Feedback = ({}) => {
                     </form>
                 </div>
             </div>
-            <GoogleMap/>
+            <GoogleMap apiKey={apiKey}/>
         </div>
     )
 }

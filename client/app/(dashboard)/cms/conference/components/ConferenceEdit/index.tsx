@@ -122,7 +122,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             const status = await ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth)
             if (status === 200) {
                 await revalidateFetch('conference')
-                toast.success('Конференцію успішно створено')
+                toast.success('Запис оновлено')
             }
         } catch (error) {
             console.log(error)
@@ -151,7 +151,6 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
         <div className="flex flex-col gap-8 w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex gap-12 max-2xl:gap-4 flex-col">
-                    {/*<div className="max-2xl:row-start-1 max-2xl:col-start-1 max-2xl:row-end-2 max-2xl:col-end-3">*/}
                     <div className="rounded-[20px] bg-white px-8 py-6 flex flex-col max-w-[700px] gap-4">
                         <div className="flex flex-col gap-4">
                             <div className="w-full flex flex-col gap-4">
@@ -276,7 +275,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                             <DNDUpload onUpload={(files) => onUpload(files, 'file')}
                                                                        onChange={field.onChange}
                                                                        styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed">
-                                                                Гей, скинь мені файли
+                                                                Скинь мені файли
                                                             </DNDUpload>
                                                             {formState.errors.files?.message &&
                                                                 <div
@@ -299,9 +298,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex flex-col gap-4 items-start w-full relative">
                                         <Controller name="text" control={control}
-                                                    rules={{
-                                                        required: 'Обов\'язкове поле',
-                                                    }}
+                                                    rules={{required: 'Обов\'язкове поле'}}
                                                     render={({field}) =>
                                                         <>
                                                             <div
@@ -337,7 +334,6 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
 
                 </div>
             </form>
-            {/*{!missArticle && <PreviewProduct product={productPreview}/>}*/}
         </div>
     )
 }
