@@ -27,7 +27,7 @@ import revalidateFetch from "@/services/revalidateFetch";
 
 
 type Props = {
-    digam: IDigam | undefined
+    digam: IDigam | null
 }
 
 const DigamCreate: FC<Props> = ({digam}) => {
@@ -198,7 +198,7 @@ const DigamCreate: FC<Props> = ({digam}) => {
 
     };
 
-    const handleRemoveFile = useCallback((index: number, type: 'file' | 'image') => {
+    const handleRemoveFile = useCallback((index: number) => {
         setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
         remove(index)
     }, [remove]);

@@ -17,6 +17,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
 RUN mkdir -p /app/secrets && chown -R nestjs:nodejs /app/secrets
+RUN mkdir -p /app/uploads && chown -R nestjs:nodejs /app/uploads
 
 COPY --from=base /app ./
 COPY ./scripts/entrypoint.sh /app/scripts/entrypoint.sh

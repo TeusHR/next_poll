@@ -143,10 +143,9 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                                         <div className="flex flex-col gap-4 w-full relative justify-end">
                                             <Controller name="image" control={control}
                                                         rules={{
-                                                            required: "Обов'язкове поле",
                                                             validate: async (value) => {
-                                                                setImagePreview('')
                                                                 if (value && value.length > 0) {
+                                                                    setImagePreview('')
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
                                                                             1280,
@@ -157,7 +156,8 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                                                                         return error as string
                                                                     }
                                                                 } else {
-                                                                    return 'Не вибрано жодного файлу';
+                                                                    if (!imagePreview)
+                                                                        return 'Не вибрано жодного файлу';
                                                                 }
                                                             },
                                                         }}

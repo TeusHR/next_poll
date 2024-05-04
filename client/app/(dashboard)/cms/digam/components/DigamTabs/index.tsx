@@ -10,7 +10,7 @@ import {IDigam} from "@/types/Digam";
 
 const DigamTabs = ({}) => {
 
-    const [initialDigam, setInitialDigam] = useState<IDigam>()
+    const [initialDigam, setInitialDigam] = useState<IDigam | null>(null)
 
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()

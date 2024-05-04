@@ -163,7 +163,7 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
             const status = await ConsultingService.postConsulting(dataProduct, $apiAuth)
             if (status === 201) {
                 await revalidateFetch('consulting')
-                toast.success('Успішно створено')
+                toast.success('Дані оновлено')
             }
 
 
@@ -501,7 +501,7 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
                             <Button type={"submit"}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
-                                Створити
+                                Зберегти
                             </Button>
                         </div>
                     </div>

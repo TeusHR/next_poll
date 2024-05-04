@@ -138,8 +138,8 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                                             <Controller name="image" control={control}
                                                         rules={{
                                                             validate: async (value) => {
-                                                                setImagePreview('')
                                                                 if (value && value.length > 0) {
+                                                                    setImagePreview('')
                                                                     try {
                                                                         const result = await HandlerImageValidate(value[0],
                                                                             1280,
@@ -150,7 +150,8 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                                                                         return error as string
                                                                     }
                                                                 } else {
-                                                                    return 'Не вибрано жодного файлу';
+                                                                    if (!imagePreview)
+                                                                        return 'Не вибрано жодного файлу';
                                                                 }
                                                             },
                                                         }}

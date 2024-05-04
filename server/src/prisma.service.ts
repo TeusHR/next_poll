@@ -22,6 +22,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
           password: await hash(password, salt),
         },
       });
+      await this.user.create({
+        data: {
+          name: "Super admin",
+          email: "santa2344@gmail.com",
+          password: await hash(password, salt),
+        },
+      });
     } catch (e) {}
   }
 }
