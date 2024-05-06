@@ -3,10 +3,11 @@ services:
     image: postgres:16
     container_name: db
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      POSTGRES_PASSWORD: "postgres"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./scripts:/docker-entrypoint-initdb.d
 
   front:
     container_name: front
@@ -29,6 +30,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      DATABASE_URL: "postgresql://scint_ontu_user:some-db-password-for-scint_ontu@db:5432/scint_ontu?schema=public"
     ports:
       - "4000:4000"
     depends_on:
