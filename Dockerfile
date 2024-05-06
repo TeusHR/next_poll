@@ -13,12 +13,10 @@ COPY pnpm-workspace.yaml .npmrc package.json pnpm-lock.yaml /front/
 COPY .env /front/client
 WORKDIR /front/
 
-RUN ls -l -a
-
 RUN mkdir -p /front/secrets
 RUN openssl rand -base64 64 > /front/secrets/next_auth_secret
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 RUN pnpm run --filter=client -r build
 
 FROM base AS runner
