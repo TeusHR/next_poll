@@ -10,7 +10,7 @@ node_modules
 README.md
 .git
 .dockerignore
-DockerfileFrontend
+Dockerfile
 docker-compose.yml
 .gitignore
 .husky
