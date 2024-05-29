@@ -1,64 +1,77 @@
-import React from 'react'
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 
 interface ILinkListItemLeft {
     text: string,
-    link: string
+    link: string,
+    external: boolean
 }
 
 const ILinkListItemLeft: ILinkListItemLeft[] = [
     {
         text: 'НАУКОВО-ДОСЛІДНИЙ ІНСТИТУТ',
-        link: '/consulting'
+        link: 'https://ontu.edu.ua/nis',
+        external: true,
     },
     {
         text: 'КОНСАЛТИНГОВИЙ ЦЕНТР',
-        link: '/consulting'
+        link: 'https://ontu.edu.ua/consulting_center',
+        external: true,
     },
     {
         text: 'НАУКОВО-ДОСЛІДНІ ЛАБОРАТОРІЇ',
-        link: '/laboratory'
+        link: '/laboratory',
+        external: false,
     },
     {
         text: 'НАУКОВІ ШКОЛИ',
-        link: '/science'
+        link: '/science',
+        external: false,
     },
     {
         text: 'СТУДЕНТСЬКА НАУКА',
-        link: '/student'
+        link: 'https://ontu.edu.ua/studentnau',
+        external: true,
     },
     {
         text: 'ІННОВАЦІЙНІ РОЗРОБКИ',
-        link: '/innovations'
+        link: '/innovations',
+        external: false,
     },
-]
+];
 
 const ILinkListItemRight: ILinkListItemLeft[] = [
     {
         text: 'ЦЕНТР МІЖНАРОДНОЇ ДІЯЛЬНОСТІ ',
-        link: '/consulting'
+        link: 'https://ontu.edu.ua/pois',
+        external: true,
     },
     {
         text: 'ВІДДІЛ МІЖНАРОДНИХ ГРАНТІВ ТА АКАДЕМІЧНОЇ МОБІЛЬНОСТІ',
-        link: ''
+        link: 'https://ontu.edu.ua/inout',
+        external: true,
     },
     {
         text: 'ЦЕНТР ЛІНГВІСТИЧНОЇ ПІДГОТОВКИ',
-        link: '/consulting'
+        link: 'https://ontu.edu.ua/langvich_success',
+        external: true,
     },
     {
         text: 'ЦЕНТР УКРАЇНО-ФРАНЦУЗЬКОГО СПІВРОБІТНИЦТВА',
-        link: '/consulting'
+        link: 'http://france.ontu.edu.ua/',
+        external: true,
     },
     {
         text: 'ЦЕНТР УКРАЇНО-ТУРЕЦЬКОГО СПІВРОБІТНИЦТВА',
-        link: '/consulting'
+        link: 'http://ukrturk.ontu.edu.ua/',
+        external: true,
     },
     {
         text: 'МІЖНАРОДНІ ПРОЕКТИ',
-        link: '/international'
+        link: '/international',
+        external: false,
     },
-]
+];
 
 const LinkList = ({}) => {
 
@@ -77,10 +90,12 @@ const LinkList = ({}) => {
                 </div>
                 {ILinkListItemLeft.map((item, index) =>
                     <div key={index} className="underline uppercase text-[20px]">
-                        <Link href={item.link}>
-                            {item.text}
-                        </Link>
-                    </div>
+                        {item.external ?
+                            <a href={item.link} target="_blank" referrerPolicy="no-referrer" rel="noopener noreferrer">{item.text}</a>
+                            : <Link href={item.link}>
+                                {item.text}
+                            </Link>}
+                    </div>,
                 )}
             </div>
             <div className="flex flex-col gap-y-8 w-full text-center">
@@ -94,14 +109,16 @@ const LinkList = ({}) => {
                 </div>
                 {ILinkListItemRight.map((item, index) =>
                     <div key={index} className="underline uppercase text-[20px]">
-                        <Link href={item.link}>
-                            {item.text}
-                        </Link>
-                    </div>
+                        {item.external ?
+                            <a href={item.link} target="_blank" referrerPolicy="no-referrer" rel="noopener noreferrer">{item.text}</a>
+                            : <Link href={item.link}>
+                                {item.text}
+                            </Link>}
+                    </div>,
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default LinkList;

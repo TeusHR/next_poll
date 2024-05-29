@@ -57,14 +57,14 @@ const Feedback: FC<{ apiKey: string }> = ({apiKey}) => {
     }
 
     return (
-        <div className="w-full h-[600px] mt-24 relative">
-            <div className="flex px-28 max-xl:px-16 justify-end absolute w-full top-[-5%]">
+        <div className="w-full h-[600px] mt-24 relative max-sm:flex max-sm:flex-col max-sm:gap-8 max-sm:h-full">
+            <div className="flex sm:px-28 max-xl:px-16 justify-center max-sm:px-4 sm:justify-end sm:absolute w-full top-[-5%]">
                 <div
-                    className="bg-white border border-primary rounded-2xl z-20 justify-end w-full max-xl:max-w-[450px] max-w-[600px] min-h-[700px] relative">
+                    className="bg-white border border-primary rounded-2xl z-20 justify-end w-full max-xl:max-w-[450px] max-w-[600px] min-h-[600px] sm:min-h-[700px] relative">
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="flex h-full flex-col">
-                            <div className="px-16 pt-14 w-full min-h-[500px] text-primary">
-                                <div className="text-4xl xl:text-2xl md:text-xl">
+                            <div className="sm:px-16 px-8 pt-14 w-full min-h-[500px] text-primary">
+                                <div className="text-3xl max-sm:text-center sm:text-4xl xl:text-2xl md:text-xl">
                                     <span className="font-semibold">Зворотній зв’язок</span>
                                 </div>
                                 <div className="flex flex-col mt-8 gap-4">
@@ -149,12 +149,12 @@ const Feedback: FC<{ apiKey: string }> = ({apiKey}) => {
                             </div>
                             <div className="flex justify-end mt-2">
                                 <Button
-                                    className="bg-primary flex flex-row gap-4 rounded-l-[4px] p-4 px-8 h-[60px] max-sm:!text-[14px]"
+                                    className="bg-primary flex flex-row gap-4 rounded-l-[4px] p-4 sm:px-8 sm:h-[60px] max-sm:!text-[14px]"
                                     isLoading={isLoading}
                                     disableAnimation
                                     radius="none"
                                     type="submit">
-                                <span className="uppercase text-white text-xl md:text-base">
+                                <span className="uppercase text-white sm:text-xl md:text-base">
                                         Відправити
                                 </span>
                                     <span>

@@ -10,19 +10,19 @@ const Header = () => (
         className="flex flex-row h-[178px] max-sm:h-auto max-sm:flex-col gap-4 justify-between items-center p-4 my-4 xl:container mx-auto">
         <div className="flex flex-row max-sm:flex-col justify-center gap-4">
             <Link href="/" className="w-auto h-full flex justify-center">
-                <Image src={'/image/logo.svg'}
+                <Image src={'/image/logo.png'}
                        alt={'ONTU логотип'}
                        as={NextImage}
-                       width={200}
-                       height={150}
+                       width={120}
+                       height={180}
                        fetchPriority={"high"}
                 />
             </Link>
-            <div className="flex flex-col gap-4 text-primary max-sm:text-center">
-                <div className="text-6xl font-semibold">
+            <div className="flex flex-col justify-center gap-4 text-primary max-sm:text-center">
+                <div className="text-5xl font-semibold">
                     SCINT ONTU
                 </div>
-                <div className="flex flex-col text-base">
+                <div className="flex flex-col text-sm">
                            <span>
                                 Наукова робота та міжнародна діяльність
                            </span>
