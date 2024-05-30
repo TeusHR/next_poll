@@ -77,7 +77,7 @@ const Search = ({}) => {
                        alt={'Пошук'}
                        as={NextImage}
                        width={34}
-                       height={34}
+                       height={22}
                        fetchPriority={"high"}
                 />
             </div>

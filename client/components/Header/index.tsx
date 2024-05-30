@@ -19,10 +19,10 @@ const Header = () => (
                 />
             </Link>
             <div className="flex flex-col justify-center gap-4 text-primary max-sm:text-center">
-                <div className="text-5xl font-semibold">
+                <div className="text-4xl font-semibold">
                     SCINT ONTU
                 </div>
-                <div className="flex flex-col text-sm">
+                <div className="flex flex-col text-xs">
                            <span>
                                 Наукова робота та міжнародна діяльність
                            </span>
