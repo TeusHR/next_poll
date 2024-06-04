@@ -300,8 +300,8 @@ const DigamCreate: FC<Props> = ({digam}) => {
                                                                         message: "Мінімальна довжина 3 символи"
                                                                     },
                                                                     maxLength: {
-                                                                        value: 100,
-                                                                        message: "Максимальна довжина 100 символів"
+                                                                        value: 500,
+                                                                        message: "Максимальна довжина 500 символів"
                                                                     },
                                                                 }} render={({field}) =>
                                                         <Input className="border-none py-2"
@@ -334,8 +334,8 @@ const DigamCreate: FC<Props> = ({digam}) => {
                                                                         message: "Мінімальна довжина 3 символи"
                                                                     },
                                                                     maxLength: {
-                                                                        value: 150,
-                                                                        message: "Максимальна довжина 150 символів"
+                                                                        value: 500,
+                                                                        message: "Максимальна довжина 500 символів"
                                                                     },
                                                                 }} render={({field}) =>
                                                         <Input className="border-none py-2"
@@ -439,8 +439,8 @@ const DigamCreate: FC<Props> = ({digam}) => {
                                                                     message: "Мінімальна довжина 3 символи"
                                                                 },
                                                                 maxLength: {
-                                                                    value: 50,
-                                                                    message: "Максимальна довжина 50 символів"
+                                                                    value: 500,
+                                                                    message: "Максимальна довжина 500 символів"
                                                                 },
                                                             }} render={({field}) =>
                                                     <Input className="border-none py-2"
@@ -528,8 +528,8 @@ function NestedFieldArray({
                                     message: "Мінімальна довжина 3 символи"
                                 },
                                 maxLength: {
-                                    value: 80,
-                                    message: "Максимальна довжина 80 символів"
+                                    value: 500,
+                                    message: "Максимальна довжина 500 символів"
                                 },
                             }} render={({field}) =>
                             <Input className="border-none py-2"

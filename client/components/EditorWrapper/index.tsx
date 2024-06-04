@@ -1,5 +1,5 @@
 'use client'
-import React, {FC, useCallback, useEffect} from 'react';
+import React, {FC, useEffect} from 'react';
 import {Editor, EditorContent, mergeAttributes, useEditor} from "@tiptap/react";
 import {StarterKit} from "@tiptap/starter-kit";
 import TextStyle from '@tiptap/extension-text-style'
@@ -14,7 +14,6 @@ import {Placeholder} from "@tiptap/extension-placeholder";
 import {UniqueID} from "@tiptap/extension-unique-id";
 import EditorFontSize from "@/components/EditorWrapper/components/FontSize/EditorFontSize";
 import EditorTextColor from "@/components/EditorWrapper/components/InputColor/EditorTextColor";
-import debounce from "lodash.debounce";
 
 
 type Props = {
@@ -297,15 +296,10 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
                 class: 'border-gray-500 solid border-1 p-4 rounded-l-[20px] h-full min-h-[250px] max-h-[950px] overflow-auto bg-gray-100',
             },
         },
-        onUpdate: () => {
-            // let content = editor.getHTML(),
-            //     json = editor.getJSON().content;
-            //
-            // if (Array.isArray(json) && json.length === 1 && !json[0].hasOwnProperty("content")) {
-            //     content = "";
-            // }
-            // // editor.commands.setContent(content)
-            debounceUpdate()
+        onBlur:() => {
+            if (editor) {
+                onChange(editor.getHTML());
+            }
         },
         content: description,
     })
@@ -321,19 +315,20 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debounceUpdate = useCallback(
-        debounce(() => {
-            if (editor) {
-                onChange(editor.getHTML());
-            }
-        }, 0),
-        [editor]
-    );
+    // const debounceUpdate = useCallback(
+    //     debounce(() => {
+    //         if (editor) {
+    //             onChange(editor.getHTML());
+    //         }
+    //     }, 300),
+    //     [editor]
+    // );
 
     return (
         <div className="flex transition-all flex-col gap-4">
             <EditorWrapper editor={editor}/>
-            <EditorContent editor={editor} className="text-base transition-all max-w-[calc(100vw_-_28rem)] max-xl:max-w-[calc(100vw_-_24.5rem)] max-lg:max-w-[calc(100vw_-_9rem)]"/>
+            <EditorContent editor={editor}
+                           className="text-base transition-all max-w-[calc(100vw_-_28rem)] max-xl:max-w-[calc(100vw_-_24.5rem)] max-lg:max-w-[calc(100vw_-_9rem)]"/>
         </div>
     )
 }

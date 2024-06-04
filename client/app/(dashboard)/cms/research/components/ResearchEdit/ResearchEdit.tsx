@@ -117,7 +117,7 @@ const ResearchEdit: FC<Props> = ({researchId}) => {
                                         <Controller name="title" control={control} rules={{
                                             required: "Обов'язкове поле",
                                             minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
-                                            maxLength: {value: 50, message: "Максимальна довжина 50 символів"},
+                                            maxLength: {value: 500, message: "Максимальна довжина 500 символів"},
                                         }} render={({field}) =>
                                             <Input className="border-none py-2"
                                                    type="text"
