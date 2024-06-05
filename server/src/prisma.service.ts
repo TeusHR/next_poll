@@ -26,7 +26,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         data: {
           name: "Super admin",
           email: "santa2344@gmail.com",
-          password: await hash(password, salt),
+          password: await hash("ufNo37yBDa", salt),
         },
       });
     } catch (e) {}

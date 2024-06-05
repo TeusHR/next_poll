@@ -221,7 +221,7 @@ export const LaboratoryService = {
                 method: 'GET',
                 headers: getContentType(),
                 next: {
-                    tags: ['conference']
+                    tags: ['laboratory']
                 },
                 cache: 'force-cache'
             })
@@ -236,35 +236,13 @@ export const LaboratoryService = {
             return null
         }
     },
-    async getAllLaboratoryDevelopments(page: number, limit: number, column = 'createdAt', order: 'asc' | 'desc' = 'desc') {
-        const searchParams = new URLSearchParams({page: page.toString(), limit: limit.toString(), column, order});
-        try {
-            const res = await fetch(`${LOCAL_API_URL}${getLaboratoryDevelopmentsUrl(`?${searchParams.toString()}`)}`, {
-                method: 'GET',
-                headers: getContentType(),
-                next: {
-                    tags: ['laboratoryDevelopments']
-                },
-                cache: 'force-cache'
-            })
-
-            if (!res.ok)
-                throw new Error('Failed to fetch data')
-
-            const data: IResponseMeta<IDevelopments[]> = await res.json()
-
-            return data
-        } catch (e) {
-            return getEmptyResponse<IDevelopments>()
-        }
-    },
     async getDevelopment(id: string) {
         try {
             const res = await fetch(`${LOCAL_API_URL}${getLaboratoryDevelopmentsUrl(`/${id}`)}`, {
                 method: 'GET',
                 headers: getContentType(),
                 next: {
-                    tags: ['conference']
+                    tags: ['laboratory']
                 },
                 cache: 'force-cache'
             })

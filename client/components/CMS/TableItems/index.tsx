@@ -1,6 +1,6 @@
-'use client'
-import React, {Key, useCallback, useEffect, useMemo, useState} from 'react'
-import {ILiftGroupConference} from "@/types/Conference";
+'use client';
+import React, {Key, useCallback, useEffect, useMemo, useState} from 'react';
+import {ILiftGroupConference} from '@/types/Conference';
 import {
     Checkbox,
     Pagination,
@@ -14,30 +14,31 @@ import {
     TableHeader,
     TableRow,
     Tooltip,
-} from "@nextui-org/react";
-import {usePathname, useRouter} from "next/navigation";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
-import moment from "moment/moment";
-import {Image, Button} from "@nextui-org/react";
-import {AxiosInstance} from "axios";
-import {StringConferenceType} from "@/utils/ConferenceType";
+} from '@nextui-org/react';
+import {usePathname, useRouter} from 'next/navigation';
+import useAxiosAuth from '@/hooks/useAxiosAuth';
+import moment from 'moment/moment';
+import {Image, Button} from '@nextui-org/react';
+import {AxiosInstance} from 'axios';
+import {StringConferenceType} from '@/utils/ConferenceType';
 import {
     ActivityService,
     ConferencesService,
     CooperationService,
     InnovationsService, InternationalService, LaboratoryService,
-    ResearchService, ScienceService
-} from "@/services/CMS.service";
-import {toast} from "react-toastify";
-import {IConsulting} from "@/types/Consulting";
-import {ICooperation} from "@/types/Cooperation";
-import {stripHtml} from "@/utils/StripHtml";
-import {IResearch} from "@/types/Research";
-import {IActivity} from "@/types/Activity";
-import {IInnovation} from "@/types/Innovation";
-import {IInternational} from "@/types/International";
-import {ILaboratory} from "@/types/Laboratory";
-import {IScience} from "@/types/Science";
+    ResearchService, ScienceService,
+} from '@/services/CMS.service';
+import {toast} from 'react-toastify';
+import {IConsulting} from '@/types/Consulting';
+import {ICooperation} from '@/types/Cooperation';
+import {stripHtml} from '@/utils/StripHtml';
+import {IResearch} from '@/types/Research';
+import {IActivity} from '@/types/Activity';
+import {IInnovation} from '@/types/Innovation';
+import {IInternational} from '@/types/International';
+import {ILaboratory} from '@/types/Laboratory';
+import {IScience} from '@/types/Science';
+import revalidateFetch from '@/services/revalidateFetch';
 
 type Props<T> = {
     dataItems: T[]
@@ -45,7 +46,7 @@ type Props<T> = {
     tableColumn: { title: string, key: string }[],
     tableType?: 'modal' | 'link',
     typeProduct: string
-    controlPage?:number
+    controlPage?: number
     initialPage?: number
     searchInput?: string
     topContent?: React.ReactNode
@@ -59,7 +60,16 @@ type Props<T> = {
     refetch?: () => void
 }
 
-type ValidDataTypes = ILiftGroupConference | IConsulting | ICooperation | IResearch | IActivity | IInnovation | ILaboratory | IInternational | IScience;
+type ValidDataTypes =
+    ILiftGroupConference
+    | IConsulting
+    | ICooperation
+    | IResearch
+    | IActivity
+    | IInnovation
+    | ILaboratory
+    | IInternational
+    | IScience;
 
 const TableItems = <T extends ValidDataTypes>(
     {
@@ -67,7 +77,6 @@ const TableItems = <T extends ValidDataTypes>(
         rowsViewPage = 6,
         tableColumn,
         tableType = 'link',
-        controlPage,
         initialPage,
         searchInput,
         selectedKeys,
@@ -78,36 +87,33 @@ const TableItems = <T extends ValidDataTypes>(
         topContent,
         totalDataItems = 0,
         totalPages,
-        refetch,
-        deleteMessage = 'Ви впевнені що хочете видалити?'
+        deleteMessage = 'Ви впевнені що хочете видалити?',
 
     }: Props<T>) => {
 
 
-    // const {isOpen, onClose, onOpen} = useDisclosure();
     const router = useRouter();
-    // const searchParams = useSearchParams()
-    const pathname = usePathname()
-    const $apiAuth = useAxiosAuth()
+    const pathname = usePathname();
+    const $apiAuth = useAxiosAuth();
 
-    const [data, setData] = useState<T[]>(dataItems)
+    const [data, setData] = useState<T[]>(dataItems);
     const [page, setPage] = useState(initialPage || 1);
     const rowsPerPage = rowsViewPage;
-    const [items, setItems] = useState<T[]>([])
+    const [items, setItems] = useState<T[]>([]);
 
     useEffect(() => {
-        setData(dataItems)
-        setPage(1)
+        setData(dataItems);
+        setPage(1);
     }, [dataItems]);
 
     useEffect(() => {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         setItems(data.slice(start, end));
-    }, [data, page, pathname, router, rowsPerPage])
+    }, [data, page, pathname, router, rowsPerPage]);
 
     const bottomContent = useMemo(() => {
-        const total = Math.ceil(data.length / rowsPerPage)
+        const total = Math.ceil(data.length / rowsPerPage);
         return (
             <div
                 className={`flex w-full ${selectionMode === 'multiple' ? 'justify-between' : 'justify-center'} flex-1 items-end`}>
@@ -120,7 +126,7 @@ const TableItems = <T extends ValidDataTypes>(
                     page={searchInput ? 1 : page}
                     total={totalPages ? totalPages : total}
                     onChange={(page) => {
-                        setPage(page)
+                        setPage(page);
                         // router.push(getQueryString('page', page.toString(), searchParams, pathname))
                     }}
                 />}
@@ -129,74 +135,59 @@ const TableItems = <T extends ValidDataTypes>(
                         <div>Вибрано {selectedKeys?.size || 0} з {totalDataItems}</div>
                     </div>}
             </div>
-        )
-    }, [totalPages, initialPage, page, data, totalDataItems, selectedKeys, rowsPerPage, searchInput, selectionMode])
-
-    // const handlerModalOpen = (item: T) => {
-        // if (typeProduct === 'categories')
-        //     setItemCategories(item as ICategory)
-        // if (typeProduct === 'ingredients')
-        //     setItemIngredients(item as IIngredient)
-        // if (typeProduct === 'reviews')
-        //     setItemReviews(item as IReview)
-    // }
+        );
+    }, [totalPages, initialPage, page, data, totalDataItems, selectedKeys, rowsPerPage, searchInput, selectionMode]);
 
     const redirectItem = useCallback((key: string | number | bigint, item?: T) => {
         if (tableType == 'link' && !String(key).includes('action') && !item)
-            router.push(`${typeProduct}/${key}`)
-        // else if (tableType == 'modal' && typeProduct === 'ingredients' && !String(key).includes('action') && item)
-        //     handlerModalOpen(item)
-        // else if (tableType == 'modal' && typeProduct === 'categories' && !String(key).includes('action') && item)
-        //     handlerModalOpen(item)
-        // else if (tableType == 'modal' && typeProduct === 'reviews' && !String(key).includes('action') && item)
-        //     handlerModalOpen(item)
+            router.push(`${typeProduct}/${key}`);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router, tableType, typeProduct])
+    }, [router, tableType, typeProduct]);
 
     const renderCell = useCallback((item: T, idx: number, columnKey: React.Key) => {
         const cellValue = item[columnKey as keyof T];
 
         switch (columnKey) {
-            case "image":
+            case 'image':
                 if (!('image' in item))
-                    break
+                    break;
                 return (
                     <div className="w-[75px] flex justify-center">
                         {/*// @ts-ignore*/}
-                        <Image src={item.image || ''} alt="Food Hub image"/>
+                        <Image src={item.image || ''} alt="SCINT image"/>
                     </div>
                 );
-            case "image_slider":
+            case 'image_slider':
                 if (!('desktopImage' in item))
-                    break
+                    break;
                 return (
                     <div className="w-[100px] flex justify-center">
                         {/*// @ts-ignore*/}
-                        <Image src={item.desktopImage.image || ''} alt="Food hub image"/>
+                        <Image src={item.desktopImage.image || ''} alt="SCINT image"/>
                     </div>
                 );
-            case "isActive":
+            case 'isActive':
                 return <div className="flex justify-center">
                     <Checkbox isSelected={Boolean(cellValue)} isReadOnly={true}/>
-                </div>
-            case "id":
-                return <div>{idx + 1}</div>
-            case "date":
-                return <div>{String(cellValue)}</div>
-            case "month":
-                return <div>{String(cellValue)}</div>
-            case "type":
-                return <div>{StringConferenceType(cellValue)}</div>
-            case "from":
-                return moment(String(cellValue)).format('YYYY-MM-DD kk:mm')
-            case "to":
-                return moment(String(cellValue)).format('YYYY-MM-DD kk:mm')
-            case "sex":
-                return !cellValue ? '' : String(cellValue) === 'MALE' ? 'Чоловіча' : 'Жіноча'
-            case "text":
-                return <div>{stripHtml(cellValue)}</div>
-            case "action":
+                </div>;
+            case 'id':
+                return <div>{idx + 1}</div>;
+            case 'date':
+                return <div>{String(cellValue)}</div>;
+            case 'month':
+                return <div>{String(cellValue)}</div>;
+            case 'type':
+                return <div>{StringConferenceType(cellValue)}</div>;
+            case 'from':
+                return moment(String(cellValue)).format('YYYY-MM-DD kk:mm');
+            case 'to':
+                return moment(String(cellValue)).format('YYYY-MM-DD kk:mm');
+            case 'sex':
+                return !cellValue ? '' : String(cellValue) === 'MALE' ? 'Чоловіча' : 'Жіноча';
+            case 'text':
+                return <div>{stripHtml(cellValue)}</div>;
+            case 'action':
                 return (
                     <div className="flex flex-row gap-4 justify-center">
                         <Button isIconOnly
@@ -217,61 +208,30 @@ const TableItems = <T extends ValidDataTypes>(
                                            deleteMessage={deleteMessage}
                         />
                     </div>
-                )
+                );
             default:
                 return <>{String(cellValue)}</>;
         }
     }, [$apiAuth, typeProduct, deleteMessage, redirectItem, tableType]);
 
-    // const [itemIngredients, setItemIngredients] = useState<IIngredient>()
-    //
-    // const [itemCategories, setItemCategories] = useState<ICategory>()
-    //
-    // const [itemReviews, setItemReviews] = useState<IReview>()
-
-    // const handlerModalOnClose = () => {
-    //     if (typeProduct === 'categories')
-    //         setItemCategories(undefined)
-    //     if (typeProduct === 'ingredients')
-    //         setItemIngredients(undefined)
-    //     if (typeProduct === 'reviews')
-    //         setItemReviews(undefined)
-    //     onClose()
-    // }
-
-    // useEffect(() => {
-    //     if (itemIngredients)
-    //         onOpen()
-    // }, [itemIngredients, onOpen])
-    //
-    // useEffect(() => {
-    //     if (itemCategories)
-    //         onOpen()
-    // }, [itemCategories, onOpen])
-    //
-    // useEffect(() => {
-    //     if (itemReviews)
-    //         onOpen()
-    // }, [itemReviews, onOpen])
-
     const changeHandler = useCallback((keys: 'all' | Set<Key>) => {
         if (onSelectKeys && selectedKeys && selectionMode === 'multiple') {
-            if (keys === "all") {
-                const all = new Set<string>(selectedKeys)
+            if (keys === 'all') {
+                const all = new Set<string>(selectedKeys);
 
                 data.forEach(item => {
-                    const id = item.id.toString()
+                    const id = item.id.toString();
                     if (!all.has(id))
-                        all.add(id)
-                })
-                onSelectKeys(all)
+                        all.add(id);
+                });
+                onSelectKeys(all);
             } else {
                 // @ts-ignore
-                onSelectKeys(keys)
+                onSelectKeys(keys);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedKeys, selectionMode, data])
+    }, [selectedKeys, selectionMode, data]);
 
     return (
         <div className="w-full h-full">
@@ -285,16 +245,16 @@ const TableItems = <T extends ValidDataTypes>(
                 bottomContent={bottomContent}
                 className="max-[900px]:min-w-[1000px]"
                 classNames={{
-                    wrapper: `min-h-[650px] ${disableShadow ? '!shadow-none' : 'shadow-small'}`
+                    wrapper: `min-h-[650px] ${disableShadow ? '!shadow-none' : 'shadow-small'}`,
                 }}
-                color={"default"}
+                color={'default'}
             >
                 <TableHeader>
                     {tableColumn.map((item) => <TableColumn key={item.key}
                                                             className={`${['action', 'isActive'].includes(item.key) ? 'text-center' : ''}`}>{item.title.toUpperCase()}</TableColumn>)}
                 </TableHeader>
                 <TableBody items={items}
-                           emptyContent={"Немає даних для відображення."}
+                           emptyContent={'Немає даних для відображення.'}
                 >
                     {items.map((item, idx) => <TableRow key={item.id} className="!text-black h-full">
                         {(columnKey) =>
@@ -313,21 +273,9 @@ const TableItems = <T extends ValidDataTypes>(
                     </TableRow>)}
                 </TableBody>
             </Table>
-            {/*{tableType === 'modal' && typeProduct === 'ingredients' &&*/}
-            {/*    <EditIngredients isOpen={isOpen} refetch={refetch}*/}
-            {/*                     onClose={handlerModalOnClose}*/}
-            {/*                     ingredients={itemIngredients}/>}*/}
-            {/*{tableType === 'modal' && typeProduct === 'categories' &&*/}
-            {/*    <EditCategory isOpen={isOpen} refetch={refetch}*/}
-            {/*                  onClose={handlerModalOnClose}*/}
-            {/*                  category={itemCategories}/>}*/}
-            {/*{tableType === 'modal' && typeProduct === 'reviews' &&*/}
-            {/*    <EditReview isOpen={isOpen} refetch={refetch}*/}
-            {/*                onClose={handlerModalOnClose}*/}
-            {/*                review={itemReviews}/>}*/}
         </div>
-    )
-}
+    );
+};
 
 type PropsPopover<T> = {
     setData: React.Dispatch<React.SetStateAction<T[]>>,
@@ -337,43 +285,52 @@ type PropsPopover<T> = {
     apiAuth: AxiosInstance
 }
 const PopoverDeleteItem = <T extends ValidDataTypes>({
-                                                                                    idItem,
-                                                                                    typeProduct,
-                                                                                    setData,
-                                                                                    deleteMessage = 'Ви впевнені що хочете видалити?',
-                                                                                    apiAuth
-                                                                                }: PropsPopover<T>) => {
+                                                         idItem,
+                                                         typeProduct,
+                                                         setData,
+                                                         deleteMessage = 'Ви впевнені що хочете видалити?',
+                                                         apiAuth,
+                                                     }: PropsPopover<T>) => {
 
-    const [popoverOpen, setPopoverOpen] = useState(false)
+    const [popoverOpen, setPopoverOpen] = useState(false);
 
     const deleteItem = async (idItem: string) => {
         try {
-            setPopoverOpen(false)
-            setData((prevState) => prevState.filter((item) => item.id !== idItem))
+            setPopoverOpen(false);
+            setData((prevState) => prevState.filter((item) => item.id !== idItem));
 
 
-            if (typeProduct === 'conference')
-                await ConferencesService.removeConferences(idItem, apiAuth)
-            else if (typeProduct === 'cooperation')
-                await CooperationService.removeCooperation(idItem, apiAuth)
-            else if (typeProduct === 'laboratory')
-                await ScienceService.removeScience(idItem, apiAuth)
-            else if (typeProduct === 'research')
-                await ResearchService.removeResearch(idItem, apiAuth)
-            else if (typeProduct === 'activity')
-                await ActivityService.removeActivity(idItem, apiAuth)
-            else if (typeProduct === 'innovations')
-                await InnovationsService.removeInnovation(idItem, apiAuth)
-            else if (typeProduct === 'international')
-                await InternationalService.removeInternational(idItem, apiAuth)
-            else if (typeProduct === 'laboratory')
-                await LaboratoryService.removeLaboratory(idItem, apiAuth)
+            if (typeProduct === 'conference') {
+                await ConferencesService.removeConferences(idItem, apiAuth);
+                await revalidateFetch('conference');
+            } else if (typeProduct === 'cooperation') {
+                await CooperationService.removeCooperation(idItem, apiAuth);
+                await revalidateFetch('cooperation');
+            } else if (typeProduct === 'science') {
+                await ScienceService.removeScience(idItem, apiAuth);
+                await revalidateFetch('science');
+            } else if (typeProduct === 'research') {
+                await ResearchService.removeResearch(idItem, apiAuth);
+                await revalidateFetch('researchWork');
+            } else if (typeProduct === 'activity') {
+                await ActivityService.removeActivity(idItem, apiAuth);
+                await revalidateFetch('activity');
+            } else if (typeProduct === 'innovations') {
+                await InnovationsService.removeInnovation(idItem, apiAuth);
+                await revalidateFetch('innovation');
+            } else if (typeProduct === 'international') {
+                await InternationalService.removeInternational(idItem, apiAuth);
+                await revalidateFetch('international');
+            } else if (typeProduct === 'laboratory') {
+                await LaboratoryService.removeLaboratory(idItem, apiAuth);
+                await revalidateFetch('laboratory');
+            }
 
-            toast.success('Позиція успішно видалена')
+            toast.success('Запис видалено');
         } catch (err: any) {
-            console.log(err)
+            console.log(err);
         }
-    }
+    };
 
     return (
         <Popover backdrop="opaque" isOpen={popoverOpen} onClose={() => setPopoverOpen(false)}
@@ -405,7 +362,7 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
                 </div>
             </PopoverContent>
         </Popover>
-    )
-}
+    );
+};
 
 export default TableItems;
