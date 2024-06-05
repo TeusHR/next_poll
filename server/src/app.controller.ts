@@ -15,6 +15,11 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get("/health")
+  healthCheck() {
+    return { success: true };
+  }
+
   @Get("search/:value")
   async search(@Param("value") value: string) {
     return this.appService.globalSearch(value);

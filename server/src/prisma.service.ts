@@ -13,6 +13,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     await this.$connect();
     if (!process.env.ROOT_EMAIL) return;
     try {
+      await this.user.deleteMany({ where: {} });
       const salt = await genSalt(10);
       const password = process.env.ADMIN_PASSWORD || "ufNo37yBDa";
       await this.user.create({

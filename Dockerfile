@@ -24,6 +24,8 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+RUN apk add --no-cache curl
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -31,10 +33,11 @@ COPY --from=builder --chown=nextjs:nodejs /front/client/public ./client/public
 COPY --from=builder --chown=nextjs:nodejs /front/secrets/ /app/secrets
 COPY --from=builder --chown=nextjs:nodejs /front/client/.next/standalone /app
 COPY --from=builder --chown=nextjs:nodejs /front/client/.next/static /app/client/.next/static
+COPY --from=builder --chown=nextjs:nodejs /front/client/scripts/revalidate.sh /app/scripts/revalidate.sh
 
 USER nextjs
 
 EXPOSE 3000
 
 CMD export NEXTAUTH_SECRET=$(cat /app/secrets/next_auth_secret) && \
-    HOSTNAME="0.0.0.0" node /app/client/server.js
+    HOSTNAME="0.0.0.0" node /app/client/server.js & /app/scripts/revalidate.sh

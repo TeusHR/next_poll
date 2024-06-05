@@ -104,7 +104,7 @@ export const InnovationService = {
                 method: 'GET',
                 headers: getContentType(),
                 next: {
-                    tags: ['conference']
+                    tags: ['innovation']
                 },
                 cache: 'force-cache'
             })
@@ -150,7 +150,7 @@ export const InternationalService = {
                 method: 'GET',
                 headers: getContentType(),
                 next: {
-                    tags: ['conference']
+                    tags: ['international']
                 },
                 cache: 'force-cache'
             })

@@ -9,25 +9,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
 
-  front:
-    container_name: front
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    ports:
-      - "3000:3000"
-    depends_on:
-      - back
-
   back:
     container_name: back
     build:
       context: ./server
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: on-failure:5
+    healthcheck:
+      test: curl --fail http://localhost:4000/v1/api/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
     env_file:
       - .env
     environment:
@@ -38,6 +30,20 @@ services:
       - db
     volumes:
       - uploads_data:/app/uploads
+
+  front:
+    container_name: front
+    restart: on-failure:5
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      back:
+        condition: service_healthy
 
 volumes:
   postgres_data:
