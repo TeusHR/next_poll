@@ -174,6 +174,9 @@ const TableItems = <T extends ValidDataTypes>(
             case 'id':
                 return <div>{idx + 1}</div>;
             case 'date':
+                if (typeProduct === 'conference') { // @ts-ignore
+                    return <div>{String(cellValue)} {item['toDate'] ? ` - ${String(item['toDate'])}` : ''}</div>;
+                }
                 return <div>{String(cellValue)}</div>;
             case 'month':
                 return <div>{String(cellValue)}</div>;

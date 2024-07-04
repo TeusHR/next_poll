@@ -56,7 +56,7 @@ const tailwindConfig: Config = {
                     }
                 },
             }
-        })
+        }),
     ]
 }
 

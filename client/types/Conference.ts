@@ -5,6 +5,7 @@ export interface ICreateConferences {
     title: string
     text: string
     files: string[]
+    toDate?: string
 }
 
 export interface IConferences {
@@ -12,6 +13,9 @@ export interface IConferences {
     type: string
     country: string
     date: string
+    toDate?: string | null
+    dateISO: string
+    toDateISO?: string | null
     title: string
     text: string
     files: string[]
@@ -23,6 +27,7 @@ export type CreateConferenceForm = {
     type: Set<string>,
     country: Set<string>
     date: string
+    toDate: string
     title: string
     text: string
     files: FileList,
@@ -32,6 +37,7 @@ export type UpdateConferenceForm = {
     type: Set<string>,
     country: Set<string>
     date: string
+    toDate: string
     title: string
     text: string
     files: FileList,

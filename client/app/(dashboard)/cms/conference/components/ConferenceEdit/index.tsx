@@ -1,23 +1,23 @@
-'use client'
-import React, {FC, useCallback, useEffect, useState} from 'react'
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {IConferences, ICreateConferences, UpdateConferenceForm} from "@/types/Conference";
-import {useSession} from "next-auth/react";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
-import {toast} from "react-toastify";
-import {ConferencesService} from "@/services/CMS.service";
-import {FileService} from "@/services/file.service";
-import moment from "moment";
-import {Button, Input} from "@nextui-org/react";
-import Select from "@/components/CMS/Select";
-import {typeConference} from "@/utils/ConferenceType";
-import {countryOptions} from "@/utils/CountrySet";
-import DNDUpload from "components/DNDFiles";
-import EditorWrapper from "@/components/EditorWrapper";
-import PreviewUpload from "@/components/DNDFiles/previewUpload";
-import {FileToFileList} from "@/utils/FIleToFileList";
-import {uploadType} from "../../../innovations/components/InnovationsEdit";
-import revalidateFetch from "@/services/revalidateFetch";
+'use client';
+import React, {FC, useCallback, useEffect, useState} from 'react';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {IConferences, ICreateConferences, UpdateConferenceForm} from '@/types/Conference';
+import {useSession} from 'next-auth/react';
+import useAxiosAuth from '@/hooks/useAxiosAuth';
+import {toast} from 'react-toastify';
+import {ConferencesService} from '@/services/CMS.service';
+import {FileService} from '@/services/file.service';
+import moment from 'moment';
+import {Button, Input} from '@nextui-org/react';
+import Select from '@/components/CMS/Select';
+import {typeConference} from '@/utils/ConferenceType';
+import {countryOptions} from '@/utils/CountrySet';
+import DNDUpload from 'components/DNDFiles';
+import EditorWrapper from '@/components/EditorWrapper';
+import PreviewUpload from '@/components/DNDFiles/previewUpload';
+import {FileToFileList} from '@/utils/FIleToFileList';
+import {uploadType} from '../../../innovations/components/InnovationsEdit';
+import revalidateFetch from '@/services/revalidateFetch';
 
 type Props = {
     conferenceId: string
@@ -36,41 +36,47 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             title: '',
             country: new Set<string>(),
             date: '',
+            toDate: '',
             text: '',
             type: new Set<string>(),
-        }
-    })
+        },
+    });
 
-    const {status} = useSession()
-    const $apiAuth = useAxiosAuth()
-    const [isLoading, setIsLoading] = useState(false)
-    const [conference, setConference] = useState<IConferences>()
+    const {status} = useSession();
+    const $apiAuth = useAxiosAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const [conference, setConference] = useState<IConferences>();
     const [files, setFiles] = useState<uploadType[]>([]);
 
     useEffect(() => {
-        setIsLoading(true)
+        setIsLoading(true);
         ConferencesService.getConference(conferenceId).then(data => setConference(data))
             .catch(() => {
-                toast.error('Конференцію не знайдено')
+                toast.error('Конференцію не знайдено');
             })
-            .finally(() => setIsLoading(false))
+            .finally(() => setIsLoading(false));
     }, [conferenceId]);
 
     const renderFileName = (fileName: string): string => {
         return fileName.replace('/uploads/pdf/', '');
-    }
+    };
 
     useEffect(() => {
         if (conference) {
-            setValue('title', conference.title)
-            setValue('country', new Set([conference.country]))
-            setValue('type', new Set([conference.type]))
-            setValue('date', moment(conference.date).format('YYYY-MM-DD'))
-            setValue('text', conference.text)
+            console.log(conference);
+            console.log(moment(conference.dateISO, 'D MMMM').format('YYYY-MM-DD'));
+            setValue('title', conference.title);
+            setValue('country', new Set([conference.country]));
+            setValue('type', new Set([conference.type]));
+            if (conference.dateISO)
+                setValue('date', moment(conference.dateISO).format('YYYY-MM-DD'));
+            if (conference.toDateISO)
+                setValue('toDate', moment(conference.toDateISO).format('YYYY-MM-DD'));
+            setValue('text', conference.text);
             const serverFiles: uploadType[] = conference.files.map(url => (
                 {
                     name: renderFileName(url),
-                    typeUpload: "server" as const,
+                    typeUpload: 'server' as const,
                     type: 'file',
                     url: url,
                 }
@@ -84,21 +90,21 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
         if (toast.isActive('toast-register') || status !== 'authenticated') {
             return;
         }
-        setIsLoading(true)
+        setIsLoading(true);
 
         try {
             let filesPath: {
                 url: string,
                 name: string
-            }[] = []
+            }[] = [];
 
-            let newFilesUrls: string[] = []
+            let newFilesUrls: string[] = [];
 
 
             const uploadFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
 
             if (uploadFiles.length > 0) {
-                filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf')
+                filesPath = await FileService.upload($apiAuth, FileToFileList(uploadFiles), 'pdf');
                 if (filesPath.length > 0)
                     newFilesUrls = filesPath.map(file => file.url);
                 else
@@ -107,7 +113,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
 
             const existingFilesUrls = files
                 .filter(file => file.typeUpload === 'server')
-                .map(file => file.url)
+                .map(file => file.url);
 
             const allFilesUrls = [...newFilesUrls, ...existingFilesUrls];
 
@@ -115,22 +121,23 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                 type: Array.from(dataForm.type).toString(),
                 country: Array.from(dataForm.country).toString(),
                 date: moment(dataForm.date).format(),
+                toDate: dataForm.toDate ? moment(dataForm.toDate).format() : undefined,
                 title: dataForm.title,
                 text: dataForm.text,
                 files: allFilesUrls,
             };
-            const status = await ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth)
+            const status = await ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth);
             if (status === 200) {
-                await revalidateFetch('conference')
-                toast.success('Запис оновлено')
+                await revalidateFetch('conference');
+                toast.success('Запис оновлено');
             }
         } catch (error) {
-            console.log(error)
-            toast.error('Щось пішло не так')
+            console.log(error);
+            toast.error('Щось пішло не так');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
     const onUpload = (files: File[], type: 'file' | 'image') => {
         const newFiles: uploadType[] = files.map(file => ({
@@ -138,7 +145,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             typeUpload: 'uploaded' as const,
             type: type,
             file,
-            url: file.name
+            url: file.name,
         }));
         setFiles(prev => [...prev, ...newFiles]);
     };
@@ -155,12 +162,11 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                         <div className="flex flex-col gap-4">
                             <div className="w-full flex flex-col gap-4">
                                 <div className="flex flex-col gap-4 w-full">
-                                    <div
-                                        className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
+                                    <div>
                                         <Controller name="title" control={control} rules={{
-                                            required: "Обов'язкове поле",
-                                            minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
-                                            maxLength: {value: 500, message: "Максимальна довжина 500 символів"},
+                                            required: 'Обов\'язкове поле',
+                                            minLength: {value: 3, message: 'Мінімальна довжина 3 символи'},
+                                            maxLength: {value: 500, message: 'Максимальна довжина 500 символів'},
                                         }} render={({field}) =>
                                             <Input className="border-none py-2"
                                                    type="text"
@@ -168,10 +174,10 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                    onValueChange={field.onChange}
                                                    isRequired
                                                    classNames={{
-                                                       inputWrapper: "border-1 border-primary-500",
-                                                       input: "focus:outline-none text-base text-primary",
-                                                       errorMessage: "text-red-600 text-sm",
-                                                       label: "text-base",
+                                                       inputWrapper: 'border-1 border-primary-500',
+                                                       input: 'focus:outline-none text-base text-primary',
+                                                       errorMessage: 'text-red-600 text-sm',
+                                                       label: 'text-base',
                                                    }}
                                                    key="title"
                                                    label="Назва"
@@ -183,9 +189,12 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                             />
                                         }
                                         />
+                                    </div>
+                                    <div
+                                        className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
                                         <Controller name="date" control={control}
                                                     rules={{
-                                                        required: "Обов'язкове поле",
+                                                        required: 'Обов\'язкове поле',
                                                     }}
                                                     render={({field}) =>
                                                         <Input className="border-none py-2"
@@ -195,13 +204,13 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                                isRequired
                                                                lang="ua-UA"
                                                                classNames={{
-                                                                   inputWrapper: "border-1 border-primary-500",
-                                                                   input: "focus:outline-none text-base text-primary",
-                                                                   errorMessage: "text-red-600 text-sm",
-                                                                   label: "text-base",
+                                                                   inputWrapper: 'border-1 border-primary-500',
+                                                                   input: 'focus:outline-none text-base text-primary',
+                                                                   errorMessage: 'text-red-600 text-sm',
+                                                                   label: 'text-base',
                                                                }}
                                                                key="date"
-                                                               label="Дата"
+                                                               label="Дата з"
                                                                labelPlacement="outside"
                                                                placeholder="Введіть дату"
                                                                autoComplete="off"
@@ -210,12 +219,36 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                         />
                                                     }
                                         />
+                                        <Controller name="toDate" control={control}
+                                                    rules={{validate: (value, formValues) => !value ? true : moment(value).isAfter(formValues.date) ? true : 'Дата кінця має бути пізніше за дату початку'}}
+                                                    render={({field}) =>
+                                                        <Input className="border-none py-2"
+                                                               type="date"
+                                                               value={field.value}
+                                                               onValueChange={field.onChange}
+                                                               lang="ua-UA"
+                                                               classNames={{
+                                                                   inputWrapper: 'border-1 border-primary-500',
+                                                                   input: 'focus:outline-none text-base text-primary',
+                                                                   errorMessage: 'text-red-600 text-sm',
+                                                                   label: 'text-base',
+                                                               }}
+                                                               key="date"
+                                                               label="Дата по"
+                                                               labelPlacement="outside"
+                                                               placeholder="Введіть дату"
+                                                               autoComplete="off"
+                                                               isInvalid={!!formState.errors.toDate?.message}
+                                                               errorMessage={formState.errors.toDate?.message}
+                                                        />
+                                                    }
+                                        />
                                     </div>
                                     <div
                                         className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
                                         <Controller name="type" control={control} rules={{
                                             required: 'Обов\'язкове поле',
-                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true
+                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true,
                                         }} render={({field}) =>
                                             <div className="w-full">
                                                 <div
@@ -223,7 +256,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                 </div>
                                                 <Select options={typeConference.map(item => ({
                                                     label: item.label,
-                                                    value: item.value
+                                                    value: item.value,
                                                 }))}
                                                         selectionMode={'single'}
                                                         justify
@@ -238,7 +271,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                         />
                                         <Controller name="country" control={control} rules={{
                                             required: 'Обов\'язкове поле',
-                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true
+                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true,
                                         }} render={({field}) =>
                                             <div className="w-full">
                                                 <div
@@ -247,7 +280,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                 </div>
                                                 <Select options={countryOptions.map(item => ({
                                                     label: item.label,
-                                                    value: item.value
+                                                    value: item.value,
                                                 }))}
                                                         selectionMode={'single'}
                                                         justify
@@ -322,7 +355,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                             </div>
                         </div>
                         <div className="flex justify-center items-center">
-                            <Button type={"submit"}
+                            <Button type={'submit'}
                                     isLoading={isLoading}
                                     disabled={!conference}
                                     disableAnimation={!conference}
@@ -335,7 +368,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                 </div>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default ConferenceEdit;

@@ -92,12 +92,10 @@ const NewsItem = ({
                            fetchPriority={"high"}
                     />
                 }
-                <div className="flex flex-col gap-6">
-                    <div dangerouslySetInnerHTML={{ __html: text }}>
-
-                    </div>
+                <div className="flex flex-col gap-6 flex-1 md:min-h-[210px]">
+                    <div dangerouslySetInnerHTML={{ __html: text }} className="line-clamp-4"/>
                     {buttonDetails &&
-                        <ButtonDetails link={link}>
+                        <ButtonDetails link={link} className="md:mt-auto max-md:mx-auto">
                             <svg width="11" height="11" viewBox="0 0 11 11" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path

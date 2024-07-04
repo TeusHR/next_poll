@@ -1,24 +1,24 @@
-'use client'
-import React, {useCallback, useState} from 'react'
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {CreateConferenceForm, ICreateConferences} from "@/types/Conference";
-import {useSession} from "next-auth/react";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
-import {toast} from "react-toastify";
-import {ConferencesService} from "@/services/CMS.service";
-import {Input} from "@nextui-org/react";
-import {Button} from "@nextui-org/react";
-import Select from "@/components/CMS/Select";
-import {countryOptions} from "@/utils/CountrySet";
-import DNDUpload from "components/DNDFiles";
-import EditorWrapper from "@/components/EditorWrapper";
-import {FileService} from "@/services/file.service";
-import moment from "moment/moment";
-import {typeConference} from "@/utils/ConferenceType";
-import PreviewUpload from "@/components/DNDFiles/previewUpload";
-import {FileToFileList} from "@/utils/FIleToFileList";
-import {uploadType} from "../../../innovations/components/InnovationsEdit";
-import revalidateFetch from "@/services/revalidateFetch";
+'use client';
+import React, {useCallback, useState} from 'react';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {CreateConferenceForm, ICreateConferences} from '@/types/Conference';
+import {useSession} from 'next-auth/react';
+import useAxiosAuth from '@/hooks/useAxiosAuth';
+import {toast} from 'react-toastify';
+import {ConferencesService} from '@/services/CMS.service';
+import {Input} from '@nextui-org/react';
+import {Button} from '@nextui-org/react';
+import Select from '@/components/CMS/Select';
+import {countryOptions} from '@/utils/CountrySet';
+import DNDUpload from 'components/DNDFiles';
+import EditorWrapper from '@/components/EditorWrapper';
+import {FileService} from '@/services/file.service';
+import moment from 'moment/moment';
+import {typeConference} from '@/utils/ConferenceType';
+import PreviewUpload from '@/components/DNDFiles/previewUpload';
+import {FileToFileList} from '@/utils/FIleToFileList';
+import {uploadType} from '../../../innovations/components/InnovationsEdit';
+import revalidateFetch from '@/services/revalidateFetch';
 
 
 const ConferenceCreate = ({}) => {
@@ -33,20 +33,21 @@ const ConferenceCreate = ({}) => {
             title: '',
             country: new Set<string>(),
             date: '',
+            toDate: '',
             text: '',
-            type: new Set<string>(["SEMINAR"]),
-        }
-    })
-    const {status} = useSession()
-    const $apiAuth = useAxiosAuth()
+            type: new Set<string>(['SEMINAR']),
+        },
+    });
+    const {status} = useSession();
+    const $apiAuth = useAxiosAuth();
 
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
     const [files, setFiles] = useState<uploadType[]>([]);
 
     const onSubmit: SubmitHandler<CreateConferenceForm> = async (dataForm) => {
         if (toast.isActive('toast-register') || status !== 'authenticated') return;
 
-        setIsLoading(true)
+        setIsLoading(true);
         try {
             const uploadFiles = files.filter(file => file.typeUpload === 'uploaded').map(file => file.file as File);
             const filesPath = uploadFiles.length > 0
@@ -64,25 +65,26 @@ const ConferenceCreate = ({}) => {
                 type: Array.from(dataForm.type).toString(),
                 country: Array.from(dataForm.country).toString(),
                 date: moment(dataForm.date).format(),
+                toDate: dataForm.toDate ? moment(dataForm.toDate).format() : undefined,
                 title: dataForm.title,
                 text: dataForm.text,
                 files: urlsFiles,
             };
 
-            const status = await ConferencesService.postConferences(dataProduct, $apiAuth)
+            const status = await ConferencesService.postConferences(dataProduct, $apiAuth);
             if (status === 201) {
-                reset()
-                await revalidateFetch('conference')
-                setFiles([])
-                toast.success('Конференцію успішно створено')
+                reset();
+                await revalidateFetch('conference');
+                setFiles([]);
+                toast.success('Конференцію успішно створено');
             }
         } catch (error) {
-            console.log(error)
-            toast.error('Щось пішло не так')
+            console.log(error);
+            toast.error('Щось пішло не так');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
     const onUpload = (files: File[], type: 'file' | 'image') => {
         const newFiles: uploadType[] = files.map(file => ({
@@ -90,7 +92,7 @@ const ConferenceCreate = ({}) => {
             typeUpload: 'uploaded' as const,
             type: type,
             file,
-            url: file.name
+            url: file.name,
         }));
         setFiles(prev => [...prev, ...newFiles]);
     };
@@ -109,12 +111,11 @@ const ConferenceCreate = ({}) => {
                         <div className="flex flex-col gap-4">
                             <div className="w-full flex flex-col gap-4">
                                 <div className="flex flex-col gap-4 w-full">
-                                    <div
-                                        className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
+                                    <div>
                                         <Controller name="title" control={control} rules={{
-                                            required: "Обов'язкове поле",
-                                            minLength: {value: 3, message: "Мінімальна довжина 3 символи"},
-                                            maxLength: {value: 500, message: "Максимальна довжина 500 символів"},
+                                            required: 'Обов\'язкове поле',
+                                            minLength: {value: 3, message: 'Мінімальна довжина 3 символи'},
+                                            maxLength: {value: 500, message: 'Максимальна довжина 500 символів'},
                                         }} render={({field}) =>
                                             <Input className="border-none py-2"
                                                    type="text"
@@ -122,10 +123,10 @@ const ConferenceCreate = ({}) => {
                                                    onValueChange={field.onChange}
                                                    isRequired
                                                    classNames={{
-                                                       inputWrapper: "border-1 border-primary-500",
-                                                       input: "focus:outline-none text-base text-primary",
-                                                       errorMessage: "text-red-600 text-sm",
-                                                       label: "text-base",
+                                                       inputWrapper: 'border-1 border-primary-500',
+                                                       input: 'focus:outline-none text-base text-primary',
+                                                       errorMessage: 'text-red-600 text-sm',
+                                                       label: 'text-base',
                                                    }}
                                                    key="title"
                                                    label="Назва"
@@ -137,8 +138,11 @@ const ConferenceCreate = ({}) => {
                                             />
                                         }
                                         />
+                                    </div>
+                                    <div
+                                        className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
                                         <Controller name="date" control={control}
-                                                    rules={{required: "Обов'язкове поле"}}
+                                                    rules={{required: 'Обов\'язкове поле'}}
                                                     render={({field}) =>
                                                         <Input className="border-none py-2"
                                                                type="date"
@@ -147,13 +151,13 @@ const ConferenceCreate = ({}) => {
                                                                isRequired
                                                                lang="ua-UA"
                                                                classNames={{
-                                                                   inputWrapper: "border-1 border-primary-500",
-                                                                   input: "focus:outline-none text-base text-primary",
-                                                                   errorMessage: "text-red-600 text-sm",
-                                                                   label: "text-base",
+                                                                   inputWrapper: 'border-1 border-primary-500',
+                                                                   input: 'focus:outline-none text-base text-primary',
+                                                                   errorMessage: 'text-red-600 text-sm',
+                                                                   label: 'text-base',
                                                                }}
                                                                key="date"
-                                                               label="Дата"
+                                                               label="Дата з"
                                                                labelPlacement="outside"
                                                                placeholder="Введіть дату"
                                                                autoComplete="off"
@@ -162,12 +166,36 @@ const ConferenceCreate = ({}) => {
                                                         />
                                                     }
                                         />
+                                        <Controller name="toDate" control={control}
+                                                    rules={{validate: (value, formValues) => !value ? true : moment(value).isAfter(formValues.date) ? true : 'Дата кінця має бути пізніше за дату початку'}}
+                                                    render={({field}) =>
+                                                        <Input className="border-none py-2"
+                                                               type="date"
+                                                               value={field.value}
+                                                               onValueChange={field.onChange}
+                                                               lang="ua-UA"
+                                                               classNames={{
+                                                                   inputWrapper: 'border-1 border-primary-500',
+                                                                   input: 'focus:outline-none text-base text-primary',
+                                                                   errorMessage: 'text-red-600 text-sm',
+                                                                   label: 'text-base',
+                                                               }}
+                                                               key="date"
+                                                               label="Дата по"
+                                                               labelPlacement="outside"
+                                                               placeholder="Введіть дату"
+                                                               autoComplete="off"
+                                                               isInvalid={!!formState.errors.toDate?.message}
+                                                               errorMessage={formState.errors.toDate?.message}
+                                                        />
+                                                    }
+                                        />
                                     </div>
                                     <div
                                         className="flex flex-row max-sm:flex-col gap-4 w-full relative justify-between">
                                         <Controller name="type" control={control} rules={{
                                             required: 'Обов\'язкове поле',
-                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true
+                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true,
                                         }} render={({field}) =>
                                             <div className="w-full">
                                                 <div
@@ -175,7 +203,7 @@ const ConferenceCreate = ({}) => {
                                                 </div>
                                                 <Select options={typeConference.map(item => ({
                                                     label: item.label,
-                                                    value: item.value
+                                                    value: item.value,
                                                 }))}
                                                         selectionMode={'single'}
                                                         justify
@@ -190,7 +218,7 @@ const ConferenceCreate = ({}) => {
                                         />
                                         <Controller name="country" control={control} rules={{
                                             required: 'Обов\'язкове поле',
-                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true
+                                            validate: value => value.size === 0 ? 'Обов\'язкове поле' : true,
                                         }} render={({field}) =>
                                             <div className="w-full">
                                                 <div
@@ -199,7 +227,7 @@ const ConferenceCreate = ({}) => {
                                                 </div>
                                                 <Select options={countryOptions.map(item => ({
                                                     label: item.label,
-                                                    value: item.value
+                                                    value: item.value,
                                                 }))}
                                                         selectionMode={'single'}
                                                         justify
@@ -276,7 +304,7 @@ const ConferenceCreate = ({}) => {
                             </div>
                         </div>
                         <div className="flex justify-center items-center">
-                            <Button type={"submit"}
+                            <Button type={'submit'}
                                     isLoading={isLoading}
                                     className="px-6 bg-fd text-xl">
                                 Створити
@@ -287,7 +315,7 @@ const ConferenceCreate = ({}) => {
                 </div>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default ConferenceCreate;

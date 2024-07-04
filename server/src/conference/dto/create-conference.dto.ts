@@ -13,6 +13,11 @@ export class CreateConferenceDto {
   @IsNotEmpty()
   date: string;
 
+  @IsOptional()
+  @IsISO8601()
+  @IsNotEmpty()
+  toDate: string;
+
   @IsEnum(ConferenceType)
   @IsNotEmpty()
   type: ConferenceType;

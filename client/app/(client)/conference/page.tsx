@@ -32,7 +32,7 @@ const Conference = async () => {
                                                                        className="flex flex-row justify-between max-sm:flex-col gap-y-6 gap-x-24 max-xl:gap-x-8">
                                         <div className="flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
-                                                <span>{item.date}</span>
+                                                <span>{item.date} {item.toDate ? ` - ${item.toDate}` : ''}</span>
                                                 <span className="text-[#D9D9D9]">&#8226;</span>
                                                 <span>{StringConferenceType(item.type)}</span>
                                                 <span className="text-[#D9D9D9]">&#8226;</span>

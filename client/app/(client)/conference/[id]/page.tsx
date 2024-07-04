@@ -48,8 +48,8 @@ const Conference = async ({params}: Params) => {
                 <div className="flex flec-row gap-8 items-end max-sm:flex-col max-sm:gap-4 max-sm:items-start">
                     <Title text={conference.title}
                            style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"/>
-                    {<div className="flex flex-row gap-2 sm:min-w-max">
-                        <span>{conference.date}</span>
+                    {<div className="flex flex-row gap-2 sm:min-w-max max-sm:flex-wrap">
+                        <span>{conference.date} {conference.toDate ? ` - ${conference.toDate}` : ''}</span>
                         <span className="text-[#D9D9D9]">&#8226;</span>
                         <span>{StringConferenceType(conference.type)}</span>
                         <span className="text-[#D9D9D9]">&#8226;</span>

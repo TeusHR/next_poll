@@ -18,6 +18,7 @@ model User {
 model Conference {
   id      String         @id @default(uuid())
   date    DateTime       @db.Timestamptz(3)
+  toDate  DateTime?      @db.Timestamptz(3)
   type    ConferenceType
   country String
   title   String

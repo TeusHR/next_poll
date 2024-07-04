@@ -29,7 +29,15 @@ export class ConferenceService {
       where: { id },
     });
     if (!conference) throw new NotFoundException();
-    return { ...conference, date: moment(conference.date).format("D MMMM") };
+    return {
+      ...conference,
+      dateISO: conference.date,
+      toDateISO: conference.toDate,
+      date: moment(conference.date).format("D MMMM"),
+      toDate: conference.toDate
+        ? moment(conference.toDate).format("D MMMM")
+        : null,
+    };
   }
 
   async update(id: string, updateConferenceDto: UpdateConferenceDto) {
@@ -76,7 +84,10 @@ export class ConferenceService {
 
         accumulator[monthIndex].items.push({
           ...item,
+          dateISO: item.date,
+          toDateISO: item.toDate,
           date: moment(item.date).format("D MMMM"),
+          toDate: item.toDate ? moment(item.toDate).format("D MMMM") : null,
         });
         return accumulator;
       },
