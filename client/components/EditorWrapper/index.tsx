@@ -1,7 +1,6 @@
 'use client'
-import React, {FC, useEffect} from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import {Editor, EditorContent, mergeAttributes, useEditor} from "@tiptap/react";
-import {StarterKit} from "@tiptap/starter-kit";
 import TextStyle from '@tiptap/extension-text-style'
 import {FontSize} from "@/components/EditorWrapper/extension/fontSize";
 import TextAlign from '@tiptap/extension-text-align'
@@ -14,11 +13,27 @@ import {Placeholder} from "@tiptap/extension-placeholder";
 import {UniqueID} from "@tiptap/extension-unique-id";
 import EditorFontSize from "@/components/EditorWrapper/components/FontSize/EditorFontSize";
 import EditorTextColor from "@/components/EditorWrapper/components/InputColor/EditorTextColor";
+import Text from '@tiptap/extension-text'
+import './styles/hyperlink.scss'
+import {ImageResize} from "@/components/EditorWrapper/extension/ImageResizable";
+import {Strike} from "@tiptap/extension-strike";
+import {Italic} from "@tiptap/extension-italic";
+import {Bold} from "@tiptap/extension-bold";
+import {Paragraph} from "@tiptap/extension-paragraph";
+import LinkModal from "@/components/EditorWrapper/components/Link";
+import {LinkEdit} from "@/components/EditorWrapper/extension/link";
+import setHyperlink from "@/components/EditorWrapper/components/Link/LinkSet";
+import previewHyperlink from "@/components/EditorWrapper/components/Link/LinkPreview";
+import ImageModal from "@/components/EditorWrapper/components/ImageModal";
+import {FileService} from "@/services/file.service";
+import {FileToFileList} from "@/utils/FIleToFileList";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 
 type Props = {
     editor: Editor | null
 }
+
 
 const EditorWrapper = ({editor}: Props) => {
 
@@ -224,7 +239,18 @@ const EditorWrapper = ({editor}: Props) => {
                     {item.children}
                 </MenuButton>
             ))}
+            {/*<EditorToolbar editor={editor}/>*/}
             <EditorFontSize defaultSize={"16"} editor={editor}/>
+            <LinkModal editor={editor}/>
+            <ImageModal editor={editor}/>
+            {/*<button onClick={() => editor.chain().focus().addImage().run()}>*/}
+            {/*    image test*/}
+            {/*</button>*/}
+            {/*<button onClick={() => editor.chain().focus().setImage().run()}>*/}
+            {/*    image test*/}
+            {/*</button>*/}
+
+            {/*<button onClick={() => editor.chain().focus().setHyperlink()}>set hyperlink</button>*/}
             <EditorTextColor defaultColor={"#000000"} editor={editor}/>
         </div>
     )
@@ -236,7 +262,19 @@ type PropsWrapper = {
     placeholder: string
 }
 
+
 const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) => {
+
+    const editorRef = useRef<Editor | null>(null);
+    const $apiAuth = useAxiosAuth()
+
+    const uploadFn = async (file: File): Promise<{
+        url: string,
+        name: string
+    }> => {
+        const path = await FileService.upload($apiAuth, FileToFileList([file]), 'image')
+        return path[0];
+    }
 
     const editor = useEditor({
         extensions: [
@@ -244,25 +282,18 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
                 attributeName: 'uid',
                 types: ['textBox', 'textBoxPC', 'textBoxLaptop', 'textBoxPhone'],
             }),
-            StarterKit.configure({
-                heading: false,
-                blockquote: false,
-                bulletList: false,
-                code: false,
-                codeBlock: false,
-                document: false,
-                history: false,
-                horizontalRule: false,
-                orderedList: false,
-            }),
-            Placeholder.configure({
-                placeholder: placeholder,
-                showOnlyWhenEditable: false,
-            }),
             Document,
-            TextAlign.configure({
-                types: ['heading', 'paragraph'],
-            }),
+            // StarterKit.configure({
+            //     heading: false,
+            //     blockquote: false,
+            //     bulletList: false,
+            //     code: false,
+            //     codeBlock: false,
+            //     document: false,
+            //     history: false,
+            //     horizontalRule: false,
+            //     orderedList: false,
+            // }),
             Heading.extend({
                 levels: [1, 2, 3, 4, 5, 6],
                 renderHTML({node, HTMLAttributes}) {
@@ -286,19 +317,54 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
                     ];
                 },
             }).configure({levels: [1, 2, 3, 4, 5, 6]}),
+            Strike,
+            Italic,
+            Bold,
+            Text,
+            Paragraph,
+            Placeholder.configure({
+                placeholder: placeholder,
+                showOnlyWhenEditable: false,
+            }),
+            TextAlign.configure({
+                types: ['heading', 'paragraph'],
+            }),
             TextStyle,
             FontSize,
             Underline,
             Color,
+            LinkEdit.extend({
+                inclusive: false,
+            })
+                .configure({
+                    defaultProtocol: "https",
+                    openOnClick: true,
+                    autolink: true,
+                    modals: {
+                        previewHyperlink: (data) => {
+                            return previewHyperlink(data);
+                        },
+                        setHyperlink: (data) => {
+                            return setHyperlink(data);
+                        },
+                    },
+                    HTMLAttributes: {
+                        class: 'underline underline-offset-2 text-[#68cef8]'
+                    }
+                }),
+            ImageResize.configure({
+                uploadFn: uploadFn
+            }),
         ],
+        immediatelyRender: false,
         editorProps: {
             attributes: {
                 class: 'border-gray-500 solid border-1 p-4 rounded-l-[20px] h-full min-h-[250px] max-h-[950px] overflow-auto bg-gray-100',
             },
         },
-        onBlur:() => {
-            if (editor) {
-                onChange(editor.getHTML());
+        onBlur: () => {
+            if (editorRef.current) {
+                onChange(editorRef.current?.getHTML());
             }
         },
         content: description,
@@ -313,6 +379,9 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
         }
     }, [description, editor]);
 
+    useEffect(() => {
+        editorRef.current = editor;
+    }, [editor]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // const debounceUpdate = useCallback(
@@ -326,7 +395,7 @@ const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) 
 
     return (
         <div className="flex transition-all flex-col gap-4">
-            <EditorWrapper editor={editor}/>
+            <EditorWrapper editor={editorRef.current}/>
             <EditorContent editor={editor}
                            className="text-base transition-all max-w-[calc(100vw_-_28rem)] max-xl:max-w-[calc(100vw_-_24.5rem)] max-lg:max-w-[calc(100vw_-_9rem)]"/>
         </div>

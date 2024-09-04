@@ -6,7 +6,6 @@ import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
 import {ResearchService} from "@/services/CMS.service";
 import {Button, Input} from "@nextui-org/react";
-import {HandlerImageValidate} from "@/utils/ImageValidate";
 import EditorWrapper from "@/components/EditorWrapper";
 import {ICreateResearch, ICreateResearchForm} from "@/types/Research";
 import {FileService} from "@/services/file.service";
@@ -118,11 +117,12 @@ const ResearchCreate = ({}) => {
                                                                 setImagePreview('')
                                                                 if (value && value.length > 0) {
                                                                     try {
-                                                                        const result = await HandlerImageValidate(value[0],
-                                                                            1280,
-                                                                            720,
-                                                                            'Усі зображення мають бути 1280x720')
-                                                                        setImagePreview(result)
+                                                                        // const result = await HandlerImageValidate(value[0],
+                                                                        //     1280,
+                                                                        //     720,
+                                                                        //     'Усі зображення мають бути 1280x720')
+                                                                        // setImagePreview(result)
+                                                                        setImagePreview(value[0].name)
                                                                     } catch (error) {
                                                                         return error as string
                                                                     }

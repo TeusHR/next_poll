@@ -13,7 +13,6 @@ import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
 import {FileService} from "@/services/file.service";
 import revalidateFetch from "@/services/revalidateFetch";
-import {HandlerImageValidate} from "@/utils/ImageValidate";
 
 type Props = {
     innovationsId: string
@@ -145,19 +144,19 @@ const InnovationsEdit: FC<Props> = ({innovationsId}) => {
     const handleUpload = useCallback(async (uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
 
-        if (type === 'image') {
-            try {
-                for (const item of uploadedFiles) {
-                    await HandlerImageValidate(item,
-                        1920,
-                        1080,
-                        'Усі зображення мають бути 1920x1080')
-                }
-            } catch (error) {
-                setError('images', {type: 'custom', message: error as string})
-                return error as string
-            }
-        }
+        // if (type === 'image') {
+        //     try {
+        //         for (const item of uploadedFiles) {
+        //             await HandlerImageValidate(item,
+        //                 1920,
+        //                 1080,
+        //                 'Усі зображення мають бути 1920x1080')
+        //         }
+        //     } catch (error) {
+        //         setError('images', {type: 'custom', message: error as string})
+        //         return error as string
+        //     }
+        // }
 
         const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,

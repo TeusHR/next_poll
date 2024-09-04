@@ -39,7 +39,7 @@ const Innovations = async ({searchParams }: { searchParams?: { page?: string; };
                                   }}
                                   key={index}
                                   text={item.text}
-                                  date={new Date().toISOString()}
+                                  date={item.createdAt}
                                   index={index}
                                   buttonDetails
                                   link={`/innovations/${item.id}`}

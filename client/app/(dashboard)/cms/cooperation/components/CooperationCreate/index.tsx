@@ -10,7 +10,6 @@ import {CooperationService} from "@/services/CMS.service";
 import {ICreateCooperation, ICreateCooperationForm} from "@/types/Cooperation";
 import revalidateFetch from "@/services/revalidateFetch";
 
-
 const ConsultingCreate = () => {
     const {
         handleSubmit,
@@ -28,13 +27,14 @@ const ConsultingCreate = () => {
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
     const [isLoading, setIsLoading] = useState(false)
-
     const onSubmit: SubmitHandler<ICreateCooperationForm> = async (dataForm) => {
 
         if (toast.isActive('toast-register') || status !== 'authenticated') {
             return;
         }
         setIsLoading(true)
+
+        console.log(dataForm)
 
         try {
             const dataProduct: ICreateCooperation = {
@@ -113,6 +113,9 @@ const ConsultingCreate = () => {
                                                                 Текст
                                                             </div>
                                                             <div className="relative w-full">
+
+                                                                {/*<ComponentThatUseEditorJs/>*/}
+
                                                                 <EditorWrapper onChange={(field.onChange)}
                                                                                description={field.value}
                                                                                placeholder={'Напишіть текст для слайдера'}

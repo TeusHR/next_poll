@@ -32,6 +32,7 @@ const Form: FC = () => {
             redirect: false
         })
 
+        console.log(res)
         if (res) {
             if (res.status === 401) {
                 toast.error("Неправильний email або пароль")

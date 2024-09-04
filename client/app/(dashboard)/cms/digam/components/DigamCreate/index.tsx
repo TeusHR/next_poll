@@ -6,7 +6,7 @@ import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
 import {Button, Image, Input} from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
-import {HandlerImageValidate, loadPreviewImage} from "@/utils/ImageValidate";
+import {loadPreviewImage} from "@/utils/ImageValidate";
 import CloseIcon from "@/UI/CloseIcon";
 import {uploadType} from "../../../innovations/components/InnovationsEdit";
 import {
@@ -175,12 +175,12 @@ const DigamCreate: FC<Props> = ({digam}) => {
 
     const onUpload = async (files: File[], type: 'file' | 'image') => {
         try {
-            for (const item of files) {
-                await HandlerImageValidate(item,
-                    1280,
-                    720,
-                    'Усі зображення мають бути 1280х720')
-            }
+            // for (const item of files) {
+            //     await HandlerImageValidate(item,
+            //         1280,
+            //         720,
+            //         'Усі зображення мають бути 1280х720')
+            // }
 
             const newFiles: uploadType[] = files.map(file => ({
                 name: file.name,

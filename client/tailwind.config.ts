@@ -1,6 +1,8 @@
 import { nextui } from "@nextui-org/react";
 import { Config } from "tailwindcss";
 
+// import withMT from "@material-tailwind/react/utils/withMT";
+
 const tailwindConfig: Config = {
     future: {
         hoverOnlyWhenSupported: true

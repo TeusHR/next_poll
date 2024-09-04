@@ -17,7 +17,6 @@ import Title from "@/UI/Title";
 import CloseIcon from "@/UI/CloseIcon";
 import {ICreateDevelopments, IDevelopmentsForm} from "@/types/LaboratoryDevelopments";
 import revalidateFetch from "@/services/revalidateFetch";
-import {HandlerImageValidate} from "@/utils/ImageValidate";
 
 type Props = {
     laboratoryId: string
@@ -225,19 +224,19 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
     const handleUpload = useCallback(async (uploadedFiles: File[], type: 'file' | 'image') => {
         const setter = type === 'file' ? setFiles : setFilesImage;
 
-        if (type === 'image') {
-            try {
-                for (const item of uploadedFiles) {
-                    await HandlerImageValidate(item,
-                        1920,
-                        1080,
-                        'Усі зображення мають бути 1920x1080')
-                }
-            } catch (error) {
-                setError('images', {type: 'custom', message: error as string})
-                return error as string
-            }
-        }
+        // if (type === 'image') {
+        //     try {
+        //         for (const item of uploadedFiles) {
+        //             await HandlerImageValidate(item,
+        //                 1920,
+        //                 1080,
+        //                 'Усі зображення мають бути 1920x1080')
+        //         }
+        //     } catch (error) {
+        //         setError('images', {type: 'custom', message: error as string})
+        //         return error as string
+        //     }
+        // }
 
         const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
@@ -256,19 +255,19 @@ const LaboratoryEdit: FC<Props> = ({laboratoryId}) => {
     }, []);
 
     const handleUploadDynamic = useCallback(async (uploadedFiles: File[], type: 'file' | 'image', index: number) => {
-        if (type === 'image') {
-            try {
-                for (const item of uploadedFiles) {
-                    await HandlerImageValidate(item,
-                        1920,
-                        1080,
-                        'Усі зображення мають бути 1920x1080')
-                }
-            } catch (error) {
-                setError(`developments.${index}.images`, {type: 'custom', message: error as string})
-                return error as string
-            }
-        }
+        // if (type === 'image') {
+        //     try {
+        //         for (const item of uploadedFiles) {
+        //             await HandlerImageValidate(item,
+        //                 1920,
+        //                 1080,
+        //                 'Усі зображення мають бути 1920x1080')
+        //         }
+        //     } catch (error) {
+        //         setError(`developments.${index}.images`, {type: 'custom', message: error as string})
+        //         return error as string
+        //     }
+        // }
         
         const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,

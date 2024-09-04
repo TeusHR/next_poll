@@ -305,3 +305,25 @@ export const ScienceService = {
         return status === 200
     },
 };
+
+
+export const IconsFetch = {
+    async getIcons(id: string) {
+        const {data} = await $api.get<IScience>(getScienceSchoolsUrl(`/${id}`))
+        return data
+    },
+    async fetchMetadata(href:string) {
+        try {
+            const response = await $api.post('/api/metadata', {
+                url: href
+            }, {
+                headers: { "Content-Type": "application/json" }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching metadata:", error);
+        }
+    }
+
+};

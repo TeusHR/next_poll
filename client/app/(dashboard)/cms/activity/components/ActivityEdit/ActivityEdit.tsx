@@ -8,7 +8,6 @@ import {filePath} from "../../../consulting/components/ConsultingCreate";
 import {FileService} from "@/services/file.service";
 import {ActivityService} from "@/services/CMS.service";
 import {Button, Input} from "@nextui-org/react";
-import {HandlerImageValidate} from "@/utils/ImageValidate";
 import EditorWrapper from "@/components/EditorWrapper";
 import {IActivity, ICreateActivity, IUpdateActivityForm} from "@/types/Activity";
 import revalidateFetch from "@/services/revalidateFetch";
@@ -141,11 +140,12 @@ const ActivityEdit: FC<Props> = ({activityId}) => {
                                                                 if (value && value.length > 0) {
                                                                     setImagePreview('')
                                                                     try {
-                                                                        const result = await HandlerImageValidate(value[0],
-                                                                            1280,
-                                                                            720,
-                                                                            'Усі зображення мають бути 1280x720')
-                                                                        setImagePreview(result)
+                                                                        // const result = await HandlerImageValidate(value[0],
+                                                                        //     1280,
+                                                                        //     720,
+                                                                        //     'Усі зображення мають бути 1280x720')
+                                                                        // setImagePreview(result)
+                                                                        setImagePreview(value[0].name)
                                                                     } catch (error) {
                                                                         return error as string
                                                                     }

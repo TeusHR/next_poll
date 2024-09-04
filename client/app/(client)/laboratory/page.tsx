@@ -16,7 +16,6 @@ const Laboratory = async ({searchParams}: { searchParams?: { page?: string; }; }
     const currentPage = Number(searchParams?.page) || 1;
     const laboratory = await LaboratoryService.getAllLaboratories(currentPage, 8, 'createdAt')
 
-
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
             <div className="flex flex-col gap-14 max-sm:gap-8">
@@ -39,7 +38,7 @@ const Laboratory = async ({searchParams}: { searchParams?: { page?: string; }; }
                                   }}
                                   key={index}
                                   text={item.text}
-                                  date={new Date().toISOString()}
+                                  date={item.createdAt}
                                   index={index}
                                   buttonDetails
                                   link={`/laboratory/${item.id}`}

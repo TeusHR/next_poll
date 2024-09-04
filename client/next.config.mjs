@@ -2,6 +2,7 @@
 const nextConfig = {
     output: "standalone",
     optimizeFonts: false,
+    reactStrictMode: false,
     webpack: (config) => {
         config.resolve.alias.canvas = false;
         return config;

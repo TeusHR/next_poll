@@ -79,7 +79,7 @@ const Consulting = async ({}) => {
                                       }}
                                       key={index}
                                       text={item.text}
-                                      date={new Date().toISOString()}
+                                      date={item.createdAt}
                                       index={index}
                                       buttonDetails
                                       link={`/trainings/${item.id}`}

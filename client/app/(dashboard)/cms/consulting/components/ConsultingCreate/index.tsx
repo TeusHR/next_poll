@@ -16,7 +16,7 @@ import {Button, Image, Input} from "@nextui-org/react";
 import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
-import {HandlerImageValidate, loadPreviewImage} from "@/utils/ImageValidate";
+import {loadPreviewImage} from "@/utils/ImageValidate";
 import {ConsultingService, TrainingService} from "@/services/CMS.service";
 import {FileService} from "@/services/file.service";
 import {FileToFileList} from "@/utils/FIleToFileList";
@@ -235,19 +235,19 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
     };
 
     const onUpload = async (files: File[], type: 'file' | 'image') => {
-        if (type === 'image') {
-            try {
-                for (const item of files) {
-                    await HandlerImageValidate(item,
-                        1280,
-                        720,
-                        'Усі зображення мають бути 1280x720')
-                }
-            } catch (error) {
-                setError('files', {type: 'custom', message: error as string})
-                return error as string
-            }
-        }
+        // if (type === 'image') {
+        //     try {
+        //         for (const item of files) {
+        //             await HandlerImageValidate(item,
+        //                 1280,
+        //                 720,
+        //                 'Усі зображення мають бути 1280x720')
+        //         }
+        //     } catch (error) {
+        //         setError('files', {type: 'custom', message: error as string})
+        //         return error as string
+        //     }
+        // }
 
         const newFiles: uploadType[] = files.map(file => ({
             name: file.name,
@@ -304,19 +304,19 @@ const ConsultingCreate: FC<Props> = ({consulting, training}) => {
     }, [getValues, setValue]);
 
     const handleUploadDynamic = useCallback(async (uploadedFiles: File[], type: 'file' | 'image', index: number) => {
-        if (type === 'image') {
-            try {
-                for (const item of uploadedFiles) {
-                    await HandlerImageValidate(item,
-                        1920,
-                        1080,
-                        'Усі зображення мають бути 1920x1080')
-                }
-            } catch (error) {
-                setError(`training.${index}.images`, {type: 'custom', message: error as string})
-                return error as string
-            }
-        }
+        // if (type === 'image') {
+        //     try {
+        //         for (const item of uploadedFiles) {
+        //             await HandlerImageValidate(item,
+        //                 1920,
+        //                 1080,
+        //                 'Усі зображення мають бути 1920x1080')
+        //         }
+        //     } catch (error) {
+        //         setError(`training.${index}.images`, {type: 'custom', message: error as string})
+        //         return error as string
+        //     }
+        // }
 
         const newFiles: uploadType[] = uploadedFiles.map(file => ({
             name: file.name,
