@@ -54,7 +54,7 @@ const Search = ({}) => {
         }
     };
 
-    const handleSelect = useCallback((key: Key) => {
+    const handleSelect = useCallback((key: Key | null) => {
         if (key) {
             const [type, id] = key.toString().split(' ')
             setSearchTerm('')
