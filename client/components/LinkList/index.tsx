@@ -67,7 +67,7 @@ const ILinkListItemRight: ILinkListItemLeft[] = [
         external: true,
     },
     {
-        text: 'МІЖНАРОДНІ ПРОЕКТИ',
+        text: 'МІЖНАРОДНІ ПРОЄКТИ',
         link: '/international',
         external: false,
     },
