@@ -4,6 +4,8 @@ import {ConferencesService} from "@/services/client.service";
 import {StringConferenceType} from "@/utils/ConferenceType";
 import ButtonDetails from "@/UI/ButtonDetails";
 import {Metadata} from "next";
+import ReactCountryFlag from "react-country-flag"
+import {getCountryCodeByLabel} from "@/utils/CountrySet";
 
 export const metadata: Metadata = {
     title: "Заходи",
@@ -36,7 +38,14 @@ const Conference = async () => {
                                                 <span className="text-[#D9D9D9]">&#8226;</span>
                                                 <span>{StringConferenceType(item.type)}</span>
                                                 <span className="text-[#D9D9D9]">&#8226;</span>
-                                                <span>{item.country}</span>
+                                                <div className="flex flex-row gap-2">
+                                                    <span>{item.country}</span>
+                                                    <span>
+                                                       {getCountryCodeByLabel(item.country) ? (
+                                                           <ReactCountryFlag countryCode={getCountryCodeByLabel(item.country) ?? ''} svg aria-label={item.country} />
+                                                       ) : null}
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div>
                                                 <span className="font-medium">{item.title}</span>
