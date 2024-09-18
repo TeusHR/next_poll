@@ -43,6 +43,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
     });
 
     const {status} = useSession();
+
     const $apiAuth = useAxiosAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [conference, setConference] = useState<IConferences>();
