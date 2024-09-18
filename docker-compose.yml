@@ -1,10 +1,16 @@
+version: '3.3'
+
 services:
   db:
     image: postgres:16
     container_name: db
     restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: "postgres"
+      - POSTGRES_DB=scint_ontu
+      - POSTGRES_USER=scint_ontu_user
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5436:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
@@ -14,7 +20,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    restart: on-failure:5
+    restart: unless-stopped
     healthcheck:
       test: curl --fail http://localhost:4000/v1/api/health || exit 1
       interval: 30s
@@ -23,9 +29,9 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: "postgresql://scint_ontu_user:some-db-password-for-scint_ontu@db:5432/scint_ontu?schema=public"
+      DATABASE_URL: "postgresql://scint_ontu_user:postgres@db:5432/scint_ontu?schema=public"
     ports:
-      - "4000:4000"
+      - "9002:4000"
     depends_on:
       - db
     volumes:
@@ -33,20 +39,18 @@ services:
 
   front:
     container_name: front
-    restart: on-failure:5
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
     env_file:
       - .env
     ports:
-      - "3000:3000"
+      - "8092:3000"
     depends_on:
       back:
         condition: service_healthy
 
 volumes:
   postgres_data:
-    name: scint-db
   uploads_data:
-    name: scint-uploads
