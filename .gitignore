@@ -32,6 +32,10 @@ yarn-error.log*
 .env
 !.env.production
 
+# prettier & eslint
+.prettierrc.json
+.prettierignore
+
 # Vercel for Next.js
 .vercel
 

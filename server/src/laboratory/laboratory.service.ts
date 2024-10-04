@@ -66,6 +66,10 @@ export class LaboratoryService {
     await deleteFiles(laboratory.files);
     await deleteFiles(laboratory.images);
 
+    await this.prismaService.laboratoryDevelopment.deleteMany({
+      where: { laboratoryId: id },
+    });
+
     return this.prismaService.laboratory.delete({ where: { id } });
   }
 }
