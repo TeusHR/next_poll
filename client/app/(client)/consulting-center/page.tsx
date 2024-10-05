@@ -2,6 +2,7 @@ import React from "react";
 import NextImage from "next/image";
 import { Image } from "@nextui-org/react";
 import Document from "@/components/Document";
+import Title from "@/UI/Title";
 
 const linkDocument = [
   {
@@ -283,7 +284,8 @@ const linkDocument = [
 const ConsultingCenter = () => {
   return (
     <div className="xl:container xl:mx-auto my-10 px-8 max-md:px-4">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-10">
+        <Title text="Консалтинговий центр НДІ" style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
         <div className="flow-root max-md:flex max-md:flex-col-reverse max-md:gap-4">
           <div className="flex flex-col float-left gap-4 max-w-[200px] max-md:max-w-full justify-center items-center md:mr-8">
             <Image
