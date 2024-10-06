@@ -2,96 +2,8 @@ import React from "react";
 import NextImage from "next/image";
 import { Image } from "@nextui-org/react";
 import Title from "@/UI/Title";
-
-const Organization = [
-  {
-    id: 1,
-    img: "/image/org-eua.png",
-    title: "Європейська асоціація університетів",
-    linkTitle: "European Universities Association",
-    link: "http://www.eua.be/",
-    abbr: "EUA",
-  },
-  {
-    id: 2,
-    img: "/image/org-bsun.png",
-    title: "Асоціація університетів Чорноморського басейну",
-    linkTitle: "Black Sea Universities Association",
-    link: "http://www.bsun.org/",
-    abbr: "BSUN",
-  },
-  {
-    id: 3,
-    img: "/image/org-icode.png",
-    title: "Міжнародна асоціація заочного та дистанційного навчання",
-    linkTitle: "International Council for Open and Distance Education",
-    link: "http://www.icde.org/",
-    abbr: "ICDE",
-  },
-  {
-    id: 4,
-    img: "/image/org-effost.png",
-    title: "Європейська федерація харчової науки і технологі",
-    linkTitle: "European Federation of Food Science and Technology",
-    link: "http://www.effost.org/",
-    abbr: "EFFoST",
-  },
-  {
-    id: 5,
-    img: "/image/org-magnahartia.png",
-    title: "Міжнародна Асоціація університетів, що підписали Університетську Хартію",
-    linkTitle: "The Magna Charta Observatory",
-    link: "http://www.magna-charta.org/",
-    abbr: "",
-  },
-  {
-    id: 6,
-    img: "/image/org-euchems.png",
-    title: "Європейська асоціація з хімії та молекулярних наук",
-    linkTitle: "European Association for Chemical and Molecular Sciences",
-    link: "http://www.eua.be/",
-    abbr: "EuCheMS",
-  },
-  {
-    id: 7,
-    img: "/image/org-lfpf.png",
-    title: "Фонд розвитку освіти в сфері готельного сервісу в Центральній і Східній Європі",
-    linkTitle: "La fondation pour la formation hôtelière",
-    link: "http://www.lafondation.org/",
-    abbr: "",
-  },
-  {
-    id: 8,
-    img: "/image/org-ifa.png",
-    title: "Міжнародна асоціація харчових продуктів",
-    linkTitle: "ISEKI Food Association",
-    link: "https://www.iseki-food.net/",
-    abbr: "",
-  },
-  {
-    id: 9,
-    img: "/image/org-oenodoc.png",
-    title: "Міжнародна організація для вищої освіти і досліджень в області енології і виноградарства",
-    linkTitle: "OENOVITI INTERNATIONAL",
-    link: "http://www.oenoviti.univ-bordeauxsegalen.fr/",
-    abbr: "",
-  },
-];
-
-const langGallery = [
-  {
-    img: "/image/langvich-1.jpg",
-  },
-  {
-    img: "/image/langvich-2.jpg",
-  },
-  {
-    img: "/image/langvich-3.jpg",
-  },
-  {
-    img: "/image/langvich-4.jpg",
-  },
-];
+import ReactCountryFlag from "react-country-flag";
+import { Organization, countryOrg, international } from "./data";
 
 const InOut = () => {
   return (
@@ -211,24 +123,184 @@ const InOut = () => {
             ))}
           </div>
         </div>
+        <span className="font-bold text-center">ОНТУ є дійсним членом наступних міжнародних організацій:</span>
         <div className="flex flex-col">
-          <div className="grid grid-cols-4 max-lg:grid-cols-2 max-xsm:grid-cols-1 gap-2">
-            {langGallery.map((item, idx) => (
-              <Image
-                key={idx}
-                src={item.img}
-                fill
-                sizes="100vw"
-                style={{ width: "100%", height: "100%" }}
-                className="object-cover"
-                classNames={{ wrapper: "w-full min-w-[200px] !max-w-none h-[250px]" }}
-                alt={"preview"}
-                radius="none"
-                quality={100}
-                as={NextImage}
-                fetchPriority={"high"}
-              />
+          <div className="grid grid-cols-[max-content,1fr,1.5fr] border border-gray-300">
+            <div className="bg-[#d5d5d5] p-2 max-xsm:p-0 border text-center flex items-center justify-center font-bold text-base max-md:text-sm max-xsm:text-xs">
+              Країна
+            </div>
+            <div className="bg-[#d5d5d5] p-2 max-xsm:p-0 border text-center flex items-center justify-center font-bold text-base max-md:text-sm max-xsm:text-xs">
+              Навчальний заклад або його підрозділи, з якими підписано угоду про співробітництво
+            </div>
+            <div className="bg-[#d5d5d5] p-2 max-xsm:p-0 border text-center font-bold text-base max-md:text-sm max-xsm:text-xs">
+              Головний напрямок співробітництва
+            </div>
+
+            {countryOrg.map((org, index) => (
+              <React.Fragment key={org.id}>
+                <div
+                  className={`border px-12 py-1 max-md:px-4 max-xsm:p-0 text-center flex items-center justify-center text-base max-md:text-sm ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                >
+                  <ReactCountryFlag
+                    countryCode={org.country}
+                    svg
+                    className="!w-[4rem] !h-[4rem] max-xsm:!w-[3rem] max-xsm:!h-[3rem]"
+                    title={org.country}
+                  />
+                </div>
+                <div
+                  className={`border p-2 max-te:p-0 text-center flex items-center justify-center text-base max-md:text-sm max-xsm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                >
+                  <div className="block text-base max-md:text-sm max-xsm:text-xs">
+                    <a href={org.link} className="text-[#0000ff]">
+                      {org.linkTitle}
+                    </a>
+                    {org.abbr ? " " + org.abbr : ""}
+                  </div>
+                </div>
+                <div
+                  className={`border p-2 max-te:p-0 text-center flex items-center justify-center text-base max-md:text-sm max-xsm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                >
+                  {org.title}
+                </div>
+              </React.Fragment>
             ))}
+          </div>
+        </div>
+        <div className="flow-root max-md:flex max-md:flex-col-reverse max-md:gap-4">
+          <div className="block gap-4 text-base max-md:text-sm text-black">
+            <div className="flex flex-col max-lg:block">
+              <span className="font-bold text-center">Створено базу даних, що містить таку інформацію:</span>
+              <span>
+                <ul className="list-disc py-1 pl-8 indent-0">
+                  <li>Університети Європи, які готують фахівців у галузі харчової науки і технології;</li>
+                  <li>Провідні вчені Європи в області харчової науки і технології;</li>
+                  <li>
+                    Повний список журналів та інших періодичних видань, в яких публікуються статті в галузі харчової
+                    науки і технології;
+                  </li>
+                  <li>Міжнародні організації в області харчової науки і технології;</li>
+                  <li>
+                    Дані про робочих програмах і навчальних планах провідних Європейських університетів за
+                    спеціальностями харчової науки і технології у зв´язку з Болонським процесом.
+                  </li>
+                </ul>
+              </span>
+              <span className="font-bold text-center">
+                Участь та членство ОНТУ у міжнародних освітніх організаціях, програмах, фондах:
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2 xsm:hidden">
+            {international.map((org, index) => (
+              <div className="grid grid-rows-1 grid-cols-[min-content,1fr] border border-gray-300" key={org.id}>
+                <div className="flex flex-col min-w-[100px]">
+                  <div className="bg-[#d5d5d5] p-2 h-full max-xsm:p-0 border text-center flex items-center justify-center font-bold text-base max-md:text-sm max-xsm:text-xs">
+                    Назва проекту, програми
+                  </div>
+                  <div className="bg-[#d5d5d5] p-2 h-full max-xsm:p-0 border text-center flex items-center justify-center font-bold text-base max-md:text-sm max-xsm:text-xs">
+                    Партнери
+                  </div>
+                  <div className="bg-[#d5d5d5] p-2 h-full max-xsm:p-0 border text-center flex items-center justify-center font-bold text-base max-md:text-sm max-xsm:text-xs">
+                    Очікуванні результати та їх впровадження
+                  </div>
+                </div>
+                <div>
+                  <div
+                    className={`border p-2 max-te:px-0 text-center flex items-center justify-center text-base max-md:text-sm max-xsm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                  >
+                    {org.name}
+                  </div>
+                  <div
+                    className={`border p-2 max-te:px-0 text-center flex items-center justify-center text-base max-md:text-sm max-xsm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                  >
+                    {org.partners}
+                  </div>
+                  <div
+                    className={`border p-2 max-te:px-0 text-center whitespace-break-spaces flex items-center justify-center text-base max-md:text-sm max-xsm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                  >
+                    {org.result}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-[1fr,1fr,1fr] border border-gray-300 max-xsm:hidden">
+            <div className="bg-[#d5d5d5] p-2 max-xsm:p-0 border text-center flex items-center justify-center font-bold text-base max-md:text-sm max-sm:text-xs">
+              Назва проекту, програми
+            </div>
+            <div className="bg-[#d5d5d5] p-2 max-xsm:p-0 border text-center flex items-center justify-center font-bold text-base max-md:text-sm max-sm:text-xs">
+              Партнери
+            </div>
+            <div className="bg-[#d5d5d5] p-2 max-xsm:p-0 border text-center font-bold text-base max-md:text-sm max-sm:text-xs">
+              Очікуванні результати та їх впровадження
+            </div>
+
+            {international.map((org, index) => (
+              <React.Fragment key={org.id}>
+                <div
+                  className={`border px-12 py-1 max-md:px-4 max-xsm:p-0 text-center flex items-center justify-center text-base max-md:text-sm max-sm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                >
+                  {org.name}
+                </div>
+                <div
+                  className={`border p-2 max-te:p-0 text-center flex items-center justify-center text-base max-md:text-sm max-sm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                >
+                  {org.partners}
+                </div>
+                <div
+                  className={`border p-2 max-te:p-0 text-center whitespace-break-spaces flex items-center justify-center text-base max-md:text-sm max-sm:text-xs ${index % 2 ? "bg-[#f0f8ff]" : "bg-[#fff2ea]"}`}
+                >
+                  {org.result}
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+        <div className="flow-root max-md:flex max-md:flex-col-reverse max-md:gap-4">
+          <div className="block gap-4 text-base max-md:text-sm text-black">
+            <div className="flex flex-col indent-4">
+              <span>
+                Для забезпечення збільшення зростання кількості публікацій науковців академії у виданнях з високим
+                імпакт-індексом складено вичерпний список міжнародних журналів з харчової науки і технології з високим
+                імпакт-фактором для відома вчених ОНТУ і розміщено на сайті академії. Регулярно проводяться засідання
+                науково-технічної ради ОНТУ, де розглядалось питання щодо публікації статей в закордонних журналах і їх
+                реєстрації в базі даних SCOPUS;
+              </span>
+              <span>
+                Отримано грант від "Фонду підготовки готельних кадрів - партнерські організації Центральної і Східної
+                Європи в галузі гостинності і туризму" в розмірі 5 тисяч євро для створення і обладнання учбової
+                лабораторії-кухні на кафедрі ресторанно-готельної справи і туризму ОНТУ.
+              </span>
+              <span>
+                Результати міжнародної співпраці ОНТУ регулярно висвітлюються в газеті «Технолог», у виступах ректора і
+                вчених ОНТУ на телебаченні, в інших засобах масової інформації.
+              </span>
+              <span>
+                Забезпечено проведення практики студентів на закордонних підприємствах Греції, Туреччини, Чехії,
+                Франції, США.
+              </span>
+              <span>
+                Щорічно під керівництвом ОНТУ проводиться міжнародна наукова конференція{" "}
+                <a href="https://ontu.edu.ua/geokonf" className="text-[#0000ff]">
+                  «Геометрія в Одесі»
+                </a>
+                , в якій приймають участь кожного року до 40 іноземних вчених.
+              </span>
+              <span>
+                В ОНТУ проводять семінари видатні іноземні вчені. Так, за підтримки Міжнародного фонду готельного
+                бізнесу, членом якого є ОНТУ, регулярно проводяться семінари і майстер-класи провідними вченими в галузі
+                туризму проф. І. Алексієвою (Болгарія), проф. Л. Новацькою (Словаччина), видатними вченими
+                Манчестерського університету (Велика Британія) проф. E.M. Інесон і проф. Р. Ралстон для викладачів, а
+                також менеджерів гостинності та туризму.
+              </span>
+              <span>
+                Про рівень міжнародної співпраці ОНТУ свідчить те, що більш ніж 40 працівників ОНТУ щорічно
+                відряджаються закордон, і приблизно така ж кількість іноземців відвідує ОНТУ.
+              </span>
+            </div>
           </div>
         </div>
       </div>
