@@ -66,6 +66,7 @@ const Pois = () => {
                     Національного. Нині університет готує фахівців за 22 спеціальностями на 10 факультетах. ОНТУ
                     здійснює підготовку іноземних фахівців з 1951 року. Нині, згідно з ліцензією, виданою Міністерством
                     освіти і науки України (далі – МОН України), університет здійснює набір іноземних громадян для
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                     навчання на підготовчому відділенні, базових факультетах на рівнях "бакалавр", “магістр». Знання,
                     отримані іноземними громадянами на підготовчому відділенні в ОНТУ, дозволяють їм надалі з успіхом
                     вчитися на факультетах в нашому університеті.
@@ -99,6 +100,7 @@ const Pois = () => {
                     </li>
                     <li className="indent-4">
                       <span className="font-bold">2.4..</span> ОНТУ здійснює набір іноземних громадян на навчання через
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       суб'єкти господарювання (резидентів та нерезидентів), що мають відповідні договори з університетом
                       про надання послуг з набору іноземних громадян на навчання, зареєстрованих в Українському
                       державному центрі міжнародної освіти МОНУ.
@@ -106,16 +108,20 @@ const Pois = () => {
                     <li className="indent-4">
                       <span className="font-bold">2.5.</span> Іноземні громадяни, що вступають в ОНТУ на денну або
                       заочну форми навчання, повинні отримати Запрошення на навчання, яке є підставою для отримання
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       довгострокової в'їзної візи "Д", а при перетині державного кордону України (в'їзді) підтверджує
                       мету прибуття в Україну (на навчання).
                     </li>
                     <li className="indent-4">
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       <span className="font-bold">2.6.</span> Для отримання в'їзної візи іноземний громадянин повинен
                       звернутися із Запрошенням в посольство (консульство) України на батьківщині, а за відсутності
                       такого, в іншій країні, що представляє інтереси України.
                     </li>
                     <li className="indent-4">
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       <span className="font-bold">2.7.</span> Отримання в'їзної візи типу "Д" в посольствах
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       (консульствах) України обов'язково, як для іноземних громадян країн, що мають візовий режим з
                       Україною, так і для громадян наступних країн: Республіка Казахстан, Республіка Киргизстан,
                       Республіка Таджикистан, Республіка Туркменістан.
@@ -128,7 +134,9 @@ const Pois = () => {
                     </li>
                     <li className="indent-4">
                       <span className="font-bold">2.9.</span> При перетині державного кордону України іноземні
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       громадяни, запрошені в університет, зобов'язані інформувати співробітників прикордонної служби
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       України про мету прибуття (навчання) і пред'явити їм Запрошення на навчання в ОНТУ.
                     </li>
                     <li className="indent-4">
@@ -144,7 +152,9 @@ const Pois = () => {
                       </ul>
                     </li>
                     <li className="indent-4">
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       <span className="font-bold">2.11.</span> Після отримання Запрошення та візи "Д" кандидат
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       повідомляє університет або суб'єкт господарювання про час і місце перетину кордону України.
                     </li>
                     <li className="indent-4">
@@ -246,13 +256,16 @@ const Pois = () => {
                 <li className="flex flex-col items-center gap-2">
                   <div className="text-center [display:ruby]">
                     <span className="font-bold list-item w-fit">
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       В'їзд іноземних громадян та осіб без громадянства в Україну, подання документів в ОНТУ
                     </span>
                   </div>
                   <ul className="py-4 flow-root indent-4">
                     <li className="indent-4">
                       <span className="font-bold">3.1.</span> Для зарахування на навчання в ОНТУ усім категоріям
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       вступників необхідно заздалегідь надати до університету (чи суб'єктові господарювання) документи
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       п. 2.10 для отримання Запрошення на навчання. Термін дії Запрошення на навчання – 1 рік. В'їзд до
                       України вступників після закінчення терміну дії Запрошення на навчання заборонений.
                     </li>
@@ -262,7 +275,9 @@ const Pois = () => {
                       <ul>
                         <li>
                           <span className="font-bold">3.2.1.</span> Іноземні громадяни, що вступають на підготовче
+                          {/* eslint-disable-next-line react/no-unescaped-entities */}
                           відділення, можуть приїжджати в Університет для навчання протягом року. Для в'їзду в Україну
+                          {/* eslint-disable-next-line react/no-unescaped-entities */}
                           необхідно мати в'їзну студентську візу "Д" і оригінал Запрошення (для усіх категорій інозців).
                         </li>
                         <li>
@@ -285,9 +300,12 @@ const Pois = () => {
                       університету до 20 липня поточного року.
                     </li>
                     <li className="indent-4">
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       <span className="font-bold">3.5.</span> Всім вступникам рекомендовано заздалегідь зв'язатися з
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       директором Центру міжнародної діяльності ОНТУ - ТОДОРОВОЮ Світланою Миколаївною - для роз'яснення
                       питань, уточнення термінів подачі документів, проведення вступних випробувань, зарахування і так
+                      {/* eslint-disable-next-line react/no-unescaped-entities */}
                       далі (див. розділ "Наша адреса і контакти").
                     </li>
                   </ul>
