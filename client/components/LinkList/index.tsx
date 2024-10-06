@@ -53,7 +53,7 @@ const ILinkListItemRight: ILinkListItemLeft[] = [
   },
   {
     text: "ЦЕНТР ЛІНГВІСТИЧНОЇ ПІДГОТОВКИ",
-    link: "/langvich_success",
+    link: "/langvich-success",
     external: false,
   },
   {
