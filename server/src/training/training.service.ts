@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateTrainingDto } from "./dto/create-training.dto";
 import { UpdateTrainingDto } from "./dto/update-training.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { Training, Prisma } from "@prisma/client";
+import { Training, Prisma, Language } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 
@@ -20,7 +20,9 @@ export class TrainingService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.TrainingOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -29,6 +31,7 @@ export class TrainingService {
       this.prismaService.training,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

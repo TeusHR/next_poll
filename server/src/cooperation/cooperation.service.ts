@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateCooperationDto } from "./dto/create-cooperation.dto";
 import { UpdateCooperationDto } from "./dto/update-cooperation.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { Cooperation, Prisma } from "@prisma/client";
+import { Cooperation, Language, Prisma } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 
 @Injectable()
@@ -19,7 +19,9 @@ export class CooperationService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.CooperationOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -28,6 +30,7 @@ export class CooperationService {
       this.prismaService.cooperation,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

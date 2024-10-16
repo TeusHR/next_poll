@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Transform } from "class-transformer";
+import { Language } from "@prisma/client";
 
 export class CreateStudentScienceDto {
   @IsString()
@@ -10,4 +11,7 @@ export class CreateStudentScienceDto {
   @IsOptional()
   @IsString({ each: true })
   files: string[];
+
+  @IsEnum(Language)
+  language: Language;
 }

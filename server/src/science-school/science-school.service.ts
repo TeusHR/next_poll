@@ -3,7 +3,7 @@ import { CreateScienceSchoolDto } from "./dto/create-science-school.dto";
 import { UpdateScienceSchoolDto } from "./dto/update-science-school.dto";
 import { paginate, PrismaService } from "../prisma.service";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
-import { Prisma, ScienceSchool } from "@prisma/client";
+import { Language, Prisma, ScienceSchool } from "@prisma/client";
 
 @Injectable()
 export class ScienceSchoolService {
@@ -19,7 +19,9 @@ export class ScienceSchoolService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.ScienceSchoolOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -28,6 +30,7 @@ export class ScienceSchoolService {
       this.prismaService.scienceSchool,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

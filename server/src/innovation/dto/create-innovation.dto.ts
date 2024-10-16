@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Transform } from "class-transformer";
+import { Language } from "@prisma/client";
 
 export class CreateInnovationDto {
   @IsString()
@@ -19,4 +20,7 @@ export class CreateInnovationDto {
   @IsOptional()
   @IsString({ each: true })
   images: string[];
+
+  @IsEnum(Language)
+  language: Language;
 }

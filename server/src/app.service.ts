@@ -7,22 +7,25 @@ import { FileResponse } from "./app.interface";
 import { checkFileExists, getFileInfo } from "./common/helpers/storage.helper";
 import { join } from "path";
 import { PrismaService } from "./prisma.service";
+import { Language } from "@prisma/client";
 
 @Injectable()
 export class AppService {
   constructor(private prismaService: PrismaService) {}
 
-  async globalSearch(searchValue: string) {
+  async globalSearch(searchValue: string, language: Language) {
     const search = searchValue.toString().toLowerCase().trim();
     const conferences = await this.prismaService.conference.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });
     const cooperations = await this.prismaService.cooperation.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });
@@ -30,6 +33,7 @@ export class AppService {
     const researchWorks = await this.prismaService.researchWork.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });
@@ -37,6 +41,7 @@ export class AppService {
     const activities = await this.prismaService.activity.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });
@@ -44,6 +49,7 @@ export class AppService {
     const innovations = await this.prismaService.innovation.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });
@@ -51,6 +57,7 @@ export class AppService {
     const laboratories = await this.prismaService.laboratory.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });
@@ -59,6 +66,7 @@ export class AppService {
       await this.prismaService.laboratoryDevelopment.findMany({
         where: {
           OR: [{ title: { contains: search } }, { text: { contains: search } }],
+          language,
         },
         take: 5,
       });
@@ -66,6 +74,7 @@ export class AppService {
     const scienceSchools = await this.prismaService.scienceSchool.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });
@@ -74,6 +83,7 @@ export class AppService {
       await this.prismaService.internationalProject.findMany({
         where: {
           OR: [{ title: { contains: search } }, { text: { contains: search } }],
+          language,
         },
         take: 5,
       });
@@ -81,6 +91,7 @@ export class AppService {
     const trainings = await this.prismaService.internationalProject.findMany({
       where: {
         OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
       },
       take: 5,
     });

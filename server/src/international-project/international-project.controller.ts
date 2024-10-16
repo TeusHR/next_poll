@@ -11,6 +11,7 @@ import {
 import { InternationalProjectService } from "./international-project.service";
 import { CreateInternationalProjectDto } from "./dto/create-international-project.dto";
 import { UpdateInternationalProjectDto } from "./dto/update-international-project.dto";
+import { Language } from "@prisma/client";
 
 @Controller("international-projects")
 export class InternationalProjectController {
@@ -27,6 +28,7 @@ export class InternationalProjectController {
 
   @Get()
   findAll(
+    @Query("language") language: Language,
     @Query("limit") limit?: string,
     @Query("page") page?: string,
     @Query("column") column?: string,
@@ -34,6 +36,7 @@ export class InternationalProjectController {
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.internationalProjectService.findAll({
+      language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,

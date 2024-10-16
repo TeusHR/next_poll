@@ -12,6 +12,7 @@ import { CooperationService } from "./cooperation.service";
 import { CreateCooperationDto } from "./dto/create-cooperation.dto";
 import { UpdateCooperationDto } from "./dto/update-cooperation.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("cooperations")
 export class CooperationController {
@@ -25,6 +26,7 @@ export class CooperationController {
 
   @Get()
   findAll(
+    @Query("language") language: Language,
     @Query("limit") limit?: string,
     @Query("page") page?: string,
     @Query("column") column?: string,
@@ -32,6 +34,7 @@ export class CooperationController {
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.cooperationService.findAll({
+      language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,

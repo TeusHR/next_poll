@@ -2,13 +2,16 @@ import { Injectable } from "@nestjs/common";
 import { CreateStudentScienceDto } from "./dto/create-student-science.dto";
 import { PrismaService } from "../prisma.service";
 import { deleteFilePack } from "src/common/helpers/storage.helper";
+import { Language } from "@prisma/client";
 
 @Injectable()
 export class StudentScienceService {
   constructor(private prismaService: PrismaService) {}
 
   async createOrUpdate(createStudentScienceDto: CreateStudentScienceDto) {
-    const studentScience = await this.prismaService.studentScience.findFirst();
+    const studentScience = await this.prismaService.studentScience.findFirst({
+      where: { language: createStudentScienceDto.language },
+    });
     let res: any;
     if (studentScience)
       res = await this.prismaService.studentScience.update({
@@ -25,7 +28,7 @@ export class StudentScienceService {
     return res;
   }
 
-  find() {
-    return this.prismaService.studentScience.findFirst();
+  find(language: Language) {
+    return this.prismaService.studentScience.findFirst({ where: { language } });
   }
 }

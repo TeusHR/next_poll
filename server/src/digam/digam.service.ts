@@ -1,13 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateDIGAMDto } from "./dto/create-digam.dto";
 import { PrismaService } from "../prisma.service";
+import { Language } from "@prisma/client";
 
 @Injectable()
 export class DIGAMService {
   constructor(private prismaService: PrismaService) {}
 
   async createOrUpdate(createDIGAMDto: CreateDIGAMDto) {
-    const DIGAM = await this.prismaService.dIGAM.findFirst();
+    const DIGAM = await this.prismaService.dIGAM.findFirst({
+      where: { language: createDIGAMDto.language },
+    });
     let res: any;
     if (DIGAM)
       res = this.prismaService.dIGAM.update({
@@ -22,8 +25,10 @@ export class DIGAMService {
     return res;
   }
 
-  async find() {
-    const DIGAM = await this.prismaService.dIGAM.findFirst();
+  async find(language: Language) {
+    const DIGAM = await this.prismaService.dIGAM.findFirst({
+      where: { language },
+    });
     if (!DIGAM) throw new NotFoundException();
 
     return {

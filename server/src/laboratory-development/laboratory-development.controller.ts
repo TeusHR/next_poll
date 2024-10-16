@@ -12,6 +12,7 @@ import { LaboratoryDevelopmentService } from "./laboratory-development.service";
 import { CreateLaboratoryDevelopmentDto } from "./dto/create-laboratory-development.dto";
 import { UpdateLaboratoryDevelopmentDto } from "./dto/update-laboratory-development.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("laboratory-developments")
 export class LaboratoryDevelopmentController {
@@ -30,6 +31,7 @@ export class LaboratoryDevelopmentController {
   }
 
   findAll(
+    @Query("language") language: Language,
     @Query("limit") limit?: string,
     @Query("page") page?: string,
     @Query("column") column?: string,
@@ -37,6 +39,7 @@ export class LaboratoryDevelopmentController {
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.laboratoryDevelopmentService.findAll({
+      language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,

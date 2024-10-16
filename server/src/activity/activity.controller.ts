@@ -12,6 +12,7 @@ import { ActivityService } from "./activity.service";
 import { CreateActivityDto } from "./dto/create-activity.dto";
 import { UpdateActivityDto } from "./dto/update-activity.dto";
 import { Auth } from "src/common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("activities")
 export class ActivityController {
@@ -25,6 +26,7 @@ export class ActivityController {
 
   @Get()
   findAll(
+    @Query("language") language: Language,
     @Query("limit") limit?: string,
     @Query("page") page?: string,
     @Query("column") column?: string,
@@ -32,6 +34,7 @@ export class ActivityController {
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.activityService.findAll({
+      language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,

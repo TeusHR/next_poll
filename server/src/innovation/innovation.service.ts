@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateInnovationDto } from "./dto/create-innovation.dto";
 import { UpdateInnovationDto } from "./dto/update-innovation.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { Innovation, Prisma } from "@prisma/client";
+import { Innovation, Language, Prisma } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 
@@ -20,7 +20,9 @@ export class InnovationService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.InnovationOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -29,6 +31,7 @@ export class InnovationService {
       this.prismaService.innovation,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

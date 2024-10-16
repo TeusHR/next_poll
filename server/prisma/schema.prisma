@@ -16,14 +16,15 @@ model User {
 
 // Конференції, семінари та конкурси
 model Conference {
-  id      String         @id @default(uuid())
-  date    DateTime       @db.Timestamptz(3)
-  toDate  DateTime?      @db.Timestamptz(3)
-  type    ConferenceType
-  country String
-  title   String
-  text    String
-  files   String[]       @default([])
+  id       String         @id @default(uuid())
+  date     DateTime       @db.Timestamptz(3)
+  toDate   DateTime?      @db.Timestamptz(3)
+  type     ConferenceType
+  country  String
+  title    String
+  text     String
+  files    String[]       @default([])
+  language Language       @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -31,9 +32,10 @@ model Conference {
 
 // Наукові школи
 model ScienceSchool {
-  id    String @id @default(uuid())
-  title String
-  text  String
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -41,9 +43,10 @@ model ScienceSchool {
 
 // Напрямки для співпраці
 model Cooperation {
-  id    String @id @default(uuid())
-  title String
-  text  String
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -51,10 +54,11 @@ model Cooperation {
 
 // Наукова робота ОНТУ
 model ResearchWork {
-  id    String @id @default(uuid())
-  title String
-  text  String
-  image String
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  image    String
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -62,10 +66,11 @@ model ResearchWork {
 
 // Міжнародна діяльність ОНТУ
 model Activity {
-  id    String @id @default(uuid())
-  title String
-  text  String
-  image String
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  image    String
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -73,11 +78,12 @@ model Activity {
 
 // Інноваційні розробки
 model Innovation {
-  id     String   @id @default(uuid())
-  title  String
-  text   String
-  images String[] @default([])
-  files  String[] @default([])
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  images   String[] @default([])
+  files    String[] @default([])
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -85,18 +91,20 @@ model Innovation {
 
 // Студентська наука
 model StudentScience {
-  id    String   @id @default(uuid())
-  text  String
-  files String[] @default([])
+  id       String   @id @default(uuid())
+  text     String
+  files    String[] @default([])
+  language Language @default(UA)
 }
 
 // Міжнародні проекти
 model InternationalProject {
-  id     String   @id @default(uuid())
-  title  String
-  text   String
-  images String[] @default([])
-  files  String[] @default([])
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  images   String[] @default([])
+  files    String[] @default([])
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -114,11 +122,12 @@ model Feedback {
 
 // Науково-дослідні лабораторії
 model Laboratory {
-  id     String   @id @default(uuid())
-  title  String
-  text   String
-  images String[] @default([])
-  files  String[] @default([])
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  images   String[] @default([])
+  files    String[] @default([])
+  language Language @default(UA)
 
   developments LaboratoryDevelopment[]
 
@@ -128,11 +137,12 @@ model Laboratory {
 
 // Розробки лабораторії
 model LaboratoryDevelopment {
-  id     String   @id @default(uuid())
-  title  String
-  text   String
-  images String[] @default([])
-  files  String[] @default([])
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  images   String[] @default([])
+  files    String[] @default([])
+  language Language @default(UA)
 
   laboratory   Laboratory @relation(references: [id], fields: [laboratoryId])
   laboratoryId String
@@ -143,31 +153,34 @@ model LaboratoryDevelopment {
 
 // Відділ міжнародних грантів та академічної мобільності (Department of International Grants and Academic Mobility)
 model DIGAM {
-  id                  String @id @default(uuid())
+  id                  String   @id @default(uuid())
   text                String
-  organizations       Json[] @default([]) // {image: string, title: string, link: string}[]
-  foreignUniversities Json[] @default([]) // {country: string, title: string, description: string}[]
+  organizations       Json[]   @default([]) // {image: string, title: string, link: string}[]
+  foreignUniversities Json[]   @default([]) // {country: string, title: string, description: string}[]
+  language            Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
 model Consulting {
-  id     String @id @default(uuid())
-  title  String
-  text   String
-  images Json[] @default([]) // {image: string, description: string}[]
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  images   Json[]   @default([]) // {image: string, description: string}[]
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
 model Training {
-  id     String   @id @default(uuid())
-  title  String
-  text   String
-  images String[] @default([])
-  files  String[] @default([])
+  id       String   @id @default(uuid())
+  title    String
+  text     String
+  images   String[] @default([])
+  files    String[] @default([])
+  language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -177,4 +190,9 @@ enum ConferenceType {
   SEMINAR
   COMPETITION
   CONFERENCT
+}
+
+enum Language {
+  UA
+  EN
 }

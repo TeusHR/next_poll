@@ -12,6 +12,7 @@ import { TrainingService } from "./training.service";
 import { CreateTrainingDto } from "./dto/create-training.dto";
 import { UpdateTrainingDto } from "./dto/update-training.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("trainings")
 export class TrainingController {
@@ -25,6 +26,7 @@ export class TrainingController {
 
   @Get()
   findAll(
+    @Query("language") language: Language,
     @Query("limit") limit?: string,
     @Query("page") page?: string,
     @Query("column") column?: string,
@@ -32,6 +34,7 @@ export class TrainingController {
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.trainingService.findAll({
+      language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,

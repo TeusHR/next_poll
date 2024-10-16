@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body } from "@nestjs/common";
+import { Controller, Get, Post, Body, Query } from "@nestjs/common";
 import { StudentScienceService } from "./student-science.service";
 import { CreateStudentScienceDto } from "./dto/create-student-science.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("student-science")
 export class StudentScienceController {
@@ -14,7 +15,7 @@ export class StudentScienceController {
   }
 
   @Get()
-  find() {
-    return this.studentScienceService.find();
+  find(@Query("language") language: Language) {
+    return this.studentScienceService.find(language);
   }
 }

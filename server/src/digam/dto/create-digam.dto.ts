@@ -1,11 +1,13 @@
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   ValidateNested,
 } from "class-validator";
 import { Transform, Type } from "class-transformer";
+import { Language } from "@prisma/client";
 
 class ForeignUniversity {
   @IsString()
@@ -58,4 +60,7 @@ export class CreateDIGAMDto {
   @ValidateNested({ each: true })
   @Type(() => ForeignUniversity)
   foreignUniversities: any[];
+
+  @IsEnum(Language)
+  language: Language;
 }

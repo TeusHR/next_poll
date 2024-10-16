@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { ConferenceService } from "./conference.service";
 import { CreateConferenceDto } from "./dto/create-conference.dto";
 import { UpdateConferenceDto } from "./dto/update-conference.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("conferences")
 export class ConferenceController {
@@ -23,8 +25,8 @@ export class ConferenceController {
   }
 
   @Get()
-  findAll() {
-    return this.conferenceService.findAll();
+  findAll(@Query("language") language: Language) {
+    return this.conferenceService.findAll(language);
   }
 
   @Get(":id")

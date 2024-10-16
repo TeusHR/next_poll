@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateInternationalProjectDto } from "./dto/create-international-project.dto";
 import { UpdateInternationalProjectDto } from "./dto/update-international-project.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { InternationalProject, Prisma } from "@prisma/client";
+import { InternationalProject, Language, Prisma } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 
@@ -20,7 +20,9 @@ export class InternationalProjectService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.InternationalProjectOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -29,6 +31,7 @@ export class InternationalProjectService {
       this.prismaService.internationalProject,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

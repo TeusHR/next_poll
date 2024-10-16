@@ -1,5 +1,12 @@
-import { IsArray, IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+} from "class-validator";
 import { Transform, Type } from "class-transformer";
+import { Language } from "@prisma/client";
 
 class Image {
   @IsString()
@@ -28,4 +35,7 @@ export class CreateConsultingDto {
   @ValidateNested({ each: true })
   @Type(() => Image)
   images: any[];
+
+  @IsEnum(Language)
+  language: Language;
 }

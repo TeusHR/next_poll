@@ -2,13 +2,16 @@ import { Injectable } from "@nestjs/common";
 import { CreateConsultingDto } from "./dto/create-consulting.dto";
 import { deleteFilePack } from "../common/helpers/storage.helper";
 import { PrismaService } from "../prisma.service";
+import { Language } from "@prisma/client";
 
 @Injectable()
 export class ConsultingService {
   constructor(private prismaService: PrismaService) {}
 
   async createOrUpdate(createConsultingDto: CreateConsultingDto) {
-    const consulting = await this.prismaService.consulting.findFirst();
+    const consulting = await this.prismaService.consulting.findFirst({
+      where: { language: createConsultingDto.language },
+    });
     let res: any;
     if (consulting)
       res = await this.prismaService.consulting.update({
@@ -28,7 +31,7 @@ export class ConsultingService {
     return res;
   }
 
-  find() {
-    return this.prismaService.consulting.findFirst();
+  find(language: Language) {
+    return this.prismaService.consulting.findFirst({ where: { language } });
   }
 }

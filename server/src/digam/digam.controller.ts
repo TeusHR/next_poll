@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body } from "@nestjs/common";
+import { Controller, Get, Post, Body, Query } from "@nestjs/common";
 import { DIGAMService } from "./digam.service";
 import { CreateDIGAMDto } from "./dto/create-digam.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("digam")
 export class DIGAMController {
@@ -14,7 +15,7 @@ export class DIGAMController {
   }
 
   @Get()
-  find() {
-    return this.digamService.find();
+  find(@Query("language") language: Language) {
+    return this.digamService.find(language);
   }
 }

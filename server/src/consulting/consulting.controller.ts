@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body } from "@nestjs/common";
+import { Controller, Get, Post, Body, Query } from "@nestjs/common";
 import { ConsultingService } from "./consulting.service";
 import { CreateConsultingDto } from "./dto/create-consulting.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("consulting")
 export class ConsultingController {
@@ -14,7 +15,7 @@ export class ConsultingController {
   }
 
   @Get()
-  find() {
-    return this.consultingService.find();
+  find(@Query("language") language: Language) {
+    return this.consultingService.find(language);
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateLaboratoryDto } from "./dto/create-laboratory.dto";
 import { UpdateLaboratoryDto } from "./dto/update-laboratory.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { Laboratory, Prisma } from "@prisma/client";
+import { Laboratory, Language, Prisma } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 
@@ -20,7 +20,9 @@ export class LaboratoryService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.LaboratoryOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -29,6 +31,7 @@ export class LaboratoryService {
       this.prismaService.laboratory,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

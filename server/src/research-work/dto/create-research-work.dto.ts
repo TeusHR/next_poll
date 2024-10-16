@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { Transform } from "class-transformer";
+import { Language } from "@prisma/client";
 
 export class CreateResearchWorkDto {
   @IsString()
@@ -15,4 +16,7 @@ export class CreateResearchWorkDto {
   @IsString()
   @IsNotEmpty()
   image: string;
+
+  @IsEnum(Language)
+  language: Language;
 }

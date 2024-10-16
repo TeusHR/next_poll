@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateResearchWorkDto } from "./dto/create-research-work.dto";
 import { UpdateResearchWorkDto } from "./dto/update-research-work.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { ResearchWork, Prisma } from "@prisma/client";
+import { ResearchWork, Prisma, Language } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 import { deleteFiles } from "../common/helpers/storage.helper";
 
@@ -20,7 +20,9 @@ export class ResearchWorkService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.ResearchWorkOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -29,6 +31,7 @@ export class ResearchWorkService {
       this.prismaService.researchWork,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

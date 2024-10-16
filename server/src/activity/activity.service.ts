@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateActivityDto } from "./dto/create-activity.dto";
 import { UpdateActivityDto } from "./dto/update-activity.dto";
 import { paginate, PrismaService } from "../prisma.service";
-import { Prisma, Activity } from "@prisma/client";
+import { Prisma, Activity, Language } from "@prisma/client";
 import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
 import { deleteFiles } from "../common/helpers/storage.helper";
 
@@ -20,7 +20,9 @@ export class ActivityService {
     page,
     perPage,
     orderBy,
+    language,
   }: {
+    language: Language;
     orderBy?: Prisma.ActivityOrderByWithRelationInput;
     page?: number;
     perPage?: number;
@@ -29,6 +31,7 @@ export class ActivityService {
       this.prismaService.activity,
       {
         orderBy,
+        where: { language },
       },
       {
         page,

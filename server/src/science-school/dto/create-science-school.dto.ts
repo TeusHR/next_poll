@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { Transform } from "class-transformer";
+import { Language } from "@prisma/client";
 
 export class CreateScienceSchoolDto {
   @IsString()
@@ -11,4 +12,7 @@ export class CreateScienceSchoolDto {
   @Transform(({ value }) => value?.toString().trim())
   @IsNotEmpty()
   text: string;
+
+  @IsEnum(Language)
+  language: Language;
 }

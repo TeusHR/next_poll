@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { ConferenceType } from "@prisma/client";
+import { ConferenceType, Language } from "@prisma/client";
 import { Transform } from "class-transformer";
 
 export class CreateConferenceDto {
@@ -40,4 +40,7 @@ export class CreateConferenceDto {
   @IsOptional()
   @IsString({ each: true })
   files: string[];
+
+  @IsEnum(Language)
+  language: Language;
 }

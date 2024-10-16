@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateConferenceDto } from "./dto/create-conference.dto";
 import { UpdateConferenceDto } from "./dto/update-conference.dto";
 import { PrismaService } from "../prisma.service";
-import { Conference } from "@prisma/client";
+import { Conference, Language } from "@prisma/client";
 import { deleteFilePack, deleteFiles } from "../common/helpers/storage.helper";
 import "moment/locale/uk";
 import * as moment from "moment";
@@ -19,8 +19,10 @@ export class ConferenceService {
     });
   }
 
-  async findAll() {
-    const conferences = await this.prismaService.conference.findMany();
+  async findAll(language: Language) {
+    const conferences = await this.prismaService.conference.findMany({
+      where: { language },
+    });
     return this.groupByMonth(conferences);
   }
 

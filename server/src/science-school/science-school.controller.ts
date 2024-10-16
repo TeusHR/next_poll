@@ -12,6 +12,7 @@ import { ScienceSchoolService } from "./science-school.service";
 import { CreateScienceSchoolDto } from "./dto/create-science-school.dto";
 import { UpdateScienceSchoolDto } from "./dto/update-science-school.dto";
 import { Auth } from "src/common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("science-schools")
 export class ScienceSchoolController {
@@ -25,6 +26,7 @@ export class ScienceSchoolController {
 
   @Get()
   findAll(
+    @Query("language") language: Language,
     @Query("limit") limit?: string,
     @Query("page") page?: string,
     @Query("column") column?: string,
@@ -32,6 +34,7 @@ export class ScienceSchoolController {
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.scienceSchoolService.findAll({
+      language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,

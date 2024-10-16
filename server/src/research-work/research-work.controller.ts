@@ -12,6 +12,7 @@ import { ResearchWorkService } from "./research-work.service";
 import { CreateResearchWorkDto } from "./dto/create-research-work.dto";
 import { UpdateResearchWorkDto } from "./dto/update-research-work.dto";
 import { Auth } from "../common/decorators/auth.decorator";
+import { Language } from "@prisma/client";
 
 @Controller("research-works")
 export class ResearchWorkController {
@@ -25,6 +26,7 @@ export class ResearchWorkController {
 
   @Get()
   findAll(
+    @Query("language") language: Language,
     @Query("limit") limit?: string,
     @Query("page") page?: string,
     @Query("column") column?: string,
@@ -32,6 +34,7 @@ export class ResearchWorkController {
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.researchWorkService.findAll({
+      language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,
