@@ -1,6 +1,6 @@
 'use client';
 import {FC, useEffect} from 'react';
-import {useRouter} from "next/navigation";
+import { useRouter } from "routing";
 import {useSession} from "next-auth/react";
 import Form from "./form";
 
