@@ -6,7 +6,7 @@ import WordIcon from "@/UI/WorkIcon";
 import DocumentIcon from "@/UI/DocumentIcon";
 import {Image} from "@nextui-org/react";
 import {loadPreviewImage} from "@/utils/ImageValidate";
-import {uploadType} from "../../app/(dashboard)/cms/innovations/components/InnovationsEdit";
+import { uploadType } from "../../app/[locale]/[dashboard]/cms/innovations/components/InnovationsEdit";
 
 type Props = {
     files: uploadType[],

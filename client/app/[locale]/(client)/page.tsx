@@ -3,6 +3,8 @@ import CellItem, {ICellItem} from "@/components/Cell/CellItem";
 import React, {Suspense} from "react";
 import Partners from "@/components/Partners";
 import Feedback from "@/components/Feedback";
+import {useTranslations} from 'next-intl';
+import {setRequestLocale} from 'next-intl/server';
 
 const cellItemsRow: ICellItem[] = [
     {
@@ -22,10 +24,21 @@ const cellItemsRow: ICellItem[] = [
     }
 ]
 
-export default function Home() {
+type Props = {
+  params: { locale: string }
+}
+
+
+export default function Home({params: {locale}}:Props) {
+
+  setRequestLocale(locale);
+
+  const t = useTranslations('HomePage');
+
     return (
         <>
             <div className="xl:container mx-auto my-4 px-8 max-md:px-4">
+              {t('title')}
                 <div className="mt-6 flex flex-col gap-20">
                     {/*<Cell style={"w-full flex flex-row max-sm:flex-col 2xl:gap-x-56 max-2xl:gap-x-40 max-xl:gap-x-12 max-md:gap-x-4"}/>*/}
                     <LinkList/>

@@ -10,3 +10,8 @@ export const USER_PAGES = ['/cabinet'];
 
 export const ADMIN_PAGES = ['/cms'];
 
+export const LOCALES = ['ua', 'en'];
+
+export const LOCALE_PREFIX = 'always';
+
+

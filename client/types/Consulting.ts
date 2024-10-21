@@ -1,4 +1,5 @@
-import {uploadType} from "../app/(dashboard)/cms/innovations/components/InnovationsEdit";
+import { uploadType } from "../app/[locale]/[dashboard]/cms/innovations/components/InnovationsEdit";
+
 
 export interface IConsulting {
     id: string

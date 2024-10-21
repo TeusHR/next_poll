@@ -10,6 +10,7 @@ import {
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { FilesInterceptor } from "@nestjs/platform-express";
+import { Language } from "@prisma/client";
 
 @Controller()
 export class AppController {
@@ -21,8 +22,8 @@ export class AppController {
   }
 
   @Get("search/:value")
-  async search(@Param("value") value: string) {
-    return this.appService.globalSearch(value);
+  async search(@Param("value") value: string, language: Language) {
+    return this.appService.globalSearch(value, language);
   }
 
   @Post("/upload")
