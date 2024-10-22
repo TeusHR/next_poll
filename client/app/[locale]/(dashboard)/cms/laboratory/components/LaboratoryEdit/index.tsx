@@ -11,18 +11,20 @@ import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
 import { FileService } from "@/services/file.service";
-import { ICreateLaboratory, ILaboratory, ILaboratoryForm } from "@/types/Laboratory";
+import { ILaboratory, ILaboratoryForm, IUpdateLaboratory } from "@/types/Laboratory";
 import { uploadType } from "../../../innovations/components/InnovationsEdit";
 import Title from "@/UI/Title";
 import CloseIcon from "@/UI/CloseIcon";
 import { ICreateDevelopments, IDevelopmentsForm } from "@/types/LaboratoryDevelopments";
 import revalidateFetch from "@/services/revalidateFetch";
+import { Language } from "@/types/Language";
 
 type Props = {
   laboratoryId: string;
+  language: Language;
 };
 
-const LaboratoryEdit: FC<Props> = ({ laboratoryId }) => {
+const LaboratoryEdit: FC<Props> = ({ laboratoryId, language }) => {
   const { handleSubmit, control, formState, getValues, setValue, watch, setError } = useForm<ILaboratoryForm>({
     mode: "all",
     defaultValues: {
@@ -118,7 +120,7 @@ const LaboratoryEdit: FC<Props> = ({ laboratoryId }) => {
 
       const existingUrlImages = filesImage.filter((file) => file.typeUpload === "server").map((file) => file.url);
 
-      const dataProduct: ICreateLaboratory = {
+      const dataProduct: IUpdateLaboratory = {
         title: dataForm.title,
         text: dataForm.text,
         files: [...existingUrlDocs, ...urlsDocs],
@@ -150,6 +152,7 @@ const LaboratoryEdit: FC<Props> = ({ laboratoryId }) => {
             files: [...existingUrlDevelopDocs, ...devFilesUrls],
             images: [...existingUrlDevelopImages, ...devImagesUrls],
             laboratoryId,
+            language,
           });
         }
       }

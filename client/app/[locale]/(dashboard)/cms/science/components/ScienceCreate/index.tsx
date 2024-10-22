@@ -9,7 +9,7 @@ const ScienceCreate = () => {
     <div className="flex flex-col gap-8 w-full">
       <TabsLanguage
         tabUkraine={<ScienceCreateForm language={Language.UA} />}
-        tabEnglish={<ScienceCreateForm language={Language.UA} />}
+        tabEnglish={<ScienceCreateForm language={Language.EN} />}
       />
     </div>
   );

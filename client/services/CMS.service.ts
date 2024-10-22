@@ -14,17 +14,23 @@ import {
   getStudentUrl,
   getTrainingUrl,
 } from "@/config/url.config";
-import { IConferences, ICreateConferences, IGroupConference, IResponseMeta } from "@/types/Conference";
+import {
+  IConferences,
+  ICreateConferences,
+  IGroupConference,
+  IResponseMeta,
+  IUpdateConferences,
+} from "@/types/Conference";
 import { ICreateScience, IScience, IUpdateScience } from "@/types/Science";
-import { ICooperation, ICreateCooperation } from "@/types/Cooperation";
-import { ICreateResearch, IResearch } from "@/types/Research";
-import { ICreateInnovation, IInnovation } from "@/types/Innovation";
+import { ICooperation, ICreateCooperation, IUpdateCooperation } from "@/types/Cooperation";
+import { ICreateResearch, IResearch, IUpdateResearch } from "@/types/Research";
+import { ICreateInnovation, IInnovation, IUpdateInnovation } from "@/types/Innovation";
 import { ICreateStudent, IStudent } from "@/types/Student";
 import { $api } from "@/api/interceptors";
 import { IConsulting, ICreateConsulting, ICreateTraining, ITraining } from "@/types/Consulting";
-import { IActivity, ICreateActivity } from "@/types/Activity";
-import { ICreateInternational, IInternational } from "@/types/International";
-import { ICreateLaboratory, ILaboratory } from "@/types/Laboratory";
+import { IActivity, ICreateActivity, IUpdateActivity } from "@/types/Activity";
+import { ICreateInternational, IInternational, IUpdateInternational } from "@/types/International";
+import { ICreateLaboratory, ILaboratory, IUpdateLaboratory } from "@/types/Laboratory";
 import { ICreateDevelopments, IDevelopments } from "@/types/LaboratoryDevelopments";
 import { ICreateDigam, IDigam } from "@/types/Digam";
 
@@ -41,7 +47,7 @@ export const ConferencesService = {
     const { status } = await authAxios.post<ICreateConferences>(getConferencesUrl(""), item);
     return status;
   },
-  async updateConferences(item: ICreateConferences, id: string, authAxios: AxiosInstance) {
+  async updateConferences(item: IUpdateConferences, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateConferences>(getConferencesUrl(`/${id}`), item);
     return status;
   },
@@ -52,8 +58,11 @@ export const ConferencesService = {
 };
 
 export const ConsultingService = {
-  async getConsulting(authAxios: AxiosInstance) {
-    const { data } = await authAxios.get<IConsulting>(getConsultingUrl(""));
+  async getConsulting(authAxios: AxiosInstance, language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    const { data } = await authAxios.get<IConsulting>(getConsultingUrl(`?${searchParams.toString()}`));
     return data;
   },
   async postConsulting(item: ICreateConsulting, authAxios: AxiosInstance) {
@@ -63,8 +72,13 @@ export const ConsultingService = {
 };
 
 export const TrainingService = {
-  async getTrainingAll(authAxios: AxiosInstance) {
-    const { data } = await authAxios.get<IResponseMeta<ITraining[]>>(getTrainingUrl("?column=createdAt&order=asc"));
+  async getTrainingAll(authAxios: AxiosInstance, language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    const { data } = await authAxios.get<IResponseMeta<ITraining[]>>(
+      getTrainingUrl(`?column=createdAt&order=asc&${searchParams.toString()}`),
+    );
     return data;
   },
   async removeTraining(id: string, authAxios: AxiosInstance) {
@@ -96,7 +110,7 @@ export const CooperationService = {
     const { status } = await authAxios.post<ICreateCooperation>(getCooperationsUrl(""), item);
     return status;
   },
-  async updateCooperation(item: ICreateCooperation, id: string, authAxios: AxiosInstance) {
+  async updateCooperation(item: IUpdateCooperation, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateCooperation>(getCooperationsUrl(`/${id}`), item);
     return status;
   },
@@ -121,7 +135,7 @@ export const ResearchService = {
     const { status } = await authAxios.post<ICreateResearch>(getResearchWorksUrl(""), item);
     return status;
   },
-  async updateResearch(item: ICreateCooperation, id: string, authAxios: AxiosInstance) {
+  async updateResearch(item: IUpdateResearch, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateResearch>(getResearchWorksUrl(`/${id}`), item);
     return status;
   },
@@ -144,7 +158,7 @@ export const ActivityService = {
     const { status } = await authAxios.post<ICreateActivity>(getActivitiesUrl(""), item);
     return status;
   },
-  async updateActivity(item: ICreateCooperation, id: string, authAxios: AxiosInstance) {
+  async updateActivity(item: IUpdateActivity, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateActivity>(getActivitiesUrl(`/${id}`), item);
     return status;
   },
@@ -169,7 +183,7 @@ export const InnovationsService = {
     const { status } = await authAxios.post<ICreateInnovation>(getInnovationsUrl(""), item);
     return status;
   },
-  async updateInnovation(item: ICreateCooperation, id: string, authAxios: AxiosInstance) {
+  async updateInnovation(item: IUpdateInnovation, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateInnovation>(getInnovationsUrl(`/${id}`), item);
     return status;
   },
@@ -194,7 +208,7 @@ export const InternationalService = {
     const { status } = await authAxios.post<ICreateInternational>(getInternationalUrl(""), item);
     return status;
   },
-  async updateInternational(item: ICreateCooperation, id: string, authAxios: AxiosInstance) {
+  async updateInternational(item: IUpdateInternational, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateInternational>(getInternationalUrl(`/${id}`), item);
     return status;
   },
@@ -205,8 +219,11 @@ export const InternationalService = {
 };
 
 export const StudentService = {
-  async getStudent(authAxios: AxiosInstance) {
-    const { data } = await authAxios.get<IResponseMeta<IStudent>>(getInternationalUrl(`/`));
+  async getStudent(authAxios: AxiosInstance, language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    const { data } = await authAxios.get<IStudent>(getStudentUrl(`?${searchParams.toString()}`));
     return data;
   },
   async postStudent(item: ICreateStudent, authAxios: AxiosInstance) {
@@ -238,7 +255,7 @@ export const LaboratoryService = {
     const { status, data } = await authAxios.post<ILaboratory>(getLaboratoryUrl(""), item);
     return { status, data };
   },
-  async updateLaboratory(item: ICreateCooperation, id: string, authAxios: AxiosInstance) {
+  async updateLaboratory(item: IUpdateLaboratory, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateLaboratory>(getLaboratoryUrl(`/${id}`), item);
     return status;
   },
@@ -274,9 +291,12 @@ export const LaboratoryDevelopService = {
 };
 
 export const DigamService = {
-  async getDigam(authAxios: AxiosInstance) {
+  async getDigam(authAxios: AxiosInstance, language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
     try {
-      const { data } = await authAxios.get<IDigam>(getDigamUrl(""));
+      const { data } = await authAxios.get<IDigam>(getDigamUrl(`?${searchParams.toString()}`));
       return data;
     } catch (_) {
       return null;

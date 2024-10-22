@@ -1,26 +1,35 @@
+import { Language } from "@/types/Language";
+
 export interface ICreateResearch {
-    title:string
-    text:string
-    image:string
+  title: string;
+  text: string;
+  image: string;
+  language: Language;
+}
+
+export interface IUpdateResearch {
+  title: string;
+  text: string;
+  image: string;
 }
 
 export interface ICreateResearchForm {
-    title:string
-    text:string
-    image:FileList
+  title: string;
+  text: string;
+  image: FileList;
 }
 
 export interface IUpdateResearchForm {
-    title:string
-    text:string
-    image:FileList | undefined
+  title: string;
+  text: string;
+  image: FileList | undefined;
 }
 
 export interface IResearch {
-    id:string
-    title:string
-    text:string
-    image:string
-    createAt:string
-    updateAt:string
+  id: string;
+  title: string;
+  text: string;
+  image: string;
+  createAt: string;
+  updateAt: string;
 }

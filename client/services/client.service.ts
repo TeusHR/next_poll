@@ -32,11 +32,15 @@ import { IDevelopments } from "@/types/LaboratoryDevelopments";
 import { IScience } from "@/types/Science";
 import { IStudent } from "@/types/Student";
 import { IInnovation } from "@/types/Innovation";
-import { Language } from "@/types/Language";
-
 export const ResearchWorkService = {
-  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc") {
-    const searchParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), column, order });
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
     try {
       const res = await fetch(`${LOCAL_API_URL}${getResearchWorksUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
@@ -59,8 +63,14 @@ export const ResearchWorkService = {
 };
 
 export const CooperationService = {
-  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc") {
-    const searchParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), column, order });
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
     try {
       const res = await fetch(`${LOCAL_API_URL}${getCooperationsUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
@@ -83,8 +93,14 @@ export const CooperationService = {
 };
 
 export const InnovationService = {
-  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc") {
-    const searchParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), column, order });
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
     try {
       const res = await fetch(`${LOCAL_API_URL}${getInnovationsUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
@@ -127,8 +143,14 @@ export const InnovationService = {
 };
 
 export const InternationalService = {
-  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc") {
-    const searchParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), column, order });
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
     try {
       const res = await fetch(`${LOCAL_API_URL}${getInternationalUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
@@ -171,7 +193,7 @@ export const InternationalService = {
 };
 
 export const ScienceService = {
-  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: Language) {
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
     const searchParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
@@ -201,8 +223,20 @@ export const ScienceService = {
 };
 
 export const LaboratoryService = {
-  async getAllLaboratories(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc") {
-    const searchParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), column, order });
+  async getAllLaboratories(
+    page: number,
+    limit: number,
+    column = "createdAt",
+    order: "asc" | "desc" = "desc",
+    language: string,
+  ) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
     try {
       const res = await fetch(`${LOCAL_API_URL}${getLaboratoryUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
@@ -265,8 +299,14 @@ export const LaboratoryService = {
 };
 
 export const ActivityService = {
-  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc") {
-    const searchParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), column, order });
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
     try {
       const res = await fetch(`${LOCAL_API_URL}${getActivitiesUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
@@ -289,9 +329,12 @@ export const ActivityService = {
 };
 
 export const ConferencesService = {
-  async getAll() {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
     try {
-      const res = await fetch(`${LOCAL_API_URL}${getConferencesUrl("")}`, {
+      const res = await fetch(`${LOCAL_API_URL}${getConferencesUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
         headers: getContentType(),
         next: {
@@ -332,9 +375,12 @@ export const ConferencesService = {
 };
 
 export const ConsultingService = {
-  async getAll() {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
     try {
-      const res = await fetch(`${LOCAL_API_URL}${getConsultingUrl("")}`, {
+      const res = await fetch(`${LOCAL_API_URL}${getConsultingUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
         headers: getContentType(),
         next: {
@@ -355,9 +401,12 @@ export const ConsultingService = {
 };
 
 export const TrainingService = {
-  async getAll() {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
     try {
-      const res = await fetch(`${LOCAL_API_URL}${getTrainingUrl("")}`, {
+      const res = await fetch(`${LOCAL_API_URL}${getTrainingUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
         headers: getContentType(),
         next: {
@@ -398,9 +447,12 @@ export const TrainingService = {
 };
 
 export const DIGAMService = {
-  async getAll() {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
     try {
-      const res = await fetch(`${LOCAL_API_URL}${getDigamUrl("")}`, {
+      const res = await fetch(`${LOCAL_API_URL}${getDigamUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
         headers: getContentType(),
         next: {
@@ -421,9 +473,12 @@ export const DIGAMService = {
 };
 
 export const StudentService = {
-  async getAll() {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
     try {
-      const res = await fetch(`${LOCAL_API_URL}${getStudentUrl("")}`, {
+      const res = await fetch(`${LOCAL_API_URL}${getStudentUrl(`?${searchParams.toString()}`)}`, {
         method: "GET",
         headers: getContentType(),
         next: {

@@ -11,7 +11,7 @@ import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
 import { FileService } from "@/services/file.service";
-import { ICreateInternational, IInternational, IUpdateInternationalForm } from "@/types/International";
+import { IInternational, IUpdateInternational, IUpdateInternationalForm } from "@/types/International";
 import { uploadType } from "../../../innovations/components/InnovationsEdit";
 import revalidateFetch from "@/services/revalidateFetch";
 
@@ -98,7 +98,7 @@ const InternationalEdit: FC<Props> = ({ internationalId }) => {
 
       const existingUrlImages = filesImage.filter((file) => file.typeUpload === "server").map((file) => file.url);
 
-      const dataProduct: ICreateInternational = {
+      const dataProduct: IUpdateInternational = {
         title: dataForm.title,
         text: dataForm.text,
         files: [...existingUrlDocs, ...urlsDocs],

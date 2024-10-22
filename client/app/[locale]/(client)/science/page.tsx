@@ -4,7 +4,6 @@ import DirectItem from "@/components/DirectItem";
 import { ScienceService } from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
 import { Metadata } from "next";
-import { Language } from "@/types/Language";
 
 export const metadata: Metadata = {
   title: "Наукові школи",
@@ -22,7 +21,7 @@ type Props = {
 
 const Science = async ({ params: { locale }, searchParams }: Props) => {
   const currentPage = Number(searchParams?.page) || 1;
-  const science = await ScienceService.getAll(currentPage, 8, "createdAt", undefined, locale.toUpperCase() as Language);
+  const science = await ScienceService.getAll(currentPage, 8, "createdAt", undefined, locale.toUpperCase());
 
   return (
     <div className="xl:container mx-auto my-16 px-8 max-md:px-4">

@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { ICreateInnovation, IInnovation, IUpdateInnovationForm } from "@/types/Innovation";
+import { IInnovation, IUpdateInnovation, IUpdateInnovationForm } from "@/types/Innovation";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { FileToFileList } from "@/utils/FIleToFileList";
@@ -105,7 +105,7 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
 
       const existingUrlImages = filesImage.filter((file) => file.typeUpload === "server").map((file) => file.url);
 
-      const dataProduct: ICreateInnovation = {
+      const dataProduct: IUpdateInnovation = {
         title: dataForm.title,
         text: dataForm.text,
         files: [...existingUrlDocs, ...urlsDocs],
