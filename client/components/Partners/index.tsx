@@ -62,6 +62,7 @@ const Partners = ({}) => {
                 {partnersImage.map((item, index) => <Image
                     key={index}
                     src={item.image}
+                    className={"object-contain"}
                     classNames={{wrapper:'min-w-[200px]'}}
                     as={NextImage}
                     alt={item.alt}
@@ -73,6 +74,7 @@ const Partners = ({}) => {
                 {partnersMain.map((item, index) => <Image
                     key={index}
                     src={item.image}
+                    className={"object-contain"}
                     classNames={{wrapper:'min-w-[200px]'}}
                     as={NextImage}
                     alt={item.alt}
