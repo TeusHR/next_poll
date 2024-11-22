@@ -7,10 +7,11 @@ export type ICellItem = {
     text: string,
     image: string,
     styleImage?: boolean,
+    wrapperStyle?: string,
     link: string
 }
 
-const CellItem = ({text, image, styleImage, link}: ICellItem) => {
+const CellItem = ({text, image, styleImage, link, wrapperStyle}: ICellItem) => {
 
 
     return (
@@ -38,9 +39,12 @@ const CellItem = ({text, image, styleImage, link}: ICellItem) => {
                     <Image
                         src={image}
                         as={NextImage}
-                        alt={"Шолом"}
-                        width={205}
-                        height={205}
+                        classNames={{wrapper:wrapperStyle}}
+                        className={"object-contain"}
+                        alt={text}
+                        fill
+                        // width={205}
+                        // height={205}
                         fetchPriority="high"
                     />
                 </div>
