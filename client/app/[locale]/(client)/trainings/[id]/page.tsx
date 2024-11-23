@@ -4,12 +4,13 @@ import {notFound} from "next/navigation";
 import DetailsPage from "@/components/DetailsPage";
 import {Metadata} from "next";
 import {stripHtml} from "@/utils/StripHtml";
+import { getTranslations } from "next-intl/server";
 
-type Params = { params: { id: string } }
+type Params = { params: { id: string, locale:string } }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const id = params.id
-
+    const t = await getTranslations({locale:params.locale, namespace: 'Page'});
     try {
         const trainings = await TrainingService.get(params.id || '')
         if (!trainings)
@@ -39,9 +40,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         }
     } catch (e) {
         return {
-            title: "Сторінка не знайдена",
+            title: t('notFound'),
             openGraph: {
-                title: 'Сторінка не знайдена',
+                title: t('notFound'),
                 url: `/trainings/${id}/`,
             },
         }

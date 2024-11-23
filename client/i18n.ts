@@ -9,11 +9,12 @@ export default getRequestConfig(async ({requestLocale}) => {
   let locale = await requestLocale;
 
   if (!locale || !LOCALES.includes(locale as any)) {
-    locale = "ua";
+    locale = "uk";
   }
 
   let messages = {
-    ...(await import(`/messages/${locale}/test.json`)).default,
+    ...(await import(`/messages/${locale}/pageTitle.json`)).default,
+    ...(await import(`/messages/${locale}/main.json`)).default,
   }
   try {
     // const apis = await FileService.downloadFile('translation.json')

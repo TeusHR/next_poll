@@ -1,40 +1,41 @@
-import React from "react";
-import Link from "next/link";
+import React, { FC } from "react";
+import { Link } from "@/routing/*";
+import { MainTranslation } from "../../app/[locale]/(client)/page";
 
 interface ILinkListItemLeft {
-  text: string;
+  text: keyof MainTranslation['Main']['scientificBlock'] | keyof MainTranslation['Main']['internationalRelationsBlock'];
   link: string;
   external: boolean;
 }
 
 const ILinkListItemLeft: ILinkListItemLeft[] = [
   {
-    text: "НАУКОВО-ДОСЛІДНИЙ ІНСТИТУТ",
+    text: 'scientificInstitute',
     link: "/nis",
     external: false,
   },
   {
-    text: "КОНСАЛТИНГОВИЙ ЦЕНТР",
+    text: "consultingCenter",
     link: "/consulting-center",
     external: false,
   },
   {
-    text: "НАУКОВО-ДОСЛІДНІ ЛАБОРАТОРІЇ",
+    text: "scientificLaboratories",
     link: "/laboratory",
     external: false,
   },
   {
-    text: "НАУКОВІ ШКОЛИ",
+    text: "scientificSchools",
     link: "/science",
     external: false,
   },
   {
-    text: "СТУДЕНТСЬКА НАУКА",
+    text: "studentScience",
     link: "/studentnau",
     external: false,
   },
   {
-    text: "ІННОВАЦІЙНІ РОЗРОБКИ",
+    text: "innovativeCenter",
     link: "/innovations",
     external: false,
   },
@@ -42,45 +43,49 @@ const ILinkListItemLeft: ILinkListItemLeft[] = [
 
 const ILinkListItemRight: ILinkListItemLeft[] = [
   {
-    text: "ЦЕНТР МІЖНАРОДНОЇ ДІЯЛЬНОСТІ ",
+    text: "centerActivity",
     link: "/pois",
     external: false,
   },
   {
-    text: "ВІДДІЛ МІЖНАРОДНИХ ГРАНТІВ ТА АКАДЕМІЧНОЇ МОБІЛЬНОСТІ",
+    text: "departmentMobility",
     link: "/inout",
     external: false,
   },
   {
-    text: "ЦЕНТР ЛІНГВІСТИЧНОЇ ПІДГОТОВКИ",
-    link: "/langvich-success",
+    text: "linguisticCenter",
+    link: "/language-success",
     external: false,
   },
   {
-    text: "ЦЕНТР УКРАЇНО-ФРАНЦУЗЬКОГО СПІВРОБІТНИЦТВА",
+    text: "internationalFrenchCooperation",
     link: "http://france.ontu.edu.ua/",
     external: true,
   },
   {
-    text: "ЦЕНТР УКРАЇНО-ТУРЕЦЬКОГО СПІВРОБІТНИЦТВА",
+    text: "internationalTurkishCooperation",
     link: "http://ukrturk.ontu.edu.ua/",
     external: true,
   },
   {
-    text: "МІЖНАРОДНІ ПРОЄКТИ",
+    text: "internationalProjects",
     link: "/international",
     external: false,
   },
 ];
 
-const LinkList = ({}) => {
+type Props = {
+  translation:MainTranslation
+}
+
+const LinkList:FC<Props> = ({translation}) => {
   return (
     <div className="w-full flex flex-row max-sm:flex-col px-2 max-sm:gap-12 2xl:gap-x-56 max-2xl:gap-x-40 max-xl:gap-x-12 max-md:gap-x-4">
       <div className="flex flex-col gap-y-8 w-full text-center">
         <div className="uppercase text-4xl max-md:text-2xl font-semibold">
           <div className="relative z-10">
             <span className="relative after:content-[''] after:z-[-1] after:absolute after:top-0 after:left-0 after:w-full after:h-[75%] after:bg-[#99ABA6] after:translate-x-[18px] after:translate-y-[20px] max-sm:after:translate-x-[15px] max-sm:after:translate-y-[13px]">
-              наукова робота
+              {translation.Main.scientificBlock.scientificWork}
             </span>
           </div>
         </div>
@@ -88,10 +93,10 @@ const LinkList = ({}) => {
           <div key={index} className="underline uppercase text-[20px]">
             {item.external ? (
               <a href={item.link} target="_blank" referrerPolicy="no-referrer" rel="noopener noreferrer">
-                {item.text}
+                {translation.Main.scientificBlock[item.text as keyof MainTranslation['Main']['scientificBlock']]}
               </a>
             ) : (
-              <Link href={item.link}>{item.text}</Link>
+              <Link href={item.link}>{translation.Main.scientificBlock[item.text as keyof MainTranslation['Main']['scientificBlock']]}</Link>
             )}
           </div>
         ))}
@@ -100,7 +105,7 @@ const LinkList = ({}) => {
         <div className="uppercase text-4xl max-md:text-2xl font-semibold">
           <div className="relative z-10">
             <span className="relative after:content-[''] after:z-[-1] after:absolute after:top-0 after:left-0 after:w-full after:h-[75%] after:bg-[#99ABA6] after:translate-x-[18px] after:translate-y-[20px] max-sm:after:translate-x-[15px] max-sm:after:translate-y-[13px]">
-              міжнародна діяльність
+             {translation.Main.internationalRelationsBlock.internationalRelations}
             </span>
           </div>
         </div>
@@ -108,10 +113,10 @@ const LinkList = ({}) => {
           <div key={index} className="underline uppercase text-[20px]">
             {item.external ? (
               <a href={item.link} target="_blank" referrerPolicy="no-referrer" rel="noopener noreferrer">
-                {item.text}
+                {translation.Main.internationalRelationsBlock[item.text as keyof MainTranslation['Main']['internationalRelationsBlock']]}
               </a>
             ) : (
-              <Link href={item.link}>{item.text}</Link>
+              <Link href={item.link}>{translation.Main.internationalRelationsBlock[item.text as keyof MainTranslation['Main']['internationalRelationsBlock']]}</Link>
             )}
           </div>
         ))}

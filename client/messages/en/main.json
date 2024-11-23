@@ -1,0 +1,51 @@
+{
+  "Main":   {
+    "scientificBlock": {
+      "scientificWork": "SCIENTIFIC WORK",
+      "scientificInstitute": "SCIENTIFIC AND RESEARCH INSTITUTE",
+      "consultingCenter": "CONSULTING CENTER",
+      "scientificLaboratories": "SCIENTIFIC AND RESEARCH LABORATORIES",
+      "scientificSchools": "SCIENTIFIC SCHOOLS",
+      "studentScience": "STUDENT SCIENCE",
+      "innovativeCenter": "INNOVATIVE DEVELOPMENTS"
+    },
+    "internationalRelationsBlock": {
+      "internationalRelations": "INTERNATIONAL RELATIONS",
+      "centerActivity": "CENTER OF INTERNATIONAL ACTIVITY",
+      "departmentMobility": "DEPARTMENT OF INTERNATIONAL GRANTS AND ACADEMIC MOBILITY",
+      "linguisticCenter": "LINGUISTIC TRAINING CENTER",
+      "internationalFrenchCooperation": "INTERNATIONAL CENTER OF UKRAINIAN-FRENCH COOPERATION",
+      "internationalTurkishCooperation": "INTERNATIONAL CENTER OF UKRAINIAN-TURKISH COOPERATION",
+      "internationalProjects": "INTERNATIONAL PROJECTS"
+    },
+    "carts": {
+      "blackScience": "INTERNATIONAL COMPETITION BLACK SEA SCIENCE",
+      "conferencesCompetitions": "CONFERENCES, SEMINARS AND COMPETITIONS",
+      "directionsCooperation": "DIRECTIONS FOR COOPERATION",
+      "cooperationAgreements": "Cooperation Agreements",
+      "documentTemplates": "Document Templates",
+      "associationsMemberships": "Associations and Memberships",
+      "readMore": "Read more"
+    },
+    "form": {
+      "feedback": "Feedback",
+      "name": "Name",
+      "email": "Mail",
+      "text": "Text",
+      "submit": "Submit",
+      "sent": "Sent",
+      "required": "Required field",
+      "minLength": "Minimum length 3 characters",
+      "maxLength": "Maximum length 50 characters",
+      "error": "Something went wrong",
+      "errorEmail": "Invalid email address"
+    },
+    "footer": {
+      "ontu": "ONTU website",
+      "telegram": "Telegram channel",
+      "youtube": "YouTube Channel",
+      "instagram": "Instagram",
+      "address": "Ukraine, 65039, Odesa, 112, Kanatna St., Room A-109"
+    }
+  }
+}

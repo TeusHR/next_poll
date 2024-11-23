@@ -2,12 +2,15 @@ import React from "react";
 import NextImage from "next/image";
 import { Image } from "@nextui-org/react";
 import Title from "@/UI/Title";
+import { useTranslations } from "next-intl";
 
 const Pois = () => {
+  const titlePage = useTranslations('Page');
+
   return (
     <div className="xl:container xl:mx-auto my-10 px-8 max-md:px-4">
       <div className="flex flex-col gap-10">
-        <Title text="Центр міжнародної діяльності" style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
+        <Title text={titlePage('pois')} style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
         <div className="block max-md:flex max-md:flex-col-reverse max-md:gap-4">
           <div className="flex flex-col gap-4 float-left max-w-[200px] max-md:max-w-full justify-center items-center md:mr-8">
             <Image

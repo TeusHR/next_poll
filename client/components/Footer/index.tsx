@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { FC } from "react";
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";
-import Link from "next/link";
+import { Link } from "@/routing/*";
+import { MainTranslation } from "../../app/[locale]/(client)/page";
 
-const Footer = ({}) => {
+type Props = {
+    translation:MainTranslation['Main']['footer'],
+}
+
+const Footer:FC<Props> = ({translation}) => {
 
 
     return (
@@ -38,13 +43,14 @@ const Footer = ({}) => {
                     <div className="flex flex-col gap-6 max-sm:items-center h-full max-lg:justify-center">
                         <a href="https://ontu.edu.ua/" className="hover:underline" rel="noopener noreferrer"
                            referrerPolicy="no-referrer">
-                            Сайт ОНТУ
+                            {translation.ontu}
                         </a>
                         <a href="tel:+38(048)712-41-79">
                             +38(048)712-41-79
                         </a>
-                        <span className="max-md:text-center">
-                          Україна, 65039, <br /> м. Одеса, вул. Канатна, 112, каб. А-109
+                        <span className="max-md:text-center max-w-[250px]">
+                          {/*Україна, 65039, <br /> м. Одеса, вул. Канатна, 112, каб. А-109*/}
+                            {translation.address}
                         </span>
                     </div>
                     <div className="flex flex-col gap-6 h-full max-lg:justify-center">
@@ -58,7 +64,7 @@ const Footer = ({}) => {
                             />
                             <div>
                                 <Link href="https://t.me/scintONTU">
-                                    Телеграм-канал
+                                    {translation.telegram}
                                     <span className="font-bold"> SCINT</span>
                                 </Link>
                             </div>
@@ -70,7 +76,7 @@ const Footer = ({}) => {
                             </svg>
                             <div>
                                 <Link href="https://www.youtube.com/c/Need2KnowONTU">
-                                    Ютуб канал
+                                    {translation.youtube}
                                 </Link>
                             </div>
                         </div>
@@ -81,7 +87,7 @@ const Footer = ({}) => {
                             </svg>
                             <div>
                                 <Link href="https://www.instagram.com/scint.ontu/">
-                                    Instagram
+                                    {translation.instagram}
                                 </Link>
                             </div>
                         </div>

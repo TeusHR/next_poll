@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+// import {Inter} from "next/font/google";
 import "@/assets/styles/index.scss"
 import 'react-toastify/dist/ReactToastify.css';
 import { LOCALES } from "@/config/constants";
@@ -8,13 +8,15 @@ import {redirect} from "next/navigation";
 import Providers from "../../providers";
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
-
+import {Roboto_Slab} from 'next/font/google';
 
 export function generateStaticParams() {
     return LOCALES.map((locale) => ({locale}));
 }
 
-const inter = Inter({subsets: ["latin"]});
+// const inter = Inter({subsets: ["latin"]});
+const RobotoSlab = Roboto_Slab({subsets: ['latin', 'cyrillic']});
+
 
 export async function generateMetadata(): Promise<Metadata> {
     return {
@@ -56,7 +58,7 @@ export default async function RootLayout({children, params: {locale}}: {
 
     return (
         <html lang={locale}>
-        <body className={inter.className}>
+        <body className={RobotoSlab.className}>
         <NextIntlClientProvider messages={messages}>
             <Providers>
                 {children}

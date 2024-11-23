@@ -1,7 +1,7 @@
 import React from 'react'
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";
-import Link from "next/link";
+import { Link } from "@/routing/*";
 import Search from "@/components/Search";
 
 

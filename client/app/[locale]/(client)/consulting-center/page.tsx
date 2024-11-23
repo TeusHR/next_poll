@@ -3,6 +3,9 @@ import NextImage from "next/image";
 import { Image } from "@nextui-org/react";
 import Document from "@/components/Document";
 import Title from "@/UI/Title";
+import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
+import { Metadata } from "next";
 
 const linkDocument = [
   {
@@ -281,11 +284,26 @@ const linkDocument = [
   },
 ];
 
+export async function generateMetadata(
+  {params}: { params: { locale: string } }
+): Promise<Metadata> {
+  const t = await getTranslations({locale:params.locale, namespace: 'Page'});
+
+  return {
+    title: t('consultingCenter'),
+    openGraph: {
+      url: "/consultingCenter/",
+    },
+  };
+}
+
 const ConsultingCenter = () => {
+  const titlePage = useTranslations('Page');
+
   return (
     <div className="xl:container xl:mx-auto my-10 px-8 max-md:px-4">
       <div className="flex flex-col gap-10">
-        <Title text="Консалтинговий центр НДІ" style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
+        <Title text={titlePage('consultingCenter')} style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
         <div className="flow-root max-md:flex max-md:flex-col-reverse max-md:gap-4">
           <div className="flex flex-col float-left gap-4 max-w-[200px] max-md:max-w-full justify-center items-center md:mr-8">
             <Image

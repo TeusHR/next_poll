@@ -4,13 +4,16 @@ import { Image } from "@nextui-org/react";
 import Title from "@/UI/Title";
 import ReactCountryFlag from "react-country-flag";
 import { Organization, countryOrg, international } from "./data";
+import { useTranslations } from "next-intl";
 
 const InOut = () => {
+  const titlePage = useTranslations('Page');
+
   return (
     <div className="xl:container xl:mx-auto my-10 px-8 max-md:px-4">
       <div className="flex flex-col gap-10">
         <Title
-          text="Відділ міжнародних грантів та академічної мобільності"
+          text={titlePage('inout')}
           style="text-[#111318] text-5xl max-xl:text-3xl font-semibold"
         />
         <div className="flow-root max-md:flex max-md:flex-col-reverse max-md:gap-4">

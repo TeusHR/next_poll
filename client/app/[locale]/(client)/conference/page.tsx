@@ -6,13 +6,27 @@ import ButtonDetails from "@/UI/ButtonDetails";
 import { Metadata } from "next";
 import ReactCountryFlag from "react-country-flag";
 import { getCountryCodeByLabel } from "@/utils/CountrySet";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Заходи",
-  openGraph: {
-    url: "/conference/",
-  },
-};
+// export const metadata: Metadata = {
+//   title: "Заходи",
+//   openGraph: {
+//     url: "/conference/",
+//   },
+// };
+
+export async function generateMetadata(
+  {params}: { params: { locale: string } }
+): Promise<Metadata> {
+  const t = await getTranslations({locale:params.locale, namespace: 'Page'});
+
+  return {
+    title: t('conference'),
+    openGraph: {
+      url: "/conference/",
+    },
+  };
+}
 
 type Props = {
   params: {
@@ -38,11 +52,12 @@ const monthNamesUkr = [
 
 const Conference = async ({ params: { locale } }: Props) => {
   const conferences = await ConferencesService.getAll(locale.toUpperCase());
+  const titlePage = await getTranslations('Page');
 
   return (
     <div className="xl:container mx-auto my-16 px-8 max-md:px-4 flex flex-col gap-14 max-sm:gap-8">
       <Title
-        text="Конференції, семінари та конкурси"
+        text={titlePage('conference')}
         style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"
       />
       <div className="my-16 flex flex-col gap-8">

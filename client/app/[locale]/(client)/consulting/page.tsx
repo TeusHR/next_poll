@@ -6,6 +6,7 @@ import { ConsultingService, TrainingService } from "@/services/client.service";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import NewsItem from "@/components/NewsItem";
+import { getTranslations } from "next-intl/server";
 
 type Props = {
   params: {
@@ -13,23 +14,37 @@ type Props = {
   };
 };
 
-export const metadata: Metadata = {
-  title: "Консалтинговий центр НДІ",
-  openGraph: {
-    url: "/consulting/",
-  },
-};
+// export const metadata: Metadata = {
+//   title: "Консалтинговий центр НДІ",
+//   openGraph: {
+//     url: "/consulting/",
+//   },
+// };
+
+export async function generateMetadata(
+  {params}: { params: { locale: string } }
+): Promise<Metadata> {
+  const t = await getTranslations({locale:params.locale, namespace: 'Page'});
+
+  return {
+    title: t('consulting'),
+    openGraph: {
+      url: "/consulting/",
+    },
+  };
+}
 
 const Consulting: FC<Props> = async ({ params: { locale } }) => {
   const consulting = await ConsultingService.getAll(locale.toUpperCase());
   const training = await TrainingService.getAll(locale.toUpperCase());
+  const titlePage = await getTranslations('Page');
 
   if (consulting === null) return notFound();
 
   return (
     <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
       <div className="flex flex-col gap-14 max-sm:gap-8">
-        <Title text="Консалтинговий центр НДІ" style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
+        <Title text={titlePage('consulting')} style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
         {consulting.images.map((item, index) => (
           <div
             key={`${item.image}-${index}`}

@@ -1,6 +1,7 @@
 import React from "react";
 import Document from "@/components/Document";
 import Title from "@/UI/Title";
+import { useTranslations } from "next-intl";
 
 const linkDocument = [
   {
@@ -32,10 +33,12 @@ const linkDocument = [
 ];
 
 const Studentnau = () => {
+  const titlePage = useTranslations('Page');
+
   return (
     <div className="xl:container xl:mx-auto my-10 px-8 max-md:px-4">
       <div className="flex flex-col gap-10">
-        <Title text="Студентська наука" style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
+        <Title text={titlePage('studentnau')} style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
         <div className="block gap-4 text-base max-md:text-sm text-black">
           <div className="text-center w-full flex items-center justify-center">
             <span className="font-bold">

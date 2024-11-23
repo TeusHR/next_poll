@@ -1,6 +1,6 @@
 'use client'
 import React, {ReactElement, useState} from 'react'
-import Link from "next/link";
+import { Link } from "@/routing/*";
 import {usePathname} from "next/navigation";
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";

@@ -2,6 +2,7 @@ import React from "react";
 import NextImage from "next/image";
 import { Image } from "@nextui-org/react";
 import Title from "@/UI/Title";
+import { useTranslations } from "next-intl";
 
 const courses = [
   {
@@ -82,10 +83,12 @@ const langGallery = [
 ];
 
 const LangvichSuccess = () => {
+  const titlePage = useTranslations('Page');
+
   return (
     <div className="xl:container xl:mx-auto my-10 px-8 max-md:px-4">
       <div className="flex flex-col gap-10">
-        <Title text="Центр лінгвістичної підготовки" style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
+        <Title text={titlePage('languageSuccess')} style="text-[#111318] text-5xl max-xl:text-3xl font-semibold" />
         <div className="flow-root max-md:flex max-md:flex-col-reverse max-md:gap-4">
           <div className="flex flex-col float-left gap-4 max-w-[200px] max-md:max-w-full justify-center items-center md:mr-8">
             <Image

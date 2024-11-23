@@ -2,16 +2,22 @@
 import React, { FC, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import GoogleMap from "@/components/GoogleMap";
+// import GoogleMap from "@/components/GoogleMap";
 import { Input } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import NextImage from "next/image";
 import { Image } from "@nextui-org/react";
 import { IFeedbackForm } from "@/types/Feedback";
 import { FeedbackService } from "@/services/client.service";
-import Link from "next/link";
+import { Link } from "@/routing/*";
+import { MainTranslation } from "../../app/[locale]/(client)/page";
 
-const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
+type Props = {
+  translation:MainTranslation['Main']['form'],
+  apiKey: string
+}
+
+const Feedback: FC<Props> = ({ apiKey, translation }) => {
   const { handleSubmit, control, formState, reset } = useForm<IFeedbackForm>({
     mode: "all",
     defaultValues: {
@@ -39,12 +45,12 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
       FeedbackService.post(data).then((status) => {
         if (status === 201) {
           reset();
-          toast.success("Відправлено");
+          toast.success(translation.sent);
         }
       });
     } catch (error) {
       console.log(error);
-      toast.error("Щось пішло не так");
+      toast.error(translation.error);
     } finally {
       setIsLoading(false);
     }
@@ -58,16 +64,16 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
             <div className="flex h-full flex-col">
               <div className="sm:px-16 px-8 pt-14 w-full min-h-[500px] text-primary">
                 <div className="text-3xl max-sm:text-center sm:text-4xl xl:text-2xl md:text-xl">
-                  <span className="font-semibold">Зворотній зв’язок</span>
+                  <span className="font-semibold">{translation.feedback}</span>
                 </div>
                 <div className="flex flex-col mt-8 gap-4">
                   <Controller
                     name="name"
                     control={control}
                     rules={{
-                      required: "Обов'язкове поле",
-                      minLength: { value: 3, message: "Мінімальна довжина 3 символи" },
-                      maxLength: { value: 50, message: "Максимальна довжина 50 символів" },
+                      required: translation.required,
+                      minLength: { value: 3, message: translation.minLength },
+                      maxLength: { value: 50, message: translation.maxLength },
                     }}
                     render={({ field }) => (
                       <Input
@@ -84,7 +90,7 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
                         variant="underlined"
                         max="50"
                         min="2"
-                        label="Ім’я"
+                        label={translation.name}
                         autoComplete="off"
                         isInvalid={!!formState.errors.name?.message}
                         errorMessage={formState.errors.name?.message}
@@ -95,10 +101,10 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
                     name="email"
                     control={control}
                     rules={{
-                      required: "Обов'язкове поле",
+                      required: translation.required,
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Невірна адреса електронної пошти",
+                        message: translation.errorEmail,
                       },
                     }}
                     render={({ field }) => (
@@ -116,7 +122,7 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
                         key="gmail"
                         max="50"
                         min="2"
-                        label="Пошта"
+                        label={translation.email}
                         autoComplete="off"
                         isInvalid={!!formState.errors.email?.message}
                         errorMessage={formState.errors.email?.message}
@@ -127,9 +133,9 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
                     name="text"
                     control={control}
                     rules={{
-                      required: "Обов'язкове поле",
-                      minLength: { value: 3, message: "Мінімальна довжина 3 символи" },
-                      maxLength: { value: 250, message: "Максимальна довжина 250 символів" },
+                      required: translation.required,
+                      minLength: { value: 3, message: translation.minLength },
+                      maxLength: { value: 50, message: translation.maxLength },
                     }}
                     render={({ field }) => (
                       <Input
@@ -146,7 +152,7 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
                         variant="underlined"
                         max="50"
                         min="2"
-                        label="Текст"
+                        label={translation.text}
                         autoComplete="off"
                         isInvalid={!!formState.errors.text?.message}
                         errorMessage={formState.errors.text?.message}
@@ -163,9 +169,9 @@ const Feedback: FC<{ apiKey: string }> = ({ apiKey }) => {
                   radius="none"
                   type="submit"
                 >
-                  <span className="uppercase text-white sm:text-xl md:text-base">Відправити</span>
+                  <span className="uppercase text-white sm:text-xl md:text-base">{translation.submit}</span>
                   <span>
-                    <Image src={"/image/arrowSubmit.svg"} as={NextImage} alt={"Відправити"} width={24} height={24} />
+                    <Image src={"/image/arrowSubmit.svg"} as={NextImage} alt={translation.submit} width={24} height={24} />
                   </span>
                 </Button>
               </div>

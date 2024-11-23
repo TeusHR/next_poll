@@ -1,0 +1,51 @@
+{
+  "Main":   {
+    "scientificBlock": {
+      "scientificWork": "НАУКОВА РОБОТА",
+      "scientificInstitute": "НАУКОВО-ДОСЛІДНИЙ ІНСТИТУТ",
+      "consultingCenter": "КОНСАЛТИНГОВИЙ ЦЕНТРА",
+      "scientificLaboratories": "НАУКОВО-ДОСЛІДНІ ЛАБОРАТОРІЇ",
+      "scientificSchools": "НАУКОВІ ШКОЛИ",
+      "studentScience": "СТУДЕНТСЬКА НАУКА",
+      "innovativeCenter": "ІННОВАЦІЙНІ РОЗРОБКИ"
+    },
+    "internationalRelationsBlock": {
+      "internationalRelations": "МІЖНАРОДНА ДІЯЛЬНІСТЬ",
+      "centerActivity": "ЦЕНТР МІЖНАРОДНОЇ ДІЯЛЬНОСТІ",
+      "departmentMobility": "ВІДДІЛ МІЖНАРОДНИХ ГРАНТІВ ТА АКАДЕМІЧНОЇ МОБІЛЬНОСТІ",
+      "linguisticCenter": "ЦЕНТР ЛІНГВІСТИЧНОЇ ПІДГОТОВКИ",
+      "internationalFrenchCooperation": "ЦЕНТР УКРАЇНО-ФРАНЦУЗЬКОГО СПІВРОБІТНИЦТВА",
+      "internationalTurkishCooperation": "ЦЕНТР УКРАЇНО-ТУРЕЦЬКОГО СПІВРОБІТНИЦТВА",
+      "internationalProjects": "МІЖНАРОДНІ ПРОЄКТИ"
+    },
+    "carts": {
+      "blackScience": "Міжнародний конкурс Black Sea Science",
+      "conferencesCompetitions": "Конференції, семінари та конкурси",
+      "directionsCooperation": "Напрямки для співпраці",
+      "cooperationAgreements": "Договори про співпрацю",
+      "documentTemplates": "Шаблони документів",
+      "associationsMemberships": "Асоціації та членства",
+      "readMore": "Читати далі"
+    },
+    "form": {
+      "feedback": "Зворотній зв’язок",
+      "name": "Ім’я",
+      "email": "Пошта",
+      "text": "Текст",
+      "submit": "Відправити",
+      "sent": "Відправлено",
+      "required": "Обов'язкове поле",
+      "minLength": "Мінімальна довжина 3 символи",
+      "maxLength": "Максимальна довжина 50 символів",
+      "error": "Щось пішло не так",
+      "errorEmail": "Невірна адреса електронної пошти"
+    },
+    "footer": {
+      "ontu": "Сайт ОНТУ",
+      "telegram": "Телеграм-канал",
+      "youtube": "Ютуб канал",
+      "instagram": "Instagram",
+      "address": "Україна, 65039, м. Одеса, вул. Канатна, 112, каб. А-109"
+    }
+  }
+}

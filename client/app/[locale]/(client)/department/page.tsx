@@ -6,6 +6,7 @@ import { DIGAMService } from "@/services/client.service";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { stripHtml } from "@/utils/StripHtml";
+import { getTranslations } from "next-intl/server";
 
 type Props = {
   params: {
@@ -14,12 +15,13 @@ type Props = {
 };
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+  const t = await getTranslations({locale:locale, namespace: 'Page'});
   try {
     const digam = await DIGAMService.getAll(locale.toUpperCase());
     if (!digam) throw new Error("Could not find digam");
 
     return {
-      title: "Відділ міжнародних грантів та академічної мобільності",
+      title: t('department'),
       description: stripHtml(digam.text, 197),
       openGraph: {
         url: "/department/",
@@ -27,9 +29,9 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     };
   } catch (e) {
     return {
-      title: "Сторінка не знайдена",
+      title: t('notFound'),
       openGraph: {
-        title: "Сторінка не знайдена",
+        title: t('notFound'),
         url: `/department/`,
       },
     };
@@ -38,6 +40,7 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 
 const Department: FC<Props> = async ({ params: { locale } }) => {
   const digam = await DIGAMService.getAll(locale.toUpperCase());
+  const titlePage = await getTranslations('Page');
 
   if (digam === null) return notFound();
 
@@ -45,7 +48,7 @@ const Department: FC<Props> = async ({ params: { locale } }) => {
     <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
       <div className="flex flex-col gap-14 max-sm:gap-8">
         <Title
-          text="Відділ міжнародних грантів та академічної мобільності"
+          text={titlePage('department')}
           style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"
         />
         <div className="text-base" dangerouslySetInnerHTML={{ __html: digam.text }}></div>

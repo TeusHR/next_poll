@@ -3,7 +3,7 @@ import React, {ReactNode, useEffect, useRef, useState} from 'react'
 import {usePathname} from "next/navigation";
 import {useCycle, motion} from "framer-motion";
 import {SIDENAV_ITEMS, SideNavItem} from "@/components/CMS/Sidebar";
-import Link from "next/link";
+import { Link } from "@/routing/*";
 
 type MenuItemWithSubMenuProps = {
     item: SideNavItem;
