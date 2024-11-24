@@ -72,7 +72,7 @@ const Search = ({}) => {
 
     return (
         <>
-            <div className="cursor-pointer" onClick={onOpen}>
+            <div className="cursor-pointer w-[34px]" onClick={onOpen}>
                 <Image src={'/image/search.svg'}
                        alt={'Пошук'}
                        as={NextImage}
