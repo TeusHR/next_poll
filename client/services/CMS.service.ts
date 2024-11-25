@@ -4,7 +4,7 @@ import {
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
-  getDigamUrl,
+  getDigamUrl, getDocumentsUrl,
   getInnovationsUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
@@ -12,7 +12,7 @@ import {
   getResearchWorksUrl,
   getScienceSchoolsUrl,
   getStudentUrl,
-  getTrainingUrl,
+  getTrainingUrl
 } from "@/config/url.config";
 import {
   IConferences,
@@ -33,6 +33,7 @@ import { ICreateInternational, IInternational, IUpdateInternational } from "@/ty
 import { ICreateLaboratory, ILaboratory, IUpdateLaboratory } from "@/types/Laboratory";
 import { ICreateDevelopments, IDevelopments } from "@/types/LaboratoryDevelopments";
 import { ICreateDigam, IDigam } from "@/types/Digam";
+import { ICreateDocuments, IDocuments } from "@/types/Documents";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -120,6 +121,31 @@ export const CooperationService = {
   },
 };
 
+export const DocumentsService = {
+  async getAllDocuments(authAxios: AxiosInstance, page: number, limit: number) {
+    const { data } = await authAxios.get<IResponseMeta<IDocuments[]>>(
+      getDocumentsUrl(`?page=${page}&limit=${limit}`),
+    );
+    return data;
+  },
+  async getDocuments(id: string) {
+    const { data } = await $api.get<IDocuments>(getDocumentsUrl(`/${id}`));
+    return data;
+  },
+  async post(item: ICreateDocuments, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateDocuments>(getDocumentsUrl(""), item);
+    return status;
+  },
+  async updateDocuments(item: IUpdateCooperation, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<ICreateDocuments>(getDocumentsUrl(`/${id}`), item);
+    return status;
+  },
+  async removeDocuments(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getDocumentsUrl(`/${id}`));
+    return status === 200;
+  },
+};
+
 export const ResearchService = {
   async getAllResearch(authAxios: AxiosInstance, page: number, limit: number) {
     const { data } = await authAxios.get<IResponseMeta<IResearch[]>>(
@@ -131,7 +157,7 @@ export const ResearchService = {
     const { data } = await $api.get<IResearch>(getResearchWorksUrl(`/${id}`));
     return data;
   },
-  async postResearch(item: ICreateCooperation, authAxios: AxiosInstance) {
+  async postResearch(item: ICreateResearch, authAxios: AxiosInstance) {
     const { status } = await authAxios.post<ICreateResearch>(getResearchWorksUrl(""), item);
     return status;
   },
@@ -154,7 +180,7 @@ export const ActivityService = {
     const { data } = await $api.get<IActivity>(getActivitiesUrl(`/${id}`));
     return data;
   },
-  async postActivity(item: ICreateCooperation, authAxios: AxiosInstance) {
+  async postActivity(item: ICreateActivity, authAxios: AxiosInstance) {
     const { status } = await authAxios.post<ICreateActivity>(getActivitiesUrl(""), item);
     return status;
   },

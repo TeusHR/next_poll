@@ -1,26 +1,27 @@
-import React, { FC, useCallback, useState } from "react";
+"use client";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { ICreateCooperation, ICreateCooperationForm } from "@/types/Cooperation";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { DocumentsService } from "@/services/CMS.service";
 import { toast } from "react-toastify";
-import { CooperationService } from "@/services/CMS.service";
-import revalidateFetch from "@/services/revalidateFetch";
 import { Button, Input } from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
-import { Language } from "@/types/Language";
+import revalidateFetch from "@/services/revalidateFetch";
+import { IDocuments, IUpdateDocuments } from "@/types/Documents";
 import { uploadType } from "../../../innovations/components/InnovationsEdit";
+import { renderName } from "@/utils/renderName";
 import { FileService } from "@/services/file.service";
 import { FileToFileList } from "@/utils/FIleToFileList";
 import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 
 type Props = {
-  language: Language;
+  documentsId: string;
 };
 
-const CooperationCreateForm: FC<Props> = ({ language }) => {
-  const { handleSubmit, control, formState, reset } = useForm<ICreateCooperationForm>({
+const DocumentsEdit: FC<Props> = ({ documentsId }) => {
+  const { handleSubmit, control, formState, setValue } = useForm<IUpdateDocuments>({
     mode: "all",
     defaultValues: {
       title: "",
@@ -31,14 +32,38 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
   const { status } = useSession();
   const $apiAuth = useAxiosAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [documents, setDocuments] = useState<IDocuments>();
   const [files, setFiles] = useState<uploadType[]>([]);
 
-  const onSubmit: SubmitHandler<ICreateCooperationForm> = async (dataForm) => {
+  useEffect(() => {
+    setIsLoading(true);
+    DocumentsService.getDocuments(documentsId)
+      .then((data) => setDocuments(data))
+      .catch(() => {
+        toast.error("Не знайдено");
+      })
+      .finally(() => setIsLoading(false));
+  }, [documentsId]);
+
+  useEffect(() => {
+    if (documents) {
+      setValue("title", documents.title);
+      setValue("text", documents.text);
+      const serverFiles: uploadType[] = documents.files.map((url) => ({
+        name: renderName(url),
+        typeUpload: "server" as const,
+        type: "file",
+        url: url,
+      }));
+      setFiles(serverFiles);
+    }
+  }, [documents, setValue]);
+
+  const onSubmit: SubmitHandler<IUpdateDocuments> = async (dataForm) => {
     if (toast.isActive("toast-register") || status !== "authenticated") {
       return;
     }
     setIsLoading(true);
-
     const processUpload = async (files: uploadType[], folder: string) => {
       const filteredFiles = files.filter((file) => file.typeUpload === "uploaded").map((file) => file.file as File);
       if (filteredFiles.length === 0) return [];
@@ -55,19 +80,17 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
 
     try {
       const urlsDocs = await processUpload(files, "pdf");
+      const existingUrlDocs = files.filter((file) => file.typeUpload === "server").map((file) => file.url);
 
-      const dataProduct: ICreateCooperation = {
+      const dataProduct: IUpdateDocuments = {
         title: dataForm.title,
         text: dataForm.text,
-        files:urlsDocs,
-        language,
+        files: [...existingUrlDocs, ...urlsDocs],
       };
-
-      const status = await CooperationService.post(dataProduct, $apiAuth);
-      if (status === 201) {
-        await revalidateFetch("cooperation");
-        reset();
-        toast.success("Запис успішно створено");
+      const status = await DocumentsService.updateDocuments(dataProduct, documentsId, $apiAuth);
+      if (status === 200) {
+        await revalidateFetch("documents");
+        toast.success("Запис успішно оновлено");
       }
     } catch (error) {
       console.log(error);
@@ -99,7 +122,7 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col gap-8 w-full">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-12 max-2xl:gap-4 flex-col">
           <div className="flex flex-row max-md:flex-col gap-8 max-lg:gap-4 justify-between">
@@ -190,8 +213,6 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
                             Текст
                           </div>
                           <div className="relative w-full">
-                            {/*<ComponentThatUseEditorJs/>*/}
-
                             <EditorWrapper
                               onChange={field.onChange}
                               description={field.value}
@@ -210,14 +231,14 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
             </div>
             <div className="flex justify-center items-center">
               <Button type={"submit"} isLoading={isLoading} className="px-6 bg-fd text-xl">
-                Створити
+                Оновити
               </Button>
             </div>
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 
-export default CooperationCreateForm;
+export default DocumentsEdit;

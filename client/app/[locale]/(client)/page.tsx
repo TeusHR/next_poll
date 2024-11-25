@@ -6,7 +6,7 @@ import Feedback from "@/components/Feedback";
 import {setRequestLocale} from 'next-intl/server';
 import { Link } from "@/routing/*";
 import { GetTranslationsForJson } from "@/utils/getTranslationKeys";
-import mainJson from '@/messages/uk/main.json'
+import mainJson from '@/messages/ua/main.json'
 
 const cellItemsRow: ICellItem[] = [
     {

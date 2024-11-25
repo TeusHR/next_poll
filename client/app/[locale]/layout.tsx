@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
             },
             description: 'Офіційний сайт ОНТУ: наукова робота, міжнародні програми, конференції, семінари...',
             siteName: "SCINT ONTU",
-            locale: 'uk',
+            locale: 'ua',
             type: "website",
             images: {
                 url: "/image/logo.svg",

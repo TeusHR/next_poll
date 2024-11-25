@@ -9,7 +9,7 @@ export default getRequestConfig(async ({requestLocale}) => {
   let locale = await requestLocale;
 
   if (!locale || !LOCALES.includes(locale as any)) {
-    locale = "uk";
+    locale = "ua";
   }
 
   let messages = {

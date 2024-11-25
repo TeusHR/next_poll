@@ -14,6 +14,7 @@ import { FileService } from "@/services/file.service";
 import { IInternational, IUpdateInternational, IUpdateInternationalForm } from "@/types/International";
 import { uploadType } from "../../../innovations/components/InnovationsEdit";
 import revalidateFetch from "@/services/revalidateFetch";
+import { renderName } from "@/utils/renderName";
 
 type Props = {
   internationalId: string;
@@ -65,10 +66,6 @@ const InternationalEdit: FC<Props> = ({ internationalId }) => {
       setFilesImage(serverImage);
     }
   }, [international, setValue]);
-
-  const renderName = (fileName: string): string => {
-    return fileName.replace("/uploads/pdf/", "").replace("/uploads/image/", "");
-  };
 
   const onSubmit: SubmitHandler<IUpdateInternationalForm> = async (dataForm) => {
     if (toast.isActive("toast-register") || status !== "authenticated") {

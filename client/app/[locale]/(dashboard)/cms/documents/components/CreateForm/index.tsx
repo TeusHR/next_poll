@@ -1,14 +1,14 @@
 import React, { FC, useCallback, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { ICreateCooperation, ICreateCooperationForm } from "@/types/Cooperation";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { toast } from "react-toastify";
-import { CooperationService } from "@/services/CMS.service";
+import { DocumentsService } from "@/services/CMS.service";
 import revalidateFetch from "@/services/revalidateFetch";
 import { Button, Input } from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import { Language } from "@/types/Language";
+import { ICreateDocuments, ICreateDocumentsForm } from "@/types/Documents";
 import { uploadType } from "../../../innovations/components/InnovationsEdit";
 import { FileService } from "@/services/file.service";
 import { FileToFileList } from "@/utils/FIleToFileList";
@@ -19,8 +19,8 @@ type Props = {
   language: Language;
 };
 
-const CooperationCreateForm: FC<Props> = ({ language }) => {
-  const { handleSubmit, control, formState, reset } = useForm<ICreateCooperationForm>({
+const DocumentsCreateForm: FC<Props> = ({ language }) => {
+  const { handleSubmit, control, formState, reset } = useForm<ICreateDocumentsForm>({
     mode: "all",
     defaultValues: {
       title: "",
@@ -33,7 +33,7 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState<uploadType[]>([]);
 
-  const onSubmit: SubmitHandler<ICreateCooperationForm> = async (dataForm) => {
+  const onSubmit: SubmitHandler<ICreateDocumentsForm> = async (dataForm) => {
     if (toast.isActive("toast-register") || status !== "authenticated") {
       return;
     }
@@ -56,16 +56,17 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
     try {
       const urlsDocs = await processUpload(files, "pdf");
 
-      const dataProduct: ICreateCooperation = {
+      const dataProduct: ICreateDocuments = {
         title: dataForm.title,
         text: dataForm.text,
         files:urlsDocs,
         language,
       };
 
-      const status = await CooperationService.post(dataProduct, $apiAuth);
+      const status = await DocumentsService.post(dataProduct, $apiAuth);
       if (status === 201) {
-        await revalidateFetch("cooperation");
+        await revalidateFetch("documents");
+        setFiles([]);
         reset();
         toast.success("Запис успішно створено");
       }
@@ -220,4 +221,4 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
   );
 };
 
-export default CooperationCreateForm;
+export default DocumentsCreateForm;

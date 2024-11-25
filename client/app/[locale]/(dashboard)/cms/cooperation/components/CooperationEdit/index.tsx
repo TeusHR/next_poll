@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -9,6 +9,11 @@ import { Button, Input } from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
 import { ICooperation, ICreateCooperationForm, IUpdateCooperation } from "@/types/Cooperation";
 import revalidateFetch from "@/services/revalidateFetch";
+import { uploadType } from "../../../innovations/components/InnovationsEdit";
+import { FileService } from "@/services/file.service";
+import { FileToFileList } from "@/utils/FIleToFileList";
+import DNDUpload from "@/components/DNDFiles";
+import PreviewUpload from "@/components/DNDFiles/previewUpload";
 
 type Props = {
   cooperationId: string;
@@ -27,6 +32,7 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
   const $apiAuth = useAxiosAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [cooperation, setCooperation] = useState<ICooperation>();
+  const [files, setFiles] = useState<uploadType[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,10 +56,29 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
       return;
     }
     setIsLoading(true);
+
+    const processUpload = async (files: uploadType[], folder: string) => {
+      const filteredFiles = files.filter((file) => file.typeUpload === "uploaded").map((file) => file.file as File);
+      if (filteredFiles.length === 0) return [];
+
+      const paths = await FileService.upload($apiAuth, FileToFileList(filteredFiles), folder);
+      if (paths.length === 0) {
+        toast.error("Файли не збережені, щось не так.");
+        setIsLoading(false);
+        return [];
+      }
+
+      return paths.map((file) => file.url);
+    };
+
     try {
+      const urlsDocs = await processUpload(files, "pdf");
+      const existingUrlDocs = files.filter((file) => file.typeUpload === "server").map((file) => file.url);
+
       const dataProduct: IUpdateCooperation = {
         title: dataForm.title,
         text: dataForm.text,
+        files: [...existingUrlDocs, ...urlsDocs],
       };
       const status = await CooperationService.updateCooperation(dataProduct, cooperationId, $apiAuth);
       if (status === 200) {
@@ -67,6 +92,27 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
       setIsLoading(false);
     }
   };
+
+  const handleUpload = useCallback(
+    async (uploadedFiles: File[], type: "file" | "image") => {
+
+      const newFiles: uploadType[] = uploadedFiles.map((file) => ({
+        name: file.name,
+        typeUpload: "uploaded" as const,
+        type: type,
+        file,
+        url: file.name,
+      }));
+
+      setFiles((prev) => [...prev, ...newFiles]);
+    },
+
+    [],
+  );
+
+  const handleRemove = useCallback((index: number, type: "file" | "image") => {
+    setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
+  }, []);
 
   return (
     <div className="flex flex-col gap-8 w-full">
@@ -83,7 +129,7 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
                       rules={{
                         required: "Обов'язкове поле",
                         minLength: { value: 3, message: "Мінімальна довжина 3 символи" },
-                        maxLength: { value: 500, message: "Максимальна довжина 500 символів" },
+                        maxLength: { value: 500, message: "Максимальна довжина 500 символів" }
                       }}
                       render={({ field }) => (
                         <Input
@@ -96,7 +142,7 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
                             inputWrapper: "border-1 border-primary-500",
                             input: "focus:outline-none text-base text-primary",
                             errorMessage: "text-red-600 text-sm",
-                            label: "text-base",
+                            label: "text-base"
                           }}
                           key="title"
                           label="Назва"
@@ -108,6 +154,34 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
                         />
                       )}
                     />
+                    <div className="flex flex-col gap-4 w-full relative justify-end">
+                      <Controller
+                        name="files"
+                        control={control}
+                        render={({ field }) => (
+                          <div className="w-full">
+                            <div
+                              className={`text-brand-gray-200 max-xl:!text-sm ${formState.errors.files?.message ? "text-red-600" : ""}`}
+                            >
+                              Завантаження документів
+                            </div>
+                            <DNDUpload
+                              onUpload={(files) => handleUpload(files, "file")}
+                              onChange={field.onChange}
+                              styleContainer="w-full mt-2 relative h-[125px] max-sm:h-[100px] flex items-center justify-center text-2xl max-sm:text-base border-2 border-primary border-dashed"
+                            >
+                              Скинь мені файли
+                            </DNDUpload>
+                            {formState.errors.files?.message && (
+                              <div className="text-red-600 text-sm">{formState.errors.files.message}</div>
+                            )}
+                          </div>
+                        )}
+                      />
+                      <div className="w-full flex flex-col gap-4 items-start">
+                        <PreviewUpload files={files} handleRemoveFile={(index) => handleRemove(index, "file")} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -122,7 +196,7 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
                       name="text"
                       control={control}
                       rules={{
-                        required: "Обов'язкове поле",
+                        required: "Обов'язкове поле"
                       }}
                       render={({ field }) => (
                         <>

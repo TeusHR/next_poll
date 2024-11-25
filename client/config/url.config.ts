@@ -8,6 +8,8 @@ export const getFeedBackUrl = (str: string) => `/feedback${str}`
 
 export const getCooperationsUrl = (str: string) => `/cooperations${str}`
 
+export const getDocumentsUrl = (str: string) => `/documents${str}`
+
 export const getConsultingUrl = (str: string) => `/consulting${str}`
 
 export const getTrainingUrl = (str: string) => `/trainings${str}`

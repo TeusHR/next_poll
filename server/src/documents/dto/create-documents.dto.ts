@@ -2,7 +2,7 @@ import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Transform } from "class-transformer";
 import { Language } from "@prisma/client";
 
-export class CreateCooperationDto {
+export class CreateDocumentsDto {
   @IsString()
   @Transform(({ value }) => value?.toString().trim())
   @IsNotEmpty()

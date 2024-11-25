@@ -1,29 +1,29 @@
 import { Language } from "@/types/Language";
 
-export interface ICreateCooperation {
+export interface ICreateDocuments {
   title: string;
   text: string;
-  files:string[],
+  files: string[];
   language: Language;
 }
 
-export interface IUpdateCooperation {
+export interface IUpdateDocuments {
   title: string;
   text: string;
-  files:string[],
+  files: string[];
 }
 
-export interface ICreateCooperationForm {
+export interface ICreateDocumentsForm {
   title: string;
   text: string;
-  files:FileList,
+  files: FileList;
 }
 
-export interface ICooperation {
+export interface IDocuments {
   id: string;
   title: string;
   text: string;
-  files:string[],
+  files: string[];
   createdAt: string;
   updatedAt: string;
 }

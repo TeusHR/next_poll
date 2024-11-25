@@ -5,7 +5,7 @@ import {
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
-  getDigamUrl,
+  getDigamUrl, getDocumentsUrl,
   getFeedBackUrl,
   getInnovationsUrl,
   getInternationalUrl,
@@ -14,7 +14,7 @@ import {
   getResearchWorksUrl,
   getScienceSchoolsUrl,
   getStudentUrl,
-  getTrainingUrl,
+  getTrainingUrl
 } from "@/config/url.config";
 import { $api } from "@/api/interceptors";
 import { IFeedbackForm } from "@/types/Feedback";
@@ -32,6 +32,7 @@ import { IDevelopments } from "@/types/LaboratoryDevelopments";
 import { IScience } from "@/types/Science";
 import { IStudent } from "@/types/Student";
 import { IInnovation } from "@/types/Innovation";
+import { IDocuments } from "@/types/Documents";
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
     const searchParams = new URLSearchParams({
@@ -88,6 +89,36 @@ export const CooperationService = {
       return data;
     } catch (e) {
       return getEmptyResponse<ICooperation>();
+    }
+  },
+};
+
+export const DocumentsService = {
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getDocumentsUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["documents"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IResponseMeta<IDocuments[]> = await res.json();
+
+      return data;
+    } catch (e) {
+      return getEmptyResponse<IDocuments>();
     }
   },
 };

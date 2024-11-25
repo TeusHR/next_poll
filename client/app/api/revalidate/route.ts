@@ -16,6 +16,7 @@ export async function GET(_req: NextRequest) {
             'training',
             'digam',
             'studentScience',
+            'documents',
         ];
 
         for (const tag of tags) {

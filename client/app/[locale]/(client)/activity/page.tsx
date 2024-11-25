@@ -4,7 +4,7 @@ import NewsItem from "@/components/NewsItem";
 import { ActivityService } from "@/services/client.service";
 import PaginationCustom from "@/components/Pagination";
 import { Metadata } from "next";
-import pageTitle from '@/messages/uk/pageTitle.json'
+import pageTitle from '@/messages/ua/pageTitle.json'
 import {getTranslations} from 'next-intl/server';
 
 // export const metadata: Metadata = {

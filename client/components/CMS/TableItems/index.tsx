@@ -23,11 +23,11 @@ import {AxiosInstance} from 'axios';
 import {StringConferenceType} from '@/utils/ConferenceType';
 import {
     ActivityService,
-    ConferencesService,
-    CooperationService,
+    ConferencesService, CooperationService,
+    DocumentsService,
     InnovationsService, InternationalService, LaboratoryService,
-    ResearchService, ScienceService,
-} from '@/services/CMS.service';
+    ResearchService, ScienceService
+} from "@/services/CMS.service";
 import {toast} from 'react-toastify';
 import {IConsulting} from '@/types/Consulting';
 import {ICooperation} from '@/types/Cooperation';
@@ -39,6 +39,7 @@ import {IInternational} from '@/types/International';
 import {ILaboratory} from '@/types/Laboratory';
 import {IScience} from '@/types/Science';
 import revalidateFetch from '@/services/revalidateFetch';
+import { IDocuments } from "@/types/Documents";
 
 type Props<T> = {
     dataItems: T[]
@@ -69,6 +70,7 @@ type ValidDataTypes =
     | IInnovation
     | ILaboratory
     | IInternational
+    | IDocuments
     | IScience;
 
 const TableItems = <T extends ValidDataTypes>(
@@ -309,6 +311,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
             } else if (typeProduct === 'cooperation') {
                 await CooperationService.removeCooperation(idItem, apiAuth);
                 await revalidateFetch('cooperation');
+            } else if (typeProduct === 'documents') {
+                await DocumentsService.removeDocuments(idItem, apiAuth);
+                await revalidateFetch('documents');
             } else if (typeProduct === 'science') {
                 await ScienceService.removeScience(idItem, apiAuth);
                 await revalidateFetch('science');

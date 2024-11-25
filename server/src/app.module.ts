@@ -24,6 +24,7 @@ import { LaboratoryDevelopmentModule } from "./laboratory-development/laboratory
 import { DIGAMModule } from "./digam/digam.module";
 import { ConsultingModule } from "./consulting/consulting.module";
 import { TrainingModule } from "./training/training.module";
+import { DocumentsModule } from "./documents/documents.module";
 import { PrismaService } from "./prisma.service";
 
 @Module({
@@ -67,6 +68,7 @@ import { PrismaService } from "./prisma.service";
     ConferenceModule,
     ScienceSchoolModule,
     CooperationModule,
+    DocumentsModule,
     ResearchWorkModule,
     ActivityModule,
     InnovationModule,

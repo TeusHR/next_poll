@@ -2,7 +2,7 @@ import React, {ReactNode} from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { GetTranslationsForJson } from "@/utils/getTranslationKeys";
-import mainJson from "@/messages/uk/main.json";
+import mainJson from "@/messages/ua/main.json";
 import { MainTranslation } from "./page";
 
 export default function LocaleLayout({children, params}: {

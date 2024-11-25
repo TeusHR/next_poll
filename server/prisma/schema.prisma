@@ -46,6 +46,7 @@ model Cooperation {
   id       String   @id @default(uuid())
   title    String
   text     String
+  files    String[] @default([])
   language Language @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
@@ -179,6 +180,18 @@ model Training {
   title    String
   text     String
   images   String[] @default([])
+  files    String[] @default([])
+  language Language @default(UA)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+// Шаблони документів
+model Documents {
+  id       String   @id @default(uuid())
+  title    String
+  text     String
   files    String[] @default([])
   language Language @default(UA)
 

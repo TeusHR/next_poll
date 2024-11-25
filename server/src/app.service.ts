@@ -96,6 +96,14 @@ export class AppService {
       take: 5,
     });
 
+    const documents = await this.prismaService.documents.findMany({
+      where: {
+        OR: [{ title: { contains: search } }, { text: { contains: search } }],
+        language,
+      },
+      take: 5,
+    });
+
     return this.formatSearch({
       conferences,
       cooperations,
@@ -107,6 +115,7 @@ export class AppService {
       scienceSchools,
       internationalProjects,
       trainings,
+      documents,
     });
   }
 
