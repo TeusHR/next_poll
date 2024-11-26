@@ -29,15 +29,15 @@ const cellItemsRow: ICellItem[] = [
 const cellItemsRowTwo = [
   {
     text: 'cooperationAgreements',
-    link: '/'
+    link: '/agreements'
   },
   {
     text: 'documentTemplates',
-    link: '/'
+    link: '/documents'
   },
   {
     text: 'associationsMemberships',
-    link: '/'
+    link: '/associations'
   }
 ]
 

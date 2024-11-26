@@ -37,8 +37,16 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/cooperation',
     },
     {
-        title: 'Шаблони документів  ',
+        title: 'Шаблони документів',
         path: '/cms/documents',
+    },
+    {
+        title: 'Договори про співпрацю',
+        path: '/cms/agreements',
+    },
+    {
+        title: 'Асоціації та членства',
+        path: '/cms/associations',
     },
     {
         title: 'Наукові школи',

@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
 import {
-  getActivitiesUrl, getAssociationsUrl,
+  getActivitiesUrl, getAgreementsUrl, getAssociationsUrl,
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
@@ -35,6 +35,7 @@ import { ICreateDevelopments, IDevelopments } from "@/types/LaboratoryDevelopmen
 import { ICreateDigam, IDigam } from "@/types/Digam";
 import { ICreateDocuments, IDocuments } from "@/types/Documents";
 import { IAssociations, ICreateAssociations } from "@/types/Associations";
+import { IAgreements, ICreateAgreements } from "@/types/Agreements";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -331,6 +332,24 @@ export const DigamService = {
   },
   async postDigam(item: ICreateDigam, authAxios: AxiosInstance) {
     const { status } = await authAxios.post<ICreateDigam>(getDigamUrl(""), item);
+    return status;
+  },
+};
+
+export const AgreementsService = {
+  async getAgreements(authAxios: AxiosInstance, language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    try {
+      const { data } = await authAxios.get<IAgreements>(getAgreementsUrl(`?${searchParams.toString()}`));
+      return data;
+    } catch (_) {
+      return null;
+    }
+  },
+  async postAgreements(item: ICreateAgreements, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateAgreements>(getAgreementsUrl(""), item);
     return status;
   },
 };

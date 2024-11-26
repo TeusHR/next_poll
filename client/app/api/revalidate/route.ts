@@ -17,6 +17,8 @@ export async function GET(_req: NextRequest) {
             'digam',
             'studentScience',
             'documents',
+            'associations',
+            'agreements',
         ];
 
         for (const tag of tags) {

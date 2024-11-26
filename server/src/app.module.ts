@@ -26,6 +26,7 @@ import { ConsultingModule } from "./consulting/consulting.module";
 import { TrainingModule } from "./training/training.module";
 import { DocumentsModule } from "./documents/documents.module";
 import { AssociationsModule } from "./associations/associations.module";
+import { AgreementsModule } from "./agreements/agreements.module";
 import { PrismaService } from "./prisma.service";
 
 @Module({
@@ -81,6 +82,7 @@ import { PrismaService } from "./prisma.service";
     DIGAMModule,
     AssociationsModule,
     ConsultingModule,
+    AgreementsModule,
     TrainingModule,
   ],
   controllers: [AppController],

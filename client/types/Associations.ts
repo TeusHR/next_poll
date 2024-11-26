@@ -16,7 +16,7 @@ export interface ICreateAssociations {
 export interface IOrganizations {
   image: string;
   title: string;
-  files: string[];
+  files?: string[];
   link: string;
 }
 

@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios";
 import { IConferences, IResponseMeta } from "@/types/Conference";
 import {
-  getActivitiesUrl,
+  getActivitiesUrl, getAgreementsUrl, getAssociationsUrl,
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
@@ -33,6 +33,9 @@ import { IScience } from "@/types/Science";
 import { IStudent } from "@/types/Student";
 import { IInnovation } from "@/types/Innovation";
 import { IDocuments } from "@/types/Documents";
+import { IAssociations } from "@/types/Associations";
+
+import { IAgreements } from "@/types/Agreements";
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
     const searchParams = new URLSearchParams({
@@ -495,6 +498,58 @@ export const DIGAMService = {
       if (!res.ok) throw new Error("Failed to fetch data");
 
       const data: IDigam = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
+
+export const AssociationService = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getAssociationsUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["associations"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IAssociations = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
+
+export const AgreementsService = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getAgreementsUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["agreements"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IAgreements = await res.json();
 
       return data;
     } catch (e) {

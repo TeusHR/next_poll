@@ -53,12 +53,12 @@ const AssociationsFormCreate: FC<Props> = ({ associations, language }) => {
       setValue("organizations", organizations);
 
       const serverFilesOrganizations: uploadType[][] = associations.organizations.map((organization) =>
-        organization.files.map((fileUrl) => ({
+        organization.files?.map((fileUrl) => ({
           name: renderName(fileUrl),
           typeUpload: "server" as const,
           type: "file",
           url: fileUrl,
-        }))
+        })) || []
       );
       setFilesOrganizations(serverFilesOrganizations);
 
@@ -102,14 +102,6 @@ const AssociationsFormCreate: FC<Props> = ({ associations, language }) => {
       const existingUrlImages = files.filter((file) => file.typeUpload === "server").map((file) => file.url);
 
       const collection = [...existingUrlImages, ...urlsImage];
-      // const organizations: IOrganizations[] = dataForm.organizations.map((item, idx) => {
-      //   return {
-      //     image: collection[idx],
-      //     title: item.title,
-      //     link: item.link,
-      //     files:[],
-      //   };
-      // });
 
       const organizations: IOrganizations[] = await Promise.all(
         dataForm.organizations.map(async (item, idx) => {
@@ -130,19 +122,15 @@ const AssociationsFormCreate: FC<Props> = ({ associations, language }) => {
         })
       );
 
-
-
       const dataProduct: ICreateAssociations = {
         organizations: organizations,
         language,
       };
 
-      console.log(dataProduct);
-
       const status = await AssociationsService.postAssociations(dataProduct, $apiAuth);
 
       if (status === 201) {
-        await revalidateFetch("digam");
+        await revalidateFetch("associations");
         toast.success("Дані оновлено");
       }
     } catch (error) {

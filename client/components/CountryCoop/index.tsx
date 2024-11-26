@@ -1,12 +1,14 @@
 import React, {FC} from 'react'
 import Title from "@/components/UI/Title";
-import {IForeignUniversities} from "@/types/Digam";
+import { IForeignUniversities } from "@/types/Agreements";
+import Document from "@/components/Document";
 
 type Props = {
-    foreignUniversities: IForeignUniversities
+    foreignUniversities: IForeignUniversities,
+    title:string,
 }
 
-const CountryCoop: FC<Props> = ({foreignUniversities}) => {
+const CountryCoop: FC<Props> = ({foreignUniversities, title}) => {
 
 
     return (
@@ -14,7 +16,7 @@ const CountryCoop: FC<Props> = ({foreignUniversities}) => {
             {Object.entries(foreignUniversities).length > 0 &&
                 <>
                     <Title
-                        text="В даний час діють угоди про співробітництво ОНТУ з наступними закордонними університетами та організаціями:"
+                        text={title}
                         style="text-[#111318] text-4xl max-xl:text-2xl max-sm:text-xl font-semibold"/>
 
                     {Object.entries(foreignUniversities).map(([country, universities]) => (
@@ -25,15 +27,21 @@ const CountryCoop: FC<Props> = ({foreignUniversities}) => {
                                 style={{WebkitTextStroke: "2px black", WebkitTextFillColor: "transparent"}}>
                                 {country}
                             </div>
-                            <div className="flex flex-col gap-16 max-md:gap-10 max-sm:gap-8 text-base">
+                            <div className="flex flex-col gap-16 max-md:gap-10 max-sm:gap-8 text-base w-full">
                                 {universities.map((universities, index) => (
                                     <div key={`${country}-${universities.title}-${index}`}
                                          className="flex flex-col gap-8 max-md:gap-6">
                                         <Title
                                             text={universities.title}
                                             style="text-[#111318] text-4xl max-xl:text-2xl max-sm:text-xl font-semibold"/>
-                                        <div>
-                                            {universities.description}
+                                        <div className="flex flex-row gap-4 justify-between">
+                                            <span>
+                                                {universities.description}
+                                            </span>
+                                            {universities.files &&
+                                              <span className="flex flex-col gap-3 relative w-max">
+                                                  {universities.files.map(item => (<Document key={item} link={item} />))}
+                                              </span>}
                                         </div>
                                     </div>))}
                             </div>
