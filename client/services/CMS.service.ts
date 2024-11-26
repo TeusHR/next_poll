@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
 import {
-  getActivitiesUrl,
+  getActivitiesUrl, getAssociationsUrl,
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
@@ -34,6 +34,7 @@ import { ICreateLaboratory, ILaboratory, IUpdateLaboratory } from "@/types/Labor
 import { ICreateDevelopments, IDevelopments } from "@/types/LaboratoryDevelopments";
 import { ICreateDigam, IDigam } from "@/types/Digam";
 import { ICreateDocuments, IDocuments } from "@/types/Documents";
+import { IAssociations, ICreateAssociations } from "@/types/Associations";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -330,6 +331,24 @@ export const DigamService = {
   },
   async postDigam(item: ICreateDigam, authAxios: AxiosInstance) {
     const { status } = await authAxios.post<ICreateDigam>(getDigamUrl(""), item);
+    return status;
+  },
+};
+
+export const AssociationsService = {
+  async getAssociations(authAxios: AxiosInstance, language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    try {
+      const { data } = await authAxios.get<IAssociations>(getAssociationsUrl(`?${searchParams.toString()}`));
+      return data;
+    } catch (_) {
+      return null;
+    }
+  },
+  async postAssociations(item: ICreateAssociations, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateAssociations>(getAssociationsUrl(""), item);
     return status;
   },
 };

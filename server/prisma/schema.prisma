@@ -164,6 +164,26 @@ model DIGAM {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
+// Асоціації та членства
+model Associations {
+  id            String   @id @default(uuid())
+  organizations Json[]   @default([]) // {image: string, title: string, link: string, files:string[]}[]
+  language      Language @default(UA)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+// Договори про співпрацю
+model CooperationAgreements {
+  id                  String   @id @default(uuid())
+  foreignUniversities Json[]   @default([]) // {country: string, title: string, description: string, files:string[]}[]
+  language            Language @default(UA)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
 model Consulting {
   id       String   @id @default(uuid())
   title    String
