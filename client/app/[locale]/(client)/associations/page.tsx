@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import Title from "@/UI/Title";
 import MemberOrganizations from "@/components/MemberOrganizations";
 import { AssociationService } from "@/services/client.service";
-import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -26,9 +25,9 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     };
   } catch (e) {
     return {
-      title: t('notFound'),
+      title: t('associations'),
       openGraph: {
-        title: t('notFound'),
+        title: t('associations'),
         url: `/associations/`,
       },
     };
@@ -39,7 +38,7 @@ const Associations: FC<Props> = async ({ params: { locale } }) => {
   const associations = await AssociationService.getAll(locale.toUpperCase());
   const titlePage = await getTranslations('Page');
 
-  if (associations === null) return notFound();
+  // if (associations === null) return notFound();
 
   return (
     <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
@@ -48,7 +47,7 @@ const Associations: FC<Props> = async ({ params: { locale } }) => {
           text={titlePage('associations')}
           style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"
         />
-        <MemberOrganizations organizations={associations.organizations} title={titlePage('memberOrganizations')}/>
+        {associations && <MemberOrganizations organizations={associations.organizations} title={titlePage("memberOrganizations")} />}
       </div>
     </div>
   );

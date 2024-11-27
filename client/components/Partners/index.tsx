@@ -20,10 +20,10 @@ const partnersImage:IPartners[] = [
         image:'/image/eua.png',
         alt:'EUA'
     },
-    {
-        image:'/image/eua2.png',
-        alt:'EUA'
-    },
+    // {
+    //     image:'/image/eua2.png',
+    //     alt:'EUA'
+    // },
     {
         image:'/image/eramus.png',
         alt:'Erasmus+'
