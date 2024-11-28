@@ -5,16 +5,21 @@ import { Link } from "@/routing/*";
 import Search from "@/components/Search";
 import SwitchLanguage from "@/components/SwitchLanguage";
 import MargueeComponent from "@/components/Marguee";
+import { useTranslations } from "next-intl";
 
 type Props = {
   params: { locale: string }
 }
 
-const Header = ({params: {locale}}:Props) => (
+const Header = ({params: {locale}}:Props) => {
+
+  const t = useTranslations('Page');
+
+  return (
   <div className="flex flex-col">
     <div className="w-full h-[50px] bg-[#2E2C39] wrapper">
       <div className="w-full flex flex-row gap-4 h-full items-center justify-center uppercase font-base animated-text-strip">
-        <MargueeComponent/>
+        <MargueeComponent translate={t('technicalWork')}/>
       </div>
     </div>
     <header
@@ -59,6 +64,6 @@ const Header = ({params: {locale}}:Props) => (
       </div>
     </header>
   </div>
-)
+)}
 
 export default Header;
