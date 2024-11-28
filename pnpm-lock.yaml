@@ -57,6 +57,9 @@ importers:
       '@tiptap/extension-link':
         specifier: ^2.5.8
         version: 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
+      '@tiptap/extension-list-item':
+        specifier: ^2.10.2
+        version: 2.10.2(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))
       '@tiptap/extension-paragraph':
         specifier: ^2.5.8
         version: 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))
@@ -123,6 +126,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-fast-marquee:
+        specifier: ^1.6.5
+        version: 1.6.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-hook-form:
         specifier: ^7.51.2
         version: 7.51.3(react@18.3.1)
@@ -145,6 +151,9 @@ importers:
         specifier: ^6.3.7
         version: 6.3.7
     devDependencies:
+      '@tiptap/extension-bullet-list':
+        specifier: ^2.10.2
+        version: 2.10.2(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))
       '@tiptap/extension-document':
         specifier: ^2.5.8
         version: 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))
@@ -2281,6 +2290,11 @@ packages:
       '@tiptap/core': ^2.5.8
       '@tiptap/pm': ^2.5.8
 
+  '@tiptap/extension-bullet-list@2.10.2':
+    resolution: {integrity: sha512-jXtTQXZ3j2cyG2dNyVnGauIbsX8CmDY56MJfDg1p+1UZ3zW2GVbKHfvyuulsjobxEd0DNLxduGqbkDY7x3I+HA==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
+
   '@tiptap/extension-color@2.5.8':
     resolution: {integrity: sha512-XId+CbRqkgyvbeJunnL3E0EF4/dpolj6gy6AITk9CyghLNBHegOaz+AmECO9+i1Zbpituv00Nh8KUrGlVI6aOA==}
     peerDependencies:
@@ -2313,6 +2327,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.5.8
       '@tiptap/pm': ^2.5.8
+
+  '@tiptap/extension-list-item@2.10.2':
+    resolution: {integrity: sha512-NE800m/QCk58MUcfeeCqmDjgOuiwHddaZvCCQIpErZdI2Y0io9RsSYU3HHEFPIfbKsv/ykVTYbwSweTPs1Tmxw==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
 
   '@tiptap/extension-paragraph@2.5.8':
     resolution: {integrity: sha512-AMfD3lfGSiomfkSE2tUourUjVahLtIfWUQew13NTPuWoxAXaSyoCGO0ULkiou/lO3JVUUUmF9+KJrAHWGIARdA==}
@@ -5622,6 +5641,12 @@ packages:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
       react: ^18.3.1
+
+  react-fast-marquee@1.6.5:
+    resolution: {integrity: sha512-swDnPqrT2XISAih0o74zQVE2wQJFMvkx+9VZXYYNSLb/CUcAzU9pNj637Ar2+hyRw6b4tP6xh4GQZip2ZCpQpg==}
+    peerDependencies:
+      react: '>= 16.8.0 || ^18.0.0'
+      react-dom: '>= 16.8.0 || ^18.0.0'
 
   react-hook-form@7.51.3:
     resolution: {integrity: sha512-cvJ/wbHdhYx8aviSWh28w9ImjmVsb5Y05n1+FW786vEZQJV5STNM0pW6ujS+oiBecb0ARBxJFyAnXj9+GHXACQ==}
@@ -9574,6 +9599,10 @@ snapshots:
       '@tiptap/pm': 2.5.8
       tippy.js: 6.3.7
 
+  '@tiptap/extension-bullet-list@2.10.2(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))':
+    dependencies:
+      '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
+
   '@tiptap/extension-color@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/extension-text-style@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8)))':
     dependencies:
       '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
@@ -9602,6 +9631,10 @@ snapshots:
       '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
       '@tiptap/pm': 2.5.8
       linkifyjs: 4.1.3
+
+  '@tiptap/extension-list-item@2.10.2(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))':
+    dependencies:
+      '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
 
   '@tiptap/extension-paragraph@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))':
     dependencies:
@@ -13720,6 +13753,11 @@ snapshots:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+
+  react-fast-marquee@1.6.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-hook-form@7.51.3(react@18.3.1):
     dependencies:

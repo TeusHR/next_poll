@@ -4,7 +4,7 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { usePathname, useRouter } from "@/routing/*";
 
 const language = [
-  { key: "ua", label: "Ukraine" },
+  { key: "ua", label: "Ukrainian" },
   { key: "en", label: "English" }
 ];
 
