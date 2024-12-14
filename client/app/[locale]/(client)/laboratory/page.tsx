@@ -68,6 +68,7 @@ const Laboratory = async ({ params: { locale }, searchParams }: Props) => {
               key={index}
               text={item.text}
               date={item.createdAt}
+              showDate={false}
               index={index}
               buttonDetails
               link={`/laboratory/${item.id}`}
