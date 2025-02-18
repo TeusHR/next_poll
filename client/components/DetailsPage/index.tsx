@@ -21,7 +21,7 @@ const DetailsPage: FC<Props<IInnovation | IInternational | ILaboratory>> = ({dat
             </div>
             }
             <div className="flex flex-col gap-4 w-max">
-                {data.files.map(item => (<Document key={item} link={item}/>))}
+                {data.files.map(item => (<Document key={item} link={item} title={item}/>))}
             </div>
         </div>
     </>

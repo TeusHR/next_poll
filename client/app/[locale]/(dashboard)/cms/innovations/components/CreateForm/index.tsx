@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, {FC, useCallback, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ICreateInnovation, ICreateInnovationForm } from "@/types/Innovation";
 import { useSession } from "next-auth/react";
@@ -70,7 +70,6 @@ const InnovationsCreateForm: FC<Props> = ({ language }) => {
       const status = await InnovationsService.postInnovation(dataProduct, $apiAuth);
       if (status === 201) {
         await revalidateFetch("innovation");
-        reset();
         handlerReset();
         toast.success("Запис успішно створено");
       }
@@ -80,11 +79,6 @@ const InnovationsCreateForm: FC<Props> = ({ language }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handlerReset = () => {
-    setFiles([]);
-    setFilesImage([]);
   };
 
   const handleUpload = useCallback(
@@ -123,6 +117,17 @@ const InnovationsCreateForm: FC<Props> = ({ language }) => {
     const setter = type === "file" ? setFiles : setFilesImage;
     setter((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
   }, []);
+
+  const handlerReset = () => {
+    if (editorRef.current) {
+      editorRef.current.setContent('');
+    }
+    setFiles([]);
+    setFilesImage([]);
+    reset();
+  };
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
 
   return (
     <>
@@ -262,6 +267,7 @@ const InnovationsCreateForm: FC<Props> = ({ language }) => {
                           <div className="relative w-full">
                             <EditorWrapper
                               onChange={field.onChange}
+                              ref={editorRef}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}
                             />

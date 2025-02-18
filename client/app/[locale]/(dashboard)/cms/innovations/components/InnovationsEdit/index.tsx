@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IInnovation, IUpdateInnovation, IUpdateInnovationForm } from "@/types/Innovation";
 import { useSession } from "next-auth/react";
@@ -52,10 +52,19 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
       .finally(() => setIsLoading(false));
   }, [innovationsId]);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+  
   useEffect(() => {
     if (innovations) {
       setValue("title", innovations.title);
       setValue("text", innovations.text);
+      setEditorContent(innovations.text);
       const serverFiles: uploadType[] = innovations.files.map((url) => ({
         name: renderName(url),
         typeUpload: "server" as const,
@@ -71,7 +80,7 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
       }));
       setFilesImage(serverImage);
     }
-  }, [innovations, setValue]);
+  }, [innovations, setEditorContent, setValue]);
 
   const renderName = (fileName: string): string => {
     return fileName.replace("/uploads/pdf/", "").replace("/uploads/image/", "");
@@ -296,6 +305,7 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

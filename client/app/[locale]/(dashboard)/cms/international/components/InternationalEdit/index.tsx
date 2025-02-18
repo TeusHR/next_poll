@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -46,10 +46,19 @@ const InternationalEdit: FC<Props> = ({ internationalId }) => {
       .finally(() => setIsLoading(false));
   }, [internationalId]);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+  
   useEffect(() => {
     if (international) {
       setValue("title", international.title);
       setValue("text", international.text);
+      setEditorContent(international.text);
       const serverFiles: uploadType[] = international.files.map((url) => ({
         name: renderName(url),
         typeUpload: "server" as const,
@@ -65,7 +74,7 @@ const InternationalEdit: FC<Props> = ({ internationalId }) => {
       }));
       setFilesImage(serverImage);
     }
-  }, [international, setValue]);
+  }, [international, setEditorContent, setValue]);
 
   const onSubmit: SubmitHandler<IUpdateInternationalForm> = async (dataForm) => {
     if (toast.isActive("toast-register") || status !== "authenticated") {
@@ -286,6 +295,7 @@ const InternationalEdit: FC<Props> = ({ internationalId }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

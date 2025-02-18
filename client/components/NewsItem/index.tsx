@@ -24,6 +24,7 @@ type Props = {
     lengthArr: number,
     buttonDetails?: boolean,
     link?: string,
+    queryLink?: string,
     showDate?: boolean,
     lightBoxImage?: {
         show: boolean,
@@ -45,12 +46,13 @@ const NewsItem = ({
                       lengthArr,
                       buttonDetails,
                       link = '/',
+                      queryLink,
                       showDate = true,
                       lightBoxImage,
                   }: Props) => {
 
 
-    const imageSrc = imageObj.image ? imageObj.image : '/image/noImage.jpg';
+    const imageSrc = imageObj.image ? encodeURI(imageObj.image) : '/image/noImage.jpg';
 
     const lightBoxImages = lightBoxImage?.images.length ? lightBoxImage.images : ['/image/noImage.jpg'];
 
@@ -79,7 +81,7 @@ const NewsItem = ({
                         imageStyle: `max-h-[210px]`
                     }}/>
                     :
-                    <Image src={imageObj.image}
+                    <Image src={encodeURI(imageObj.image)}
                            width={imageObj.width}
                            height={imageObj.height}
                            classNames={{
@@ -95,7 +97,7 @@ const NewsItem = ({
                 <div className="flex flex-col gap-6 flex-1 md:min-h-[210px]">
                     <div dangerouslySetInnerHTML={{ __html: text }} className="line-clamp-4"/>
                     {buttonDetails &&
-                        <ButtonDetails link={link} className="md:mt-auto max-md:mx-auto">
+                        <ButtonDetails link={link} queryLink={queryLink} className="md:mt-auto max-md:mx-auto">
                             <svg width="11" height="11" viewBox="0 0 11 11" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path

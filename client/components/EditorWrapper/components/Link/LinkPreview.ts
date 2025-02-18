@@ -1,8 +1,8 @@
 import {Editor} from "@tiptap/core";
 import {EditorView} from "@tiptap/pm/view";
+import { LinkSlash, Pencil } from "@/components/EditorWrapper/icons";
 import * as tippy from "@/components/EditorWrapper/utils/tippy";
-import {LinkSlash, Pencil} from "@/components/EditorWrapper/icons";
-import {editHyperlinkHandler} from "@/components/EditorWrapper/components/Link/LinkEdit";
+import { editHyperlinkHandler } from "@/components/EditorWrapper/components/Link/LinkEdit";
 
 
 type HyperlinkModalOptions = {

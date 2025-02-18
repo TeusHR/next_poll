@@ -28,7 +28,7 @@ export default function setHyperlink(options: setHyperlinkModalOptions) {
     input.setAttribute("type", "text");
     input.setAttribute("placeholder", "https://example.com");
     button.setAttribute("type", "button");
-    button.innerText = "Submit";
+    button.innerText = "Зберегти";
 
     inputsWrapper.append(input);
     buttonsWrapper.append(button);

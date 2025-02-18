@@ -22,9 +22,11 @@ const DirectItem = ({title, text, index, files}: Props) => {
           <div className="flex flex-col gap-6 text-xl w-full">
             <Title text={title} style="text-[#2E2C39] text-3xl max-xl:text-2xl max-sm:text-xl font-semibold" />
             <div dangerouslySetInnerHTML={{ __html: text }}></div>
-            {files && <div className="flex flex-col gap-3 relative w-max">
-              {files.map(item => (<Document key={item} link={item} />))}
-            </div>}
+            {files &&
+                <div className="flex flex-col relative w-max gap-2">
+                    {files.map(item => (<Document key={item} link={item} title={item}/>))}
+                </div>
+            }
           </div>
         </div>
     )

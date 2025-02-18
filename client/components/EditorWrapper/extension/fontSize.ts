@@ -36,8 +36,18 @@ export const FontSize = Extension.create<FontSizeOptions>({
                 attributes: {
                     fontSize: {
                         default: null,
-                        parseHTML: (element) =>
-                            element.style.fontSize.replace(/['"]+/g, ""),
+                        parseHTML: (element) => {
+                            const fontSize = element.style.fontSize;
+                            if (fontSize) {
+                                if (fontSize.includes('rem')) {
+                                    return fontSize;
+                                } else if (fontSize.includes('px')) {
+                                    const fontSizeInRem = String(parseFloat(fontSize.replace('px', '')) / 16);
+                                    return `${fontSizeInRem}rem`;
+                                }
+                            }
+                            return '1rem'
+                        },
                         renderHTML: (attributes) => {
                             if (!attributes.fontSize) {
                                 return {};

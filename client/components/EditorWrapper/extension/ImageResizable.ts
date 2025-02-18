@@ -1,4 +1,5 @@
 import {mergeAttributes, Node, nodeInputRule} from "@tiptap/core";
+import {BACKEND_URL} from "@/config/constants";
 
 export interface UploadFn {
     (file: File): Promise<{ url: string; name: string }>;
@@ -189,7 +190,7 @@ export const ImageResize = Node.create<ImageOptions>({
                 return uploadFn(options.file)
                     .then(imageUrl => {
                     let attr = this.editor.getAttributes("image")
-                    return this.editor.commands.setImage({src: imageUrl.url, alt: attr.alt, title: attr.title});
+                    return this.editor.commands.setImage({src: BACKEND_URL+imageUrl.url, alt: attr.alt, title: attr.title});
                     })
                     .catch(() => console.log("something wrong with image upload"));
             },

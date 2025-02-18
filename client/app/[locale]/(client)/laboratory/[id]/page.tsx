@@ -87,10 +87,11 @@ const LaboratoryItem = async ({params, searchParams}: Params) => {
                                   }}
                                   key={index}
                                   text={item.text}
-                                  date={new Date().toISOString()}
+                                  date={item.createdAt}
                                   index={index}
                                   buttonDetails
-                                  link={`/laboratory/${item.id}?develop=true`}
+                                  queryLink={'develop=true'}
+                                  link={`/laboratory/${item.id}`}
                                   lengthArr={(laboratory as ILaboratory).developments.length}
                         />
                     )}

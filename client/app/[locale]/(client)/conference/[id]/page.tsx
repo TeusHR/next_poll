@@ -59,8 +59,8 @@ const Conference = async ({params}: Params) => {
                 <div className="text-xl" dangerouslySetInnerHTML={{ __html: conference.text }}>
 
                 </div>
-                <div className="flex flex-col relative w-max">
-                    {conference.files.map(item => (<Document key={item} link={item}/>))}
+                <div className="flex flex-col relative w-max gap-2">
+                    {conference.files.map(item => (<Document key={item} link={item} title={item}/>))}
                 </div>
             </div>
         </div>

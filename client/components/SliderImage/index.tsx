@@ -53,7 +53,7 @@ const SliderImage = ({images}: Props) => {
             >
                 {images.map((item, index) =>
                     <SwiperSlide key={index} onClick={() => openLightboxOnSlide()}>
-                        <Image src={item}
+                        <Image src={encodeURI(item)}
                                sizes="100vw"
                                alt={'preview'}
                                as={NextImage}

@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -38,12 +38,21 @@ const ScienceEdit: FC<Props> = ({ scienceId }) => {
       .finally(() => setIsLoading(false));
   }, [scienceId]);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+
   useEffect(() => {
     if (cooperation) {
       setValue("title", cooperation.title);
       setValue("text", cooperation.text);
+      setEditorContent(cooperation.text);
     }
-  }, [cooperation, setValue]);
+  }, [cooperation, setEditorContent, setValue]);
 
   const onSubmit: SubmitHandler<ICreateScienceForm> = async (dataForm) => {
     if (toast.isActive("toast-register") || status !== "authenticated") {
@@ -133,6 +142,7 @@ const ScienceEdit: FC<Props> = ({ scienceId }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

@@ -55,9 +55,7 @@ const ResearchCreateForm: FC<Props> = ({ language }) => {
       const status = await ResearchService.postResearch(dataProduct, $apiAuth);
       if (status === 201) {
         await revalidateFetch("researchWork");
-        reset();
-        if (inputRef.current) inputRef.current.value = "";
-        setImagePreview("");
+        handlerReset()
         toast.success("Запис успішно створено");
       }
     } catch (error) {
@@ -67,6 +65,17 @@ const ResearchCreateForm: FC<Props> = ({ language }) => {
       setIsLoading(false);
     }
   };
+
+  const handlerReset = () => {
+    if (editorRef.current) {
+      editorRef.current.setContent('');
+    }
+    if (inputRef.current) inputRef.current.value = "";
+    reset();
+    setImagePreview("");
+  };
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
 
   return (
     <>
@@ -192,6 +201,7 @@ const ResearchCreateForm: FC<Props> = ({ language }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

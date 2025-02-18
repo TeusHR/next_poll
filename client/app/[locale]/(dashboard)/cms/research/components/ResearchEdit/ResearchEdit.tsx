@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IResearch, IUpdateResearch, IUpdateResearchForm } from "@/types/Research";
 import { useSession } from "next-auth/react";
@@ -43,13 +43,22 @@ const ResearchEdit: FC<Props> = ({ researchId }) => {
     }
   }, [researchId]);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+
   useEffect(() => {
     if (research) {
       setValue("title", research.title);
       setValue("text", research.text);
+      setEditorContent(research.text);
       setImagePreview(renderFileName(research.image));
     }
-  }, [research, setValue]);
+  }, [research, setEditorContent, setValue]);
 
   const renderFileName = (fileName: string): string => {
     return fileName.replace("/uploads/image/", "");
@@ -217,6 +226,7 @@ const ResearchEdit: FC<Props> = ({ researchId }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

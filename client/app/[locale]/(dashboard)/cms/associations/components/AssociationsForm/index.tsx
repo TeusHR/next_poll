@@ -240,7 +240,7 @@ const AssociationsFormCreate: FC<Props> = ({ associations, language }) => {
                       )}
                     />
                     <div className="w-full flex flex-col gap-4 items-start">
-                      <PreviewUpload files={files} handleRemoveFile={(index) => handleRemoveFile(index)} />
+                      <PreviewUpload files={files} type={"image"} handleRemoveFile={(index) => handleRemoveFile(index)} />
                     </div>
                   </div>
                   <div className="flex justify-center items-center">
@@ -260,7 +260,7 @@ const AssociationsFormCreate: FC<Props> = ({ associations, language }) => {
                     <div className="grid grid-cols-[80px_1fr_max-content] gap-4 w-full items-center">
                       <div className="w-[80px]">
                         <Image as={NextImage} className="object-cover"
-                               src={loadPreviewImage(files[idx]?.file) || files[idx].url}
+                               src={loadPreviewImage(files[idx]?.file) || encodeURI(files[idx].url)}
                                alt="preview"
                                width={80} height={100} />
                       </div>

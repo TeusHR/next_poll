@@ -7,6 +7,11 @@ type Props = {
 };
 
 const Document = ({ link, title }: Props) => {
+
+  const renderFileName = (fileName: string): string => {
+    return fileName.replace("/uploads/pdf/", "").replace(/__[^.]+/, "");
+  };
+
   return (
     <Link
       href={link}
@@ -22,7 +27,7 @@ const Document = ({ link, title }: Props) => {
           />
         </svg>
       </div>
-      <span>{title ? title : "Документ"}</span>
+      <span>{title ? renderFileName(title) : "Документ"}</span>
     </Link>
   );
 };

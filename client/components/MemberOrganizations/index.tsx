@@ -26,7 +26,7 @@ const MemberOrganizations: FC<Props> = ({organizations, title}) => {
                       <div key={index}
                            className="grid grid-cols-[260px_1fr_max-content_max-content] max-lg:grid-cols-2 max-sm:grid-cols-1 max-lg:justify-items-center gap-16 max-lg:gap-16 max-sm:gap-8 items-center max-md:flex-wrap max-md:items-center max-md:justify-center">
                           <Image
-                            src={organization.image}
+                            src={encodeURI(organization.image)}
                             width={250}
                             height={150}
                             style={{ width: '100%', height: '100%' }}
@@ -43,7 +43,7 @@ const MemberOrganizations: FC<Props> = ({organizations, title}) => {
                           <div>
                               {organization.files &&
                                 <span className="flex flex-col gap-3 relative w-max">
-                                    {organization.files.map(item => (<Document key={item} link={item} />))}
+                                    {organization.files.map(item => (<Document key={item} link={item} title={item}/>))}
                               </span>}
                           </div>
                           <ButtonDetails link={organization.link}>

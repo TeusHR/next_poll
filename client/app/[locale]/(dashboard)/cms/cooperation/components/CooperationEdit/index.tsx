@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -44,12 +44,21 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
       .finally(() => setIsLoading(false));
   }, [cooperationId]);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+  
   useEffect(() => {
     if (cooperation) {
       setValue("title", cooperation.title);
       setValue("text", cooperation.text);
+      setEditorContent(cooperation.text)
     }
-  }, [cooperation, setValue]);
+  }, [cooperation, setEditorContent, setValue]);
 
   const onSubmit: SubmitHandler<ICreateCooperationForm> = async (dataForm) => {
     if (toast.isActive("toast-register") || status !== "authenticated") {
@@ -207,7 +216,8 @@ const CooperationEdit: FC<Props> = ({ cooperationId }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
-                              onChange={field.onChange}
+                                ref={editorRef}
+                                onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}
                             />

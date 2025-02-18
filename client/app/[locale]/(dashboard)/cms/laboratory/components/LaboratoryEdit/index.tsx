@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Controller, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -43,6 +43,14 @@ const LaboratoryEdit: FC<Props> = ({ laboratoryId, language }) => {
   const [files, setFiles] = useState<uploadType[]>([]);
   const [filesImage, setFilesImage] = useState<uploadType[]>([]);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+
   useEffect(() => {
     setIsLoading(true);
     LaboratoryService.getLaboratory(laboratoryId)
@@ -50,6 +58,7 @@ const LaboratoryEdit: FC<Props> = ({ laboratoryId, language }) => {
         setLaboratory(data);
         setValue("title", data.title);
         setValue("text", data.text);
+        setEditorContent(data.text);
         const serverFiles: uploadType[] = data.files.map((url) => ({
           name: renderName(url),
           typeUpload: "server" as const,
@@ -86,7 +95,7 @@ const LaboratoryEdit: FC<Props> = ({ laboratoryId, language }) => {
         toast.error("Не знайдено");
       })
       .finally(() => setIsLoading(false));
-  }, [laboratoryId, setValue]);
+  }, [laboratoryId, setEditorContent, setValue]);
 
   const renderName = (fileName: string): string => {
     return fileName.replace("/uploads/pdf/", "").replace("/uploads/image/", "");
@@ -441,6 +450,7 @@ const LaboratoryEdit: FC<Props> = ({ laboratoryId, language }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

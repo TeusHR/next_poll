@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, {FC, useCallback, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ICreateCooperation, ICreateCooperationForm } from "@/types/Cooperation";
 import { useSession } from "next-auth/react";
@@ -66,7 +66,7 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
       const status = await CooperationService.post(dataProduct, $apiAuth);
       if (status === 201) {
         await revalidateFetch("cooperation");
-        reset();
+        handlerReset();
         toast.success("Запис успішно створено");
       }
     } catch (error) {
@@ -97,6 +97,15 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
   const handleRemove = useCallback((index: number, type: "file" | "image") => {
     setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
   }, []);
+
+  const handlerReset = () => {
+    if (editorRef.current) {
+      editorRef.current.setContent('');
+    }
+    reset();
+  };
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
 
   return (
     <>
@@ -193,6 +202,7 @@ const CooperationCreateForm: FC<Props> = ({ language }) => {
                             {/*<ComponentThatUseEditorJs/>*/}
 
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

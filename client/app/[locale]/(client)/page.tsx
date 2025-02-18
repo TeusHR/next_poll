@@ -1,7 +1,6 @@
 import LinkList from "@/components/LinkList";
 import CellItem, {ICellItem} from "@/components/Cell/CellItem";
 import React, {Suspense} from "react";
-import Partners from "@/components/Partners";
 import Feedback from "@/components/Feedback";
 import {setRequestLocale} from 'next-intl/server';
 import { Link } from "@/routing/*";
@@ -95,9 +94,9 @@ export default function Home({params: {locale}}:Props) {
             )}
           </div>
         </div>
-        <div className="xl:container mx-auto my-4 px-8 max-md:px-4">
-          <Partners />
-        </div>
+        {/*<div className="xl:container mx-auto my-4 px-8 max-md:px-4">*/}
+        {/*  <Partners />*/}
+        {/*</div>*/}
         <Suspense>
           <Feedback translation={mainPage.Main.form} apiKey={process.env.GOOGLE_MAPS_API_KEY || ''} />
         </Suspense>

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, {FC, useCallback, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ICreateInternational, ICreateInternationalForm } from "@/types/International";
 import { useSession } from "next-auth/react";
@@ -70,7 +70,6 @@ const InternationalCreateForm: FC<Props> = ({ language }) => {
       const status = await InternationalService.postInternational(dataProduct, $apiAuth);
       if (status === 201) {
         await revalidateFetch("international");
-        reset();
         handlerReset();
         toast.success("Запис успішно створено");
       }
@@ -80,11 +79,6 @@ const InternationalCreateForm: FC<Props> = ({ language }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handlerReset = () => {
-    setFiles([]);
-    setFilesImage([]);
   };
 
   const handleUpload = useCallback(
@@ -123,6 +117,17 @@ const InternationalCreateForm: FC<Props> = ({ language }) => {
     const setter = type === "file" ? setFiles : setFilesImage;
     setter((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
   }, []);
+
+  const handlerReset = () => {
+    if (editorRef.current) {
+      editorRef.current.setContent('');
+    }
+    setFiles([]);
+    setFilesImage([]);
+    reset();
+  };
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
 
   return (
     <>
@@ -261,6 +266,7 @@ const InternationalCreateForm: FC<Props> = ({ language }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

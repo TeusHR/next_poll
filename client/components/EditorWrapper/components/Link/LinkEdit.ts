@@ -27,15 +27,15 @@ export const editHyperlinkHandler = (options: EditHyperlinkModalOptions) => {
 
     linkTextInput.type = "text";
     linkTextInput.value = link?.innerText || "";
-    linkTextInput.placeholder = "Enter link text";
+    linkTextInput.placeholder = "Введіть текст посилання";
 
     hrefInput.type = "text";
     hrefInput.value = link.href;
-    hrefInput.placeholder = "Enter href";
+    hrefInput.placeholder = "Вставте посилання";
 
     applyButton.type = "button";
     applyButton.classList.add("hyperlink-set-modal__apply-button");
-    applyButton.innerText = "Apply";
+    applyButton.innerText = "Застосувати";
 
     inputsWrapper.append(linkTextInput, hrefInput);
     buttonsWrapper.append(applyButton);

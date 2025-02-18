@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, {FC, useCallback, useRef, useState} from "react";
 import { Controller, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { ICreateLaboratory, ILaboratoryForm } from "@/types/Laboratory";
 import { useSession } from "next-auth/react";
@@ -123,9 +123,15 @@ const LaboratoryCreateForm: FC<Props> = ({ language }) => {
   };
 
   const handlerReset = () => {
+    if (editorRef.current) {
+      editorRef.current.setContent('');
+    }
+    reset();
     setFiles([]);
     setFilesImage([]);
   };
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
 
   const handleRemoveDevelop = () => {
     let indexDev: number[] = developments.map((_, i) => i);
@@ -350,6 +356,7 @@ const LaboratoryCreateForm: FC<Props> = ({ language }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

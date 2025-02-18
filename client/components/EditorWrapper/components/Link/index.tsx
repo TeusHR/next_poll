@@ -12,7 +12,6 @@ const LinkModal: FC<Props> = ({editor}) => {
 
 
     const handleApplyLink = () => {
-        console.log(link)
         editor.chain().setLink({href: link}).run()
         setLink('')
         onClose()
@@ -50,15 +49,15 @@ const LinkModal: FC<Props> = ({editor}) => {
                                 <Input
                                     type="text"
                                     variant="flat"
-                                    label="Link"
-                                    placeholder="Enter your link"
+                                    label="Посилання"
+                                    placeholder="Введіть своє посилання"
                                     value={link}
                                     onChange={handleLinkChange}
                                 />
                                 <Button onClick={() => handleApplyLink()}
                                         className="px-6 bg-fd text-base"
                                 >
-                                    Submit
+                                    Зберегти
                                 </Button>
                             </ModalBody>
                         </>

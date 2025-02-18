@@ -53,7 +53,7 @@ const Consulting: FC<Props> = async ({ params: { locale } }) => {
             <div className="flex flex-col gap-14 max-sm:gap-10 max-w-[400px]">
               <div className="flex flex-col gap-5 max-sm:items-center max-sm:justify-center">
                 <Image
-                  src={item.image}
+                  src={encodeURI(item.image)}
                   width={400}
                   height={400}
                   sizes="100vw"

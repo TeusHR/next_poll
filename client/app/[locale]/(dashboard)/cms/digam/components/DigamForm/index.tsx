@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Control, Controller, FormState, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
@@ -53,9 +53,18 @@ const DigamFormCreate: FC<Props> = ({ digam, language }) => {
 
   const [files, setFiles] = useState<uploadType[]>([]);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+
   useEffect(() => {
     if (digam) {
       setValue("text", digam.text);
+      setEditorContent(digam.text);
       const organizations: IOrganizationsForm[] = digam.organizations.map((organizations) => ({
         title: organizations.title,
         link: organizations.link,
@@ -82,7 +91,7 @@ const DigamFormCreate: FC<Props> = ({ digam, language }) => {
       }));
       setFiles(serverFiles);
     }
-  }, [digam, setValue]);
+  }, [digam, setEditorContent, setValue]);
 
   const renderName = (fileName: string): string => {
     return fileName.replace("/uploads/pdf/", "").replace("/uploads/image/", "");
@@ -385,6 +394,7 @@ const DigamFormCreate: FC<Props> = ({ digam, language }) => {
                         </div>
                         <div className="relative w-full">
                           <EditorWrapper
+                              ref={editorRef}
                             onChange={field.onChange}
                             description={field.value}
                             placeholder={"Напишіть текст для слайдера"}

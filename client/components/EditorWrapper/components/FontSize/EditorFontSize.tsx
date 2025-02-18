@@ -1,20 +1,21 @@
 'use client'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
-
-import {defaultFontSize, ItemFontSize} from "@/components/EditorWrapper/utils/fontsize";
 import {Editor} from "@tiptap/react";
 import {Input} from "@nextui-org/react";
+import { defaultFontSize, ItemFontSize } from "@/components/EditorWrapper/utils/fontsize";
 
 type Props = {
     defaultSize: string
     editor: Editor,
     children?: ReactNode,
-    itemFontSize?: ItemFontSize[]
+    itemFontSize?: ItemFontSize[],
+    minNumber?:number,
+    maxNumber?:number
 }
 
 
-const EditorFontSize = ({defaultSize, itemFontSize, editor}: Props) => {
+const EditorFontSize = ({defaultSize, itemFontSize, editor, minNumber = 6, maxNumber = 80}: Props) => {
 
     const edit: Record<string, any> | undefined = editor.getAttributes('textStyle')
     const [selectSize, setSelectSize] = useState<string>(edit.fontSize ? String(parseFloat(edit.fontSize) * 16) : defaultSize)
@@ -49,19 +50,19 @@ const EditorFontSize = ({defaultSize, itemFontSize, editor}: Props) => {
 
     const UpdateEditorFontSize = (event:string) => {
         let fs = Number(event);
-        if (fs >= 8 && fs <= 64) {
+        if (fs >= minNumber && fs <= maxNumber) {
             editor.commands.setFontSize(`${Number(event) / 16}rem`);
         }
     }
 
     const handleChangFilter = (event: any) => {
         let fs = Number(event.target.value)
-        if (fs <= 8) {
-            setSelectSize("8")
-            editor.commands.setFontSize(`${8 / 16}rem`)
-        } else if (fs >= 64) {
-            setSelectSize("64")
-            editor.commands.setFontSize(`${64 / 16}rem`)
+        if (fs <= minNumber) {
+            setSelectSize(`${minNumber}`)
+            editor.commands.setFontSize(`${minNumber / 16}rem`)
+        } else if (fs >= maxNumber) {
+            setSelectSize(`${maxNumber}`)
+            editor.commands.setFontSize(`${maxNumber / 16}rem`)
         }
     }
 
@@ -107,18 +108,18 @@ const EditorFontSize = ({defaultSize, itemFontSize, editor}: Props) => {
                                         <DropdownItem
                                             className="py-0"
                                             key={item.key}
-                                            textValue={String(item.fontSize)}
-                                            onClick={() => handlerFontSize(String(item.fontSize))}>
-                                            {item.fontSize}
+                                            textValue={String(item.value)}
+                                            onClick={() => handlerFontSize(String(item.value))}>
+                                            {item.value}
                                         </DropdownItem>)
 
                                     : defaultFontSize.map((item) =>
                                         <DropdownItem
                                             className="py-0"
                                             key={item.key}
-                                            textValue={String(item.fontSize)}
-                                            onClick={() => handlerFontSize(String(item.fontSize))}>
-                                            {item.fontSize}
+                                            textValue={String(item.value)}
+                                            onClick={() => handlerFontSize(String(item.value))}>
+                                            {item.value}
                                         </DropdownItem>)
                                 }
                             </DropdownMenu>

@@ -5,7 +5,7 @@ export const FileService = {
     async upload(apiAuth: AxiosInstance, files: FileList, folder?: string) {
         const formData = new FormData()
         for (let i = 0; i < files.length; i++) {
-            formData.append(`file`, files[i])
+            formData.append(`file`, files[i], encodeURIComponent(files[i].name))
         }
 
         const { data } = await apiAuth.post<{

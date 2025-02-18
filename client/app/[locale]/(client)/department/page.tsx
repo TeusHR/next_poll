@@ -45,6 +45,8 @@ const Department: FC<Props> = async ({ params: { locale } }) => {
 
   if (digam === null) return notFound();
 
+  console.log(digam)
+
   return (
     <div className="xl:container mx-auto my-16 px-8 max-md:px-4">
       <div className="flex flex-col gap-14 max-sm:gap-8">

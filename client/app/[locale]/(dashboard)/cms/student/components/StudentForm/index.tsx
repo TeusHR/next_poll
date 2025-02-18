@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import EditorWrapper from "@/components/EditorWrapper";
 import { Button } from "@nextui-org/react";
@@ -27,11 +27,20 @@ const StudentFormCreate: FC<Props> = ({ student, language }) => {
   const $apiAuth = useAxiosAuth();
   const [isLoading, setIsLoading] = useState(false);
 
+  const setEditorContent = useCallback((text: string) => {
+    if (editorRef.current) {
+      editorRef.current.setContent(text);
+    }
+  }, []);
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
+  
   useEffect(() => {
     if (student) {
       setValue("text", student.text);
+      setEditorContent(student.text);
     }
-  }, [student, setValue]);
+  }, [student, setValue, setEditorContent]);
 
   const onSubmit: SubmitHandler<ICreateStudent> = async (dataForm) => {
     if (toast.isActive("toast-register") || status !== "authenticated") {
@@ -81,6 +90,7 @@ const StudentFormCreate: FC<Props> = ({ student, language }) => {
                         </div>
                         <div className="relative w-full">
                           <EditorWrapper
+                              ref={editorRef}
                             onChange={field.onChange}
                             description={field.value}
                             placeholder={"Напишіть текст для слайдера"}

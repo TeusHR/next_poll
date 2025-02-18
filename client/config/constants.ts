@@ -6,6 +6,8 @@ export const API_URL = `${process.env.NEXT_PUBLIC_CLIENT_URL}/v1/api`;
 
 export const LOCAL_API_URL = `${process.env.LOCAL_BACKEND_URL}/v1/api`;
 
+export const BACKEND_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}`;
+
 export const USER_PAGES = ["/cabinet"];
 
 export const ADMIN_PAGES = ["/cms"];

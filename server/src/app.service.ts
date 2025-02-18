@@ -127,13 +127,13 @@ export class AppService {
     await ensureDir(uploadFolder);
 
     if (files.filter((file) => file).length === 0) return [];
-
     const res: FileResponse[] = await Promise.all(
       files.map(async (file, index) => {
         const fileInfo = getFileInfo(
           iconv.encode(file.originalname, "utf8").toString(),
         );
-        const fileName = `${fileInfo.fileName}__${Date.now() + index}.${fileInfo.fileExtension}`;
+
+        const fileName = `${decodeURIComponent(fileInfo.fileName)}__${Date.now() + index}.${fileInfo.fileExtension}`;
         await writeFile(join(uploadFolder, fileName), file.buffer);
 
         return {

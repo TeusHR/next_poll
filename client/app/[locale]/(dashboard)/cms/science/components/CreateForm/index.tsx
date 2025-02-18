@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, {FC, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Button, Input } from "@nextui-org/react";
 import EditorWrapper from "@/components/EditorWrapper";
@@ -43,7 +43,7 @@ const ScienceCreateForm: FC<Props> = ({ language }) => {
       const status = await ScienceService.post(dataProduct, $apiAuth);
       if (status === 201) {
         await revalidateFetch("science");
-        reset();
+        handlerReset();
         toast.success("Запис успішно створено");
       }
     } catch (error) {
@@ -53,6 +53,15 @@ const ScienceCreateForm: FC<Props> = ({ language }) => {
       setIsLoading(false);
     }
   };
+
+  const handlerReset = () => {
+    if (editorRef.current) {
+      editorRef.current.setContent('');
+    }
+    reset();
+  };
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
 
   return (
     <>
@@ -122,6 +131,7 @@ const ScienceCreateForm: FC<Props> = ({ language }) => {
                           </div>
                           <div className="relative w-full">
                             <EditorWrapper
+                                ref={editorRef}
                               onChange={field.onChange}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}

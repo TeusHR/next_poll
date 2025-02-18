@@ -108,7 +108,7 @@ const AgreementsFormCreate: FC<Props> = ({ agreements, language }) => {
       //     const universitiesWithFiles = await Promise.all(
       //       foreign.item.map(async (university, universityIdx) => {
       //         const currentFiles = files[countryIdx]?.[universityIdx] || [];
-      //         const uploadedUrls = await processUpload(currentFiles, "files");
+      //         const uploadedUrls = await processUpload(currentFiles, "pdf");
       //         const existingUrls = currentFiles
       //           .filter((file) => file.typeUpload === "server")
       //           .map((file) => file.url);
@@ -144,7 +144,7 @@ const AgreementsFormCreate: FC<Props> = ({ agreements, language }) => {
           return Promise.all(
             foreign.item.flatMap(async (university, universityIdx) => {
               const currentFiles = files[countryIdx]?.[universityIdx] || [];
-              const uploadedUrls = await processUpload(currentFiles, "files");
+              const uploadedUrls = await processUpload(currentFiles, "pdf");
               const existingUrls = currentFiles
                 .filter((file) => file.typeUpload === "server")
                 .map((file) => file.url);

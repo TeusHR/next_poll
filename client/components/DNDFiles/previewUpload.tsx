@@ -7,6 +7,7 @@ import DocumentIcon from "@/UI/DocumentIcon";
 import { Image } from "@nextui-org/react";
 import { loadPreviewImage } from "@/utils/ImageValidate";
 import { uploadType } from "app/[locale]/(dashboard)/cms/innovations/components/InnovationsEdit";
+import NextImage from "next/image";
 
 type Props = {
   files: uploadType[];
@@ -23,14 +24,24 @@ const PreviewUpload: FC<Props> = ({ files, handleRemoveFile, type }) => {
       return <WordIcon width={"35px"} height={"35px"} />;
     } else if (type === "image" && file.file) {
       return (
-        <div className="w-[50px]">
-          <Image src={loadPreviewImage(file.file)} alt="preview" />
+        <div className="w-[50px] h-[50px]">
+          <Image src={loadPreviewImage(file.file)} as={NextImage}
+                 width={50}
+                 height={50}
+                 radius="sm"
+                 alt="preview"
+                 style={{ objectFit: 'contain' }} />
         </div>
       );
     } else if (type === "image") {
       return (
-        <div className="w-[50px]">
-          <Image src={file.url} alt="preview" />
+        <div className="w-[50px] h-[50px]">
+          <Image src={encodeURI(file.url)} as={NextImage}
+                 width={50}
+                 height={50}
+                 radius="sm"
+                 alt="preview"
+                 style={{ objectFit: 'fill' }} />
         </div>
       );
     } else {
@@ -39,7 +50,7 @@ const PreviewUpload: FC<Props> = ({ files, handleRemoveFile, type }) => {
   };
 
   const renderFileName = (fileName: string): string => {
-    return fileName.replace("/uploads/pdf/", "");
+    return fileName.replace("/uploads/pdf/", "").replace(/__[^.]+/, "");
   };
 
   return (

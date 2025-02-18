@@ -1,41 +1,98 @@
 'use client'
-import React, {FC, useEffect, useRef} from 'react';
-import {Editor, EditorContent, mergeAttributes, useEditor} from "@tiptap/react";
-import TextStyle from '@tiptap/extension-text-style'
-import {FontSize} from "@/components/EditorWrapper/extension/fontSize";
-import TextAlign from '@tiptap/extension-text-align'
-import Heading from '@tiptap/extension-heading'
-import MenuButton, {EditorMenuButton} from "@/components/EditorWrapper/MenuButton";
-import {Document} from "@tiptap/extension-document";
-import {Underline} from "@tiptap/extension-underline";
-import {Color} from "@tiptap/extension-color";
-import {Placeholder} from "@tiptap/extension-placeholder";
-import {UniqueID} from "@tiptap/extension-unique-id";
-import EditorFontSize from "@/components/EditorWrapper/components/FontSize/EditorFontSize";
-import EditorTextColor from "@/components/EditorWrapper/components/InputColor/EditorTextColor";
-import Text from '@tiptap/extension-text'
+import React, {forwardRef, ReactNode, useEffect, useImperativeHandle, useRef} from 'react';
+import {Editor, EditorContent, Extensions, useEditor} from "@tiptap/react";
 import './styles/hyperlink.scss'
-import {ImageResize} from "@/components/EditorWrapper/extension/ImageResizable";
-import {Strike} from "@tiptap/extension-strike";
-import {Italic} from "@tiptap/extension-italic";
-import {Bold} from "@tiptap/extension-bold";
-import {Paragraph} from "@tiptap/extension-paragraph";
+import {defaultExtensions} from "@/components/EditorWrapper/utils/defaultExtensions";
+import MenuButton, {EditorMenuButton} from "@/components/EditorWrapper/MenuButton";
+import EditorFontSize from "@/components/EditorWrapper/components/FontSize/EditorFontSize";
 import LinkModal from "@/components/EditorWrapper/components/Link";
-import {LinkEdit} from "@/components/EditorWrapper/extension/link";
-import setHyperlink from "@/components/EditorWrapper/components/Link/LinkSet";
-import previewHyperlink from "@/components/EditorWrapper/components/Link/LinkPreview";
-import ImageModal from "@/components/EditorWrapper/components/ImageModal";
-import {FileService} from "@/services/file.service";
-import {FileToFileList} from "@/utils/FIleToFileList";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
+import EditorTextColor from "@/components/EditorWrapper/components/InputColor/EditorTextColor";
+import LineHeight, {generateOptions} from "@/components/EditorWrapper/components/LineHeight";
 
+type PropsWrapper = {
+    onChange: (e: any) => void
+    description: string,
+    className?: string,
+    placeholder?: string,
+    extensions?: Extensions,
+    children?: ReactNode,
+}
+
+const EditorWrapper = forwardRef<{ setContent: (content: string) => void }, PropsWrapper>(({
+                                                                                               onChange,
+                                                                                               description,
+                                                                                               placeholder = '',
+                                                                                               className = 'text-base transition-all max-w-[calc(100vw_-_18rem)] max-xl:max-w-[calc(100vw_-_18rem)] max-lg:max-w-[calc(100vw_-_2rem)]',
+                                                                                               extensions = defaultExtensions,
+                                                                                               children,
+                                                                                           }, ref) => {
+
+    const editorRef = useRef<Editor | null>(null);
+    // const $apiAuth = useAxiosAuth()
+
+    // const uploadFn = async (file: File): Promise<{
+    //     url: string,
+    //     name: string
+    // }> => {
+    //     const path = await FileService.upload($apiAuth, FileToFileList([file]), 'image')
+    //     return path[0];
+    // }
+
+    // extensions.push(Placeholder.configure({
+    //     placeholder: placeholder,
+    //     showOnlyWhenEditable: false,
+    // }))
+
+    const editor = useEditor({
+        extensions: extensions,
+        immediatelyRender: false,
+        editorProps: {
+            attributes: {
+                class: 'border-gray-500 solid border-1 p-4 rounded-l-[20px] h-full min-h-[250px] max-h-[950px] overflow-auto bg-gray-100',
+            },
+        },
+        onCreate: ({editor}) => {
+            editor.commands.setContent(description);
+        },
+        onUpdate: ({editor}) => {
+            onChange(editor.getHTML());
+        },
+        content: description,
+    })
+
+    useEffect(() => {
+        editorRef.current = editor;
+    }, [editor]);
+
+    useImperativeHandle(ref, () => {
+        return {
+            setContent: (content: string) => {
+                editor?.commands.setContent(content)
+            },
+        }
+    }, [editor]);
+
+
+    return (
+        <div className="flex transition-all flex-col gap-4">
+            <EditorToolbar editor={editorRef.current} toolbar={children}/>
+            <EditorContent editor={editor}
+                           className={className}/>
+        </div>
+    )
+})
+
+export default EditorWrapper
+
+EditorWrapper.displayName = "EditorWrapper";
 
 type Props = {
-    editor: Editor | null
+    editor: Editor | null,
+    toolbar?: ReactNode,
 }
 
 
-const EditorWrapper = ({editor}: Props) => {
+const EditorToolbar = ({editor, toolbar}: Props) => {
 
     if (!editor)
         return null
@@ -153,7 +210,6 @@ const EditorWrapper = ({editor}: Props) => {
                 </svg>
             )
         },
-
         {
             name: 'underline',
             onClick: () => editor.chain().focus().toggleUnderline().run(),
@@ -167,7 +223,22 @@ const EditorWrapper = ({editor}: Props) => {
                           d="M8 3V12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12V3H18V12C18 15.3137 15.3137 18 12 18C8.68629 18 6 15.3137 6 12V3H8ZM4 20H20V22H4V20Z"/>
                 </svg>
             )
-        }, {
+        },
+        {
+            name: 'bulletList',
+            onClick: () => editor.chain().focus().toggleBulletList().run(),
+            classCondition: editor.isActive('bulletList'),
+            classActive: 'is-active border-gray-500 solid border-1',
+            classPassive: '',
+            children: (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     className="!w-full !h-[30px] max-[580px]:!h-[20px]">
+                    <path
+                        d="M8 4H21V6H8V4ZM4.5 6.5C3.67157 6.5 3 5.82843 3 5C3 4.17157 3.67157 3.5 4.5 3.5C5.32843 3.5 6 4.17157 6 5C6 5.82843 5.32843 6.5 4.5 6.5ZM4.5 13.5C3.67157 13.5 3 12.8284 3 12C3 11.1716 3.67157 10.5 4.5 10.5C5.32843 10.5 6 11.1716 6 12C6 12.8284 5.32843 13.5 4.5 13.5ZM4.5 20.4C3.67157 20.4 3 19.7284 3 18.9C3 18.0716 3.67157 17.4 4.5 17.4C5.32843 17.4 6 18.0716 6 18.9C6 19.7284 5.32843 20.4 4.5 20.4ZM8 11H21V13H8V11ZM8 18H21V20H8V18Z"></path>
+                </svg>
+            )
+        },
+        {
             name: 'left',
             onClick: () => editor.chain().focus().setTextAlign('left').run(),
             classCondition: editor.isActive({textAlign: 'left'}),
@@ -239,167 +310,12 @@ const EditorWrapper = ({editor}: Props) => {
                     {item.children}
                 </MenuButton>
             ))}
-            {/*<EditorToolbar editor={editor}/>*/}
+            <LineHeight editor={editor} options={generateOptions()}/>
             <EditorFontSize defaultSize={"16"} editor={editor}/>
             <LinkModal editor={editor}/>
-            <ImageModal editor={editor}/>
-            {/*<button onClick={() => editor.chain().focus().addImage().run()}>*/}
-            {/*    image test*/}
-            {/*</button>*/}
-            {/*<button onClick={() => editor.chain().focus().setImage().run()}>*/}
-            {/*    image test*/}
-            {/*</button>*/}
-
-            {/*<button onClick={() => editor.chain().focus().setHyperlink()}>set hyperlink</button>*/}
+            {/*<ImageModal editor={editor}/>*/}
             <EditorTextColor defaultColor={"#000000"} editor={editor}/>
+            {toolbar}
         </div>
     )
 }
-
-type PropsWrapper = {
-    onChange: (e: any) => void
-    description: string,
-    placeholder: string
-}
-
-
-const EditorWrapper2: FC<PropsWrapper> = ({onChange, description, placeholder}) => {
-
-    const editorRef = useRef<Editor | null>(null);
-    const $apiAuth = useAxiosAuth()
-
-    const uploadFn = async (file: File): Promise<{
-        url: string,
-        name: string
-    }> => {
-        const path = await FileService.upload($apiAuth, FileToFileList([file]), 'image')
-        return path[0];
-    }
-
-    const editor = useEditor({
-        extensions: [
-            UniqueID.configure({
-                attributeName: 'uid',
-                types: ['textBox', 'textBoxPC', 'textBoxLaptop', 'textBoxPhone'],
-            }),
-            Document,
-            // StarterKit.configure({
-            //     heading: false,
-            //     blockquote: false,
-            //     bulletList: false,
-            //     code: false,
-            //     codeBlock: false,
-            //     document: false,
-            //     history: false,
-            //     horizontalRule: false,
-            //     orderedList: false,
-            // }),
-            Heading.extend({
-                levels: [1, 2, 3, 4, 5, 6],
-                renderHTML({node, HTMLAttributes}) {
-                    const level = this.options.levels.includes(node.attrs.level)
-                        ? node.attrs.level
-                        : this.options.levels[0];
-                    const styles: { [index: number]: string } = {
-                        1: 'font-size: 2.25rem; line-height: 2.5rem;',
-                        2: 'font-size: 1.875rem; line-height: 2.25rem;',
-                        3: 'font-size: 1.5rem; line-height: 2rem;',
-                        4: 'font-size: 1.25rem; line-height: 1.75rem;',
-                        5: 'font-size: 1.125rem; line-height: 1.75rem;',
-                        6: 'font-size: 1rem; line-height: 1.5rem;',
-                    };
-                    return [
-                        `h${level}`,
-                        mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-                            style: `${styles[level]}`,
-                        }),
-                        0,
-                    ];
-                },
-            }).configure({levels: [1, 2, 3, 4, 5, 6]}),
-            Strike,
-            Italic,
-            Bold,
-            Text,
-            Paragraph,
-            Placeholder.configure({
-                placeholder: placeholder,
-                showOnlyWhenEditable: false,
-            }),
-            TextAlign.configure({
-                types: ['heading', 'paragraph'],
-            }),
-            TextStyle,
-            FontSize,
-            Underline,
-            Color,
-            LinkEdit.extend({
-                inclusive: false,
-            })
-                .configure({
-                    defaultProtocol: "https",
-                    openOnClick: true,
-                    autolink: true,
-                    modals: {
-                        previewHyperlink: (data) => {
-                            return previewHyperlink(data);
-                        },
-                        setHyperlink: (data) => {
-                            return setHyperlink(data);
-                        },
-                    },
-                    HTMLAttributes: {
-                        class: 'underline underline-offset-2 text-[#68cef8]'
-                    }
-                }),
-            ImageResize.configure({
-                uploadFn: uploadFn
-            }),
-        ],
-        immediatelyRender: false,
-        editorProps: {
-            attributes: {
-                class: 'border-gray-500 solid border-1 p-4 rounded-l-[20px] h-full min-h-[250px] max-h-[950px] overflow-auto bg-gray-100',
-            },
-        },
-        onBlur: () => {
-            if (editorRef.current) {
-                onChange(editorRef.current?.getHTML());
-            }
-        },
-        content: description,
-    })
-
-    useEffect(() => {
-        if (description.trim() !== '' && editor) {
-            editor.commands.setContent(description);
-        }
-        if (description === '' && editor) {
-            editor.commands.setContent('');
-        }
-    }, [description, editor]);
-
-    useEffect(() => {
-        editorRef.current = editor;
-    }, [editor]);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // const debounceUpdate = useCallback(
-    //     debounce(() => {
-    //         if (editor) {
-    //             onChange(editor.getHTML());
-    //         }
-    //     }, 300),
-    //     [editor]
-    // );
-
-    return (
-        <div className="flex transition-all flex-col gap-4">
-            <EditorWrapper editor={editorRef.current}/>
-            <EditorContent editor={editor}
-                           className="text-base transition-all max-w-[calc(100vw_-_28rem)] max-xl:max-w-[calc(100vw_-_24.5rem)] max-lg:max-w-[calc(100vw_-_9rem)]"/>
-        </div>
-    )
-}
-
-export default EditorWrapper2

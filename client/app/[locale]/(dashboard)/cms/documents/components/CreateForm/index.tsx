@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, {FC, useCallback, useRef, useState} from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
@@ -66,8 +66,7 @@ const DocumentsCreateForm: FC<Props> = ({ language }) => {
       const status = await DocumentsService.post(dataProduct, $apiAuth);
       if (status === 201) {
         await revalidateFetch("documents");
-        setFiles([]);
-        reset();
+        handlerReset();
         toast.success("Запис успішно створено");
       }
     } catch (error) {
@@ -98,6 +97,16 @@ const DocumentsCreateForm: FC<Props> = ({ language }) => {
   const handleRemove = useCallback((index: number, type: "file" | "image") => {
     setFiles((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
   }, []);
+
+  const handlerReset = () => {
+    if (editorRef.current) {
+      editorRef.current.setContent('');
+    }
+    setFiles([]);
+    reset();
+  };
+
+  const editorRef = useRef<{ setContent: (content: string) => void }>(null);
 
   return (
     <>
@@ -195,6 +204,7 @@ const DocumentsCreateForm: FC<Props> = ({ language }) => {
 
                             <EditorWrapper
                               onChange={field.onChange}
+                              ref={editorRef}
                               description={field.value}
                               placeholder={"Напишіть текст для слайдера"}
                             />

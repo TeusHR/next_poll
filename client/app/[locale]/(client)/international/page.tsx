@@ -62,6 +62,7 @@ const International = async ({ params: { locale }, searchParams }: Props) => {
               key={index}
               text={item.text}
               date={item.createdAt}
+              showDate={false}
               index={index}
               buttonDetails
               link={`/international/${item.id}`}

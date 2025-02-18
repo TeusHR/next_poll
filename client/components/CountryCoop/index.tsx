@@ -39,9 +39,10 @@ const CountryCoop: FC<Props> = ({foreignUniversities, title}) => {
                                                 {universities.description}
                                             </span>
                                             {universities.files &&
-                                              <span className="flex flex-col gap-3 relative w-max">
-                                                  {universities.files.map(item => (<Document key={item} link={item} />))}
-                                              </span>}
+                                                <div className="flex flex-col relative w-max gap-2">
+                                                    {universities.files.map(item => (<Document key={item} link={item} title={item}/>))}
+                                                </div>
+                                            }
                                         </div>
                                     </div>))}
                             </div>
