@@ -9,8 +9,6 @@ import TitleBack from "@/components/CMS/TitleBack";
 import ConferenceTable from "../ConferenceTable";
 import {LiftGroupConference} from "@/utils/ConferenceType";
 import ConferenceFile from "../ConferenceFile";
-import {useLocale} from "next-intl";
-import {Language} from "@/types/Language";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
