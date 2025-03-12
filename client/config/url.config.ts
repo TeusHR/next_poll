@@ -30,6 +30,8 @@ export const getInternationalUrl = (str: string) => `/international-projects${st
 
 export const getConferencesUrl = (str: string) => `/conferences${str}`
 
+export const getConferencesFileUrl = (str: string) => `/conference-file${str}`
+
 export const getActivitiesUrl = (str: string) => `/activities${str}`
 
 export const getResearchWorksUrl = (str: string) => `/research-works${str}`

@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEnum,
   IsISO8601,
   IsNotEmpty,
@@ -40,6 +41,10 @@ export class CreateConferenceDto {
   @IsOptional()
   @IsString({ each: true })
   files: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  isStudent: boolean;
 
   @IsEnum(Language)
   language: Language;

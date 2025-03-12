@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios";
-import { IConferences, IResponseMeta } from "@/types/Conference";
+import {IConferences, IConferencesFile, IResponseMeta} from "@/types/Conference";
 import {
-  getActivitiesUrl, getAgreementsUrl, getAssociationsUrl,
+  getActivitiesUrl, getAgreementsUrl, getAssociationsUrl, getConferencesFileUrl,
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
@@ -384,6 +384,26 @@ export const ConferencesService = {
       return data;
     } catch (e) {
       return [];
+    }
+  },
+  async getAllFiles(locale: string) {
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getConferencesFileUrl(`/?language=${locale}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["conference"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IConferencesFile = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
     }
   },
   async get(id: string) {

@@ -10,7 +10,7 @@ import {FileToFileList} from "@/utils/FIleToFileList";
 import moment from "moment";
 import {ConferencesService} from "@/services/CMS.service";
 import revalidateFetch from "@/services/revalidateFetch";
-import {Button, Input} from "@nextui-org/react";
+import {Button, Checkbox, Input} from "@nextui-org/react";
 import Select from "@/components/CMS/Select";
 import {typeConference} from "@/utils/ConferenceType";
 import {countryOptions} from "@/utils/CountrySet";
@@ -23,7 +23,7 @@ type Props = {
     language: Language;
 };
 
-const ConsultingCreateForm: FC<Props> = ({language}) => {
+const ConferenceCreateForm: FC<Props> = ({language}) => {
     const {handleSubmit, control, formState, reset, watch} = useForm<CreateConferenceForm>({
         mode: "all",
         defaultValues: {
@@ -32,6 +32,7 @@ const ConsultingCreateForm: FC<Props> = ({language}) => {
             date: "",
             toDate: "",
             text: "",
+            isStudent: false,
             type: new Set<string>(["SEMINAR"]),
         },
     });
@@ -66,6 +67,7 @@ const ConsultingCreateForm: FC<Props> = ({language}) => {
                 title: dataForm.title,
                 text: dataForm.text,
                 files: urlsFiles,
+                isStudent:dataForm.isStudent,
                 language,
             };
 
@@ -290,6 +292,28 @@ const ConsultingCreateForm: FC<Props> = ({language}) => {
                                             )}
                                         />
                                     </div>
+                                    <div
+                                        className="flex flex-row max-sm:flex-col gap-4 relative justify-between">
+                                        <Controller
+                                            name="isStudent"
+                                            control={control}
+                                            render={({field}) => (
+                                                <div className="w-full">
+                                                    <Checkbox isSelected={field.value}
+                                                              classNames={{
+                                                                  label:"text-lg"
+                                                              }}
+                                                              onValueChange={field.onChange}>
+                                                        Студентське?
+                                                    </Checkbox>
+                                                    {formState.errors.type?.message && (
+                                                        <div
+                                                            className="text-red-600 text-sm">{formState.errors.type.message}</div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        />
+                                    </div>
                                 </div>
                                 <div className="flex flex-row gap-4 w-full relative">
                                     <div className="flex flex-col gap-4 w-full relative justify-end">
@@ -374,4 +398,4 @@ const ConsultingCreateForm: FC<Props> = ({language}) => {
     );
 };
 
-export default ConsultingCreateForm;
+export default ConferenceCreateForm;

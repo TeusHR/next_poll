@@ -8,6 +8,7 @@ export interface ICreateConferences {
   text: string;
   files: string[];
   toDate?: string;
+  isStudent:boolean;
   language: Language;
 }
 
@@ -18,6 +19,7 @@ export interface IUpdateConferences {
   title: string;
   text: string;
   files: string[];
+  isStudent:boolean;
   toDate?: string;
 }
 
@@ -32,6 +34,7 @@ export interface IConferences {
   title: string;
   text: string;
   files: string[];
+  isStudent:boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -43,6 +46,24 @@ export type CreateConferenceForm = {
   toDate: string;
   title: string;
   text: string;
+  isStudent:boolean;
+  files: FileList;
+};
+
+export interface IConferencesFile {
+  "id": string,
+  "files": string[],
+  "language": string,
+  "createdAt": string,
+  "updatedAt": string
+}
+
+export interface ICreateConferencesFile {
+  files: string[];
+  language: Language;
+}
+
+export type CreateConferenceFileForm = {
   files: FileList;
 };
 
@@ -53,6 +74,7 @@ export type UpdateConferenceForm = {
   toDate: string;
   title: string;
   text: string;
+  isStudent:boolean;
   files: FileList;
 };
 

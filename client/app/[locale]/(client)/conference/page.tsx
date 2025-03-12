@@ -7,6 +7,7 @@ import {Metadata} from "next";
 import ReactCountryFlag from "react-country-flag";
 import {getCountryCodeByLabel} from "@/utils/CountrySet";
 import {getTranslations} from "next-intl/server";
+import Document from "@/components/Document";
 
 // export const metadata: Metadata = {
 //   title: "Заходи",
@@ -52,7 +53,10 @@ const monthNamesUkr = [
 
 const Conference = async ({params: {locale}}: Props) => {
     const conferences = await ConferencesService.getAll(locale.toUpperCase());
+    const conferencesFiles = await ConferencesService.getAllFiles(locale.toUpperCase());
     const titlePage = await getTranslations("Page");
+
+    console.log(conferencesFiles);
 
     return (
         <div className="xl:container mx-auto my-16 px-8 max-md:px-4 flex flex-col gap-14 max-sm:gap-8">
@@ -60,6 +64,9 @@ const Conference = async ({params: {locale}}: Props) => {
                 text={titlePage("conference")}
                 style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"
             />
+            <div className="flex flex-col relative w-max gap-3">
+                {conferencesFiles?.files.map(item => (<Document key={item} link={item} title={item}/>))}
+            </div>
             <div className="my-16 flex flex-col gap-8">
                 <div className="flex flex-col">
                     <div
@@ -77,10 +84,10 @@ const Conference = async ({params: {locale}}: Props) => {
                                             className="flex flex-row justify-between max-sm:flex-col gap-y-6 gap-x-24 max-xl:gap-x-8"
                                         >
                                             <div className="flex flex-col gap-3">
-                                                <div className="flex flex-row gap-2 flex-wrap">
-                                                  <span className="text-nowrap">
-                                                    {item.date} {item.toDate ? ` - ${item.toDate}` : ""}
-                                                  </span>
+                                                <div className="flex flex-row gap-2 flex-wrap items-center">
+                                                    <span className="text-nowrap">
+                                                        {item.date} {item.toDate ? ` - ${item.toDate}` : ""}
+                                                    </span>
                                                     <span className="text-[#D9D9D9]">&#8226;</span>
                                                     <span
                                                         className="text-nowrap">{StringConferenceType(item.type)}</span>
@@ -88,15 +95,23 @@ const Conference = async ({params: {locale}}: Props) => {
                                                     <div className="flex flex-row gap-2">
                                                         <span>{item.country}</span>
                                                         <span className="min-w-[20px]">
-                              {getCountryCodeByLabel(item.country) ? (
-                                  <ReactCountryFlag
-                                      countryCode={getCountryCodeByLabel(item.country) ?? ""}
-                                      svg
-                                      aria-label={item.country}
-                                  />
-                              ) : null}
-                            </span>
+                                                            {getCountryCodeByLabel(item.country) ? (
+                                                                <ReactCountryFlag
+                                                                    countryCode={getCountryCodeByLabel(item.country) ?? ""}
+                                                                    svg
+                                                                    aria-label={item.country}
+                                                                />
+                                                            ) : null}
+                                                        </span>
                                                     </div>
+                                                    {item.isStudent &&
+                                                        <>
+                                                            <span className="text-[#D9D9D9]">&#8226;</span>
+                                                            <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M4 10.18V14.18L11 18L18 14.18V10.18L11 14L4 10.18ZM11 0L0 6L11 12L20 7.09V14H22V6L11 0Z" fill="#111318"/>
+                                                            </svg>
+                                                        </>
+                                                    }
                                                 </div>
                                                 <div>
                                                     <span className="font-medium">{item.title}</span>

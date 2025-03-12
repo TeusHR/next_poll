@@ -16,15 +16,26 @@ model User {
 
 // Конференції, семінари та конкурси
 model Conference {
-  id       String         @id @default(uuid())
-  date     DateTime       @db.Timestamptz(3)
-  toDate   DateTime?      @db.Timestamptz(3)
-  type     ConferenceType
-  country  String
-  title    String
-  text     String
-  files    String[]       @default([])
-  language Language       @default(UA)
+  id        String         @id @default(uuid())
+  date      DateTime       @db.Timestamptz(3)
+  toDate    DateTime?      @db.Timestamptz(3)
+  type      ConferenceType
+  country   String
+  title     String
+  text      String
+  files     String[]       @default([])
+  language  Language       @default(UA)
+  isStudent Boolean        @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+// Файлы Конференції
+model ConferenceFile {
+  id       String   @id @default(uuid())
+  files    String[] @default([])
+  language Language @unique @default(UA)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)

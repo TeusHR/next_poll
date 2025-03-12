@@ -9,7 +9,7 @@ type Props = {
 const Document = ({ link, title }: Props) => {
 
   const renderFileName = (fileName: string): string => {
-    return fileName.replace("/uploads/pdf/", "").replace(/__[^.]+/, "");
+    return fileName.replace("/uploads/pdf/", "").replace("/uploads/files/", "").replace(/__[^.]+/, "");
   };
 
   return (

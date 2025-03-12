@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
 import {
-  getActivitiesUrl, getAgreementsUrl, getAssociationsUrl,
+  getActivitiesUrl, getAgreementsUrl, getAssociationsUrl, getConferencesFileUrl,
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
@@ -15,11 +15,11 @@ import {
   getTrainingUrl
 } from "@/config/url.config";
 import {
-  IConferences,
-  ICreateConferences,
+  IConferences, IConferencesFile,
+  ICreateConferences, ICreateConferencesFile,
   IGroupConference,
   IResponseMeta,
-  IUpdateConferences,
+  IUpdateConferences
 } from "@/types/Conference";
 import { ICreateScience, IScience, IUpdateScience } from "@/types/Science";
 import { ICooperation, ICreateCooperation, IUpdateCooperation } from "@/types/Cooperation";
@@ -36,6 +36,7 @@ import { ICreateDigam, IDigam } from "@/types/Digam";
 import { ICreateDocuments, IDocuments } from "@/types/Documents";
 import { IAssociations, ICreateAssociations } from "@/types/Associations";
 import { IAgreements, ICreateAgreements } from "@/types/Agreements";
+import { Language } from "@/types/Language";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -49,6 +50,14 @@ export const ConferencesService = {
   async postConferences(item: ICreateConferences, authAxios: AxiosInstance) {
     const { status } = await authAxios.post<ICreateConferences>(getConferencesUrl(""), item);
     return status;
+  },
+  async postConferencesFiles(item: ICreateConferencesFile, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateConferencesFile>(getConferencesFileUrl(""), item);
+    return status;
+  },
+  async getConferencesFiles(language: Language, authAxios: AxiosInstance) {
+    const { data } = await authAxios.get<IConferencesFile>(getConferencesFileUrl(`/?language=${language}`));
+    return data;
   },
   async updateConferences(item: IUpdateConferences, id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.patch<ICreateConferences>(getConferencesUrl(`/${id}`), item);

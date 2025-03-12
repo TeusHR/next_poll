@@ -28,6 +28,7 @@ import { DocumentsModule } from "./documents/documents.module";
 import { AssociationsModule } from "./associations/associations.module";
 import { AgreementsModule } from "./agreements/agreements.module";
 import { PrismaService } from "./prisma.service";
+import { ConferenceFileModule } from './conference-file/conference-file.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { PrismaService } from "./prisma.service";
     ConsultingModule,
     AgreementsModule,
     TrainingModule,
+    ConferenceFileModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, JwtService],

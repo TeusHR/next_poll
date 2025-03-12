@@ -8,6 +8,9 @@ import {ILiftGroupConference} from "@/types/Conference";
 import TitleBack from "@/components/CMS/TitleBack";
 import ConferenceTable from "../ConferenceTable";
 import {LiftGroupConference} from "@/utils/ConferenceType";
+import ConferenceFile from "../ConferenceFile";
+import {useLocale} from "next-intl";
+import {Language} from "@/types/Language";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
@@ -35,12 +38,17 @@ const ConferenceTabs = () => {
         }
     }, [$apiAuth, searchParams, status]);
 
+
     return (
         <div className="flex flex-col px-10 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
             <div className="flex items-center justify-between">
                 <TitleBack title="Конференції, семінари та конкурси" isBack={false}/>
             </div>
             <ConferenceTable tableColumn={tableColumn} conferences={initialConference} showAdd/>
+            <div className="flex gap-2 flex-col mt-8">
+                <TitleBack title="Завантажити файли" isBack={false}/>
+                <ConferenceFile />
+            </div>
         </div>
     )
 }

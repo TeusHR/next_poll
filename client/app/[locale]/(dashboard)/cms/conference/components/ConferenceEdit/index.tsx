@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 import {ConferencesService} from "@/services/CMS.service";
 import {FileService} from "@/services/file.service";
 import moment from "moment";
-import {Button, Input} from "@nextui-org/react";
+import {Button, Checkbox, Input} from "@nextui-org/react";
 import Select from "@/components/CMS/Select";
 import {typeConference} from "@/utils/ConferenceType";
 import {countryOptions} from "@/utils/CountrySet";
@@ -32,6 +32,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             date: "",
             toDate: "",
             text: "",
+            isStudent:false,
             type: new Set<string>(),
         },
     });
@@ -90,6 +91,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                 toDate: dataForm.toDate ? moment(dataForm.toDate).format() : undefined,
                 title: dataForm.title,
                 text: dataForm.text,
+                isStudent:dataForm.isStudent,
                 files: allFilesUrls,
             };
             const status = await ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth);
@@ -133,6 +135,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             setValue("title", conference.title);
             setValue("country", new Set([conference.country]));
             setValue("type", new Set([conference.type]));
+            setValue("isStudent", conference.isStudent)
             if (conference.dateISO) setValue("date", moment(conference.dateISO).format("YYYY-MM-DD"));
             if (conference.toDateISO) setValue("toDate", moment(conference.toDateISO).format("YYYY-MM-DD"));
             setValue("text", conference.text);
@@ -355,10 +358,31 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                         </div>
                                     </div>
                                 </div>
+                                <div
+                                    className="flex flex-row max-sm:flex-col gap-4 relative justify-between">
+                                    <Controller
+                                        name="isStudent"
+                                        control={control}
+                                        render={({field}) => (
+                                            <div className="w-full">
+                                                <Checkbox isSelected={field.value}
+                                                          classNames={{
+                                                              label:"text-lg"
+                                                          }}
+                                                          onValueChange={field.onChange}>
+                                                    Студентське?
+                                                </Checkbox>
+                                                {formState.errors.type?.message && (
+                                                    <div
+                                                        className="text-red-600 text-sm">{formState.errors.type.message}</div>
+                                                )}
+                                            </div>
+                                        )}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
-                    {/*</div>*/}
                     <div className="rounded-[20px] w-full bg-white px-8 py-6 flex flex-col gap-4">
                         <div className="flex">
                             <div className="w-full flex flex-col gap-4">
