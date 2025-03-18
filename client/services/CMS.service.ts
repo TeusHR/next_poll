@@ -8,7 +8,7 @@ import {
   getInnovationsUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
-  getLaboratoryUrl,
+  getLaboratoryUrl, getPublicInformationUrl,
   getResearchWorksUrl,
   getScienceSchoolsUrl,
   getStudentUrl,
@@ -37,6 +37,13 @@ import { ICreateDocuments, IDocuments } from "@/types/Documents";
 import { IAssociations, ICreateAssociations } from "@/types/Associations";
 import { IAgreements, ICreateAgreements } from "@/types/Agreements";
 import { Language } from "@/types/Language";
+import {
+  ICreatePageForm,
+  ICreatePublicInformation,
+  IPage,
+  IPageForm,
+  IPublicInformation
+} from "@/types/PublicInformation";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -65,6 +72,41 @@ export const ConferencesService = {
   },
   async removeConferences(id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.delete(getConferencesUrl(`/${id}`));
+    return status === 200;
+  },
+};
+
+export const PublicInformation = {
+  async getAllPublicInformation(authAxios: AxiosInstance) {
+    const { data } = await authAxios.get<IPublicInformation[]>(getPublicInformationUrl(`/?language=UA`));
+    return data;
+  },
+  async getPublicInformation(id: string) {
+    const { data } = await $api.get<IPublicInformation>(getPublicInformationUrl(`/${id}`));
+    return data;
+  },
+  async postPublicInformation(item: ICreatePublicInformation, authAxios: AxiosInstance) {
+    const { status, data } = await authAxios.post<IPublicInformation>(getPublicInformationUrl(""), item);
+    return {status , data};
+  },
+  async postPage(item: ICreatePageForm, authAxios: AxiosInstance) {
+    const { status, data } = await authAxios.post<IPage>(getPublicInformationUrl("/pages"), item);
+    return {status , data};
+  },
+  async updatePublicInformation(item: ICreatePublicInformation, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<IPublicInformation>(getPublicInformationUrl(`/${id}`), item);
+    return status;
+  },
+  async updatePublicInformationPage(item: ICreatePageForm, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<IPageForm>(getPublicInformationUrl(`/pages/${id}`), item);
+    return status;
+  },
+  async removePublicInformation(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getPublicInformationUrl(`/${id}`));
+    return status === 200;
+  },
+  async removePublicInformationPage(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getPublicInformationUrl(`/pages/${id}`));
     return status === 200;
   },
 };

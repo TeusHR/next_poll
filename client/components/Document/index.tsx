@@ -4,9 +4,10 @@ import Link from "next/link";
 type Props = {
   link: string;
   title?: string;
+  className?: string;
 };
 
-const Document = ({ link, title }: Props) => {
+const Document = ({ link, title, className }: Props) => {
 
   const renderFileName = (fileName: string): string => {
     return fileName.replace("/uploads/pdf/", "").replace("/uploads/files/", "").replace(/__[^.]+/, "");
@@ -17,7 +18,7 @@ const Document = ({ link, title }: Props) => {
       href={link}
       rel="noopener noreferrer"
       target="_blank"
-      className="flex flex-row gap-3 items-center w-fit text-base max-md:text-sm"
+      className={`flex flex-row gap-3 items-center w-fit text-base max-md:text-sm ${className}`}
     >
       <div className="w-[24px] h-[30px]">
         <svg width="24" height="30" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">

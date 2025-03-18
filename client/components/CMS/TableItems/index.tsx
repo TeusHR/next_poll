@@ -25,7 +25,7 @@ import {
     ActivityService,
     ConferencesService, CooperationService,
     DocumentsService,
-    InnovationsService, InternationalService, LaboratoryService,
+    InnovationsService, InternationalService, LaboratoryService, PublicInformation,
     ResearchService, ScienceService
 } from "@/services/CMS.service";
 import {toast} from 'react-toastify';
@@ -40,6 +40,7 @@ import {ILaboratory} from '@/types/Laboratory';
 import {IScience} from '@/types/Science';
 import revalidateFetch from '@/services/revalidateFetch';
 import { IDocuments } from "@/types/Documents";
+import {useLocale} from "next-intl";
 
 type Props<T> = {
     dataItems: T[]
@@ -90,13 +91,13 @@ const TableItems = <T extends ValidDataTypes>(
         totalDataItems = 0,
         totalPages,
         deleteMessage = 'Ви впевнені що хочете видалити?',
-
     }: Props<T>) => {
 
 
     const router = useRouter();
     const pathname = usePathname();
     const $apiAuth = useAxiosAuth();
+    const language = useLocale()
 
     const [data, setData] = useState<T[]>(dataItems);
     const [page, setPage] = useState(initialPage || 1);
@@ -188,6 +189,10 @@ const TableItems = <T extends ValidDataTypes>(
                 return moment(String(cellValue)).format('YYYY-MM-DD kk:mm');
             case 'to':
                 return moment(String(cellValue)).format('YYYY-MM-DD kk:mm');
+            case 'createdAt':
+                return moment(String(cellValue)).locale(language).format('YYYY-MM-DD kk:mm');
+            case 'updatedAt':
+                return moment(String(cellValue)).locale(language).format('YYYY-MM-DD kk:mm');
             case 'sex':
                 return !cellValue ? '' : String(cellValue) === 'MALE' ? 'Чоловіча' : 'Жіноча';
             case 'text':
@@ -332,6 +337,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
             } else if (typeProduct === 'laboratory') {
                 await LaboratoryService.removeLaboratory(idItem, apiAuth);
                 await revalidateFetch('laboratory');
+            } else if (typeProduct === 'public-information') {
+                await PublicInformation.removePublicInformation(idItem, apiAuth);
+                await revalidateFetch('public-information');
             }
 
             toast.success('Запис видалено');

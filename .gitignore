@@ -35,6 +35,7 @@ yarn-error.log*
 # prettier & eslint
 .prettierrc.json
 .prettierignore
+/server/.eslintrc.js
 
 # Vercel for Next.js
 .vercel

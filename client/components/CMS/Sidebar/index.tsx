@@ -61,6 +61,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/international',
     },
     {
+        title: 'Публічна інформація',
+        path: '/cms/public-information',
+    },
+    {
         title: 'Наукова робота ОНТУ',
         path: '/cms/research',
     },

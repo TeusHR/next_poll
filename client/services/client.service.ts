@@ -10,7 +10,7 @@ import {
   getInnovationsUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
-  getLaboratoryUrl,
+  getLaboratoryUrl, getPublicInformationUrl,
   getResearchWorksUrl,
   getScienceSchoolsUrl,
   getStudentUrl,
@@ -36,6 +36,7 @@ import { IDocuments } from "@/types/Documents";
 import { IAssociations } from "@/types/Associations";
 
 import { IAgreements } from "@/types/Agreements";
+import {IPublicInformation} from "@/types/PublicInformation";
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
     const searchParams = new URLSearchParams({
@@ -122,6 +123,36 @@ export const DocumentsService = {
       return data;
     } catch (e) {
       return getEmptyResponse<IDocuments>();
+    }
+  },
+};
+
+export const PublicInformationService = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      // page: page.toString(),
+      // limit: limit.toString(),
+      // column,
+      // order,
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getPublicInformationUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["public-information"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IPublicInformation[] = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
     }
   },
 };

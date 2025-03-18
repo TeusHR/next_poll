@@ -163,6 +163,43 @@ model LaboratoryDevelopment {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
+// Публічна інформація
+model PublicInformation {
+  id    String   @id @default(uuid())
+  title String
+  files String[]
+
+  pages Page[]
+
+  language  Language @default(UA)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+// Динамічна сторінка публічної інформації
+model Page {
+  id    String   @id @default(uuid())
+  title String
+  files String[]
+
+  information         PublicInformation @relation(fields: [publicInformationId], references: [id])
+  publicInformationId String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+// model Folder {
+//   id    String   @id @default(uuid())
+//   title String
+//   files String[]
+//
+//   pageId String
+//
+//   createdAt DateTime @default(now()) @db.Timestamptz(3)
+//   updatedAt DateTime @updatedAt @db.Timestamptz(3)
+// }
+
 // Відділ міжнародних грантів та академічної мобільності (Department of International Grants and Academic Mobility)
 model DIGAM {
   id                  String   @id @default(uuid())
