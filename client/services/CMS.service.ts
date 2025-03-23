@@ -4,7 +4,7 @@ import {
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
-  getDigamUrl, getDocumentsUrl,
+  getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl,
   getInnovationsUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
@@ -44,6 +44,7 @@ import {
   IPageForm,
   IPublicInformation
 } from "@/types/PublicInformation";
+import {ICreateDocumentsTemplates, IDocumentsTemplates} from "@/types/DocumentsTemplates";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -107,6 +108,29 @@ export const PublicInformation = {
   },
   async removePublicInformationPage(id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.delete(getPublicInformationUrl(`/pages/${id}`));
+    return status === 200;
+  },
+};
+
+export const DocumentTemplates = {
+  async getAll(authAxios: AxiosInstance) {
+    const { data } = await authAxios.get<IDocumentsTemplates[]>(getDocumentsTemplateUrl(`/?language=UA`));
+    return data;
+  },
+  async get(id: string) {
+    const { data } = await $api.get<IDocumentsTemplates>(getDocumentsTemplateUrl(`/${id}`));
+    return data;
+  },
+  async post(item: ICreateDocumentsTemplates, authAxios: AxiosInstance) {
+    const { status, data } = await authAxios.post<IDocumentsTemplates>(getDocumentsTemplateUrl(""), item);
+    return {status , data};
+  },
+  async update(item: ICreateDocumentsTemplates, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<IDocumentsTemplates>(getDocumentsTemplateUrl(`/${id}`), item);
+    return status;
+  },
+  async remove(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getDocumentsTemplateUrl(`/${id}`));
     return status === 200;
   },
 };

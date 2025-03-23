@@ -4,6 +4,7 @@ import { Link } from "@/routing/*";
 import {usePathname} from "next/navigation";
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";
+import {useLocale} from "next-intl";
 
 export type SideNavItem = {
     title: string;
@@ -65,6 +66,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/public-information',
     },
     {
+        title: 'Шаблони документів',
+        path: '/cms/documents-templates',
+    },
+    {
         title: 'Наукова робота ОНТУ',
         path: '/cms/research',
     },
@@ -124,6 +129,7 @@ const Sidebar = ({}) => {
 const MenuItem = ({ item }: { item: SideNavItem }) => {
     const pathname = usePathname();
     const [subMenuOpen, setSubMenuOpen] = useState(false);
+    const language = useLocale();
     const toggleSubMenu = () => {
         setSubMenuOpen(!subMenuOpen);
     };
@@ -135,7 +141,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                     <button
                         onClick={toggleSubMenu}
                         className={`flex flex-row items-center p-2 rounded-lg hover-bg-zinc-100 w-full justify-between hover:bg-zinc-100 ${
-                            pathname.includes(item.path) ? 'bg-zinc-100' : ''
+                            `/${language}${item.path}` === pathname ? 'bg-zinc-300' : ''
                         }`}
                     >
                         <div className="flex flex-row space-x-4 items-center">
@@ -159,7 +165,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                                         key={idx}
                                         href={subItem.path}
                                         className={`${
-                                            subItem.path === pathname ? 'font-bold' : ''
+                                            `/${language}${subItem.path}` === pathname ? 'font-bold' : ''
                                         }`}
                                     >
                                         <span>{subItem.title}</span>
@@ -172,8 +178,8 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
             ) : (
                 <Link
                     href={item.path}
-                    className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:bg-zinc-100 ${
-                        item.path === pathname ? 'bg-zinc-100' : ''
+                    className={`flex flex-row space-x-4 items-center p-1 rounded-lg hover:bg-zinc-100 ${
+                        `/${language}${item.path}` === pathname ? 'bg-zinc-300' : ''
                     }`}
                 >
                     {item.icon}

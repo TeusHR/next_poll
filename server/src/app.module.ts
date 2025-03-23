@@ -30,6 +30,7 @@ import { AgreementsModule } from "./agreements/agreements.module";
 import { PrismaService } from "./prisma.service";
 import { ConferenceFileModule } from './conference-file/conference-file.module';
 import { PublicInformationModule } from './public-information/public-information.module';
+import { DocumentsTemplatesModule } from './documents-templates/documents-templates.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { PublicInformationModule } from './public-information/public-information
     TrainingModule,
     ConferenceFileModule,
     PublicInformationModule,
+    DocumentsTemplatesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, JwtService],

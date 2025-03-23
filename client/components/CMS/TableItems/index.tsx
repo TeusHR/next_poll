@@ -24,7 +24,7 @@ import {StringConferenceType} from '@/utils/ConferenceType';
 import {
     ActivityService,
     ConferencesService, CooperationService,
-    DocumentsService,
+    DocumentsService, DocumentTemplates,
     InnovationsService, InternationalService, LaboratoryService, PublicInformation,
     ResearchService, ScienceService
 } from "@/services/CMS.service";
@@ -39,8 +39,9 @@ import {IInternational} from '@/types/International';
 import {ILaboratory} from '@/types/Laboratory';
 import {IScience} from '@/types/Science';
 import revalidateFetch from '@/services/revalidateFetch';
-import { IDocuments } from "@/types/Documents";
+import {IDocuments} from "@/types/Documents";
 import {useLocale} from "next-intl";
+import {IDocumentsTemplates} from "@/types/DocumentsTemplates";
 
 type Props<T> = {
     dataItems: T[]
@@ -72,7 +73,8 @@ type ValidDataTypes =
     | ILaboratory
     | IInternational
     | IDocuments
-    | IScience;
+    | IScience
+    | IDocumentsTemplates;
 
 const TableItems = <T extends ValidDataTypes>(
     {
@@ -340,6 +342,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
             } else if (typeProduct === 'public-information') {
                 await PublicInformation.removePublicInformation(idItem, apiAuth);
                 await revalidateFetch('public-information');
+            } else if (typeProduct === 'documents-templates') {
+                await DocumentTemplates.remove(idItem, apiAuth);
+                await revalidateFetch('documents-templates');
             }
 
             toast.success('Запис видалено');

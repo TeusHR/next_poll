@@ -31,13 +31,15 @@ export interface IPublicInformationPageForm {
 export interface ICreatePageForm {
     title: string;
     files: string[];
-    publicInformationId:string;
+    publicInformationId?:string;
+    documentsTemplatesId?:string;
 }
 
 export interface IPageForm {
     title: string;
     files: string[];
-    publicInformationId:string;
+    publicInformationId?:string;
+    documentsTemplatesId?:string;
     createdAt: string;
     updatedAt: string;
 }

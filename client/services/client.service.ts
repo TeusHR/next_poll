@@ -5,7 +5,7 @@ import {
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
-  getDigamUrl, getDocumentsUrl,
+  getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl,
   getFeedBackUrl,
   getInnovationsUrl,
   getInternationalUrl,
@@ -37,6 +37,7 @@ import { IAssociations } from "@/types/Associations";
 
 import { IAgreements } from "@/types/Agreements";
 import {IPublicInformation} from "@/types/PublicInformation";
+import {IDocumentsTemplates} from "@/types/DocumentsTemplates";
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
     const searchParams = new URLSearchParams({
@@ -149,6 +150,36 @@ export const PublicInformationService = {
       if (!res.ok) throw new Error("Failed to fetch data");
 
       const data: IPublicInformation[] = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
+
+export const DocumentsTemplatesService = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      // page: page.toString(),
+      // limit: limit.toString(),
+      // column,
+      // order,
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getDocumentsTemplateUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["documents-templates"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IDocumentsTemplates[] = await res.json();
 
       return data;
     } catch (e) {
