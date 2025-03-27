@@ -10,6 +10,7 @@ import {Button} from "@nextui-org/react";
 import TitleBack from "@/components/CMS/TitleBack";
 import TableItems from "@/components/CMS/TableItems";
 import {IInnovation} from "@/types/Innovation";
+import {useLocale} from "next-intl";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
@@ -25,17 +26,18 @@ const InnovationsTable = ({}) => {
     const searchParams = useSearchParams()
     const {status} = useSession()
     const $apiAuth = useAxiosAuth()
+    const language = useLocale()
 
     const showAdd = true
 
     useEffect(() => {
         if (status === 'authenticated') {
-            InnovationsService.getAllInnovations($apiAuth, Number(searchParams.get('page') ?? 1), 999).then(res => {
+            InnovationsService.getAllInnovations($apiAuth, Number(searchParams.get('page') ?? 1), 999, language.toUpperCase()).then(res => {
                 setInitialInnovation(res)
                 setFilterInnovation(res.data)
             })
         }
-    }, [$apiAuth, searchParams, status]);
+    }, [$apiAuth, language, searchParams, status]);
 
     const router = useRouter()
     const [valueSearch,

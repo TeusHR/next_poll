@@ -27,5 +27,8 @@
     "countryCoop": "Currently there are agreements on the cooperation of ONTU with the following foreign universities and organizations:",
     "memberOrganizations": "ONTU is a valid member of the following international organizations:",
     "notFound": "Page not found"
+  },
+  "Conference" : {
+    "isStudent": "Conference for education seekers"
   }
 }

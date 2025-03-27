@@ -4,7 +4,7 @@ import {
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
-  getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl,
+  getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl, getInnovationFiltersUrl,
   getInnovationsUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
@@ -45,6 +45,7 @@ import {
   IPublicInformation
 } from "@/types/PublicInformation";
 import {ICreateDocumentsTemplates, IDocumentsTemplates} from "@/types/DocumentsTemplates";
+import {ICreateInnovationFilterForm, IInnovationFilter} from "@/types/InnovationFilter";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -272,9 +273,9 @@ export const ActivityService = {
 };
 
 export const InnovationsService = {
-  async getAllInnovations(authAxios: AxiosInstance, page: number, limit: number) {
+  async getAllInnovations(authAxios: AxiosInstance, page: number, limit: number, language: string) {
     const { data } = await authAxios.get<IResponseMeta<IInnovation[]>>(
-      getInnovationsUrl(`?page=${page}&limit=${limit}`),
+      getInnovationsUrl(`?page=${page}&limit=${limit}&language=${language}`),
     );
     return data;
   },
@@ -292,6 +293,30 @@ export const InnovationsService = {
   },
   async removeInnovation(id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.delete(getInnovationsUrl(`/${id}`));
+    return status === 200;
+  },
+};
+
+
+export const InnovationsFilters = {
+  async getAll(authAxios: AxiosInstance, language:string) {
+    const { data } = await authAxios.get<IInnovationFilter[]>(getInnovationFiltersUrl(`?language=${language}`),);
+    return data;
+  },
+  async get(id: string) {
+    const { data } = await $api.get<IInnovationFilter>(getInnovationFiltersUrl(`/${id}`));
+    return data;
+  },
+  async post(item: ICreateInnovationFilterForm, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateInnovationFilterForm>(getInnovationFiltersUrl(""), item);
+    return status;
+  },
+  async update(item: ICreateInnovationFilterForm, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<ICreateInnovationFilterForm>(getInnovationFiltersUrl(`/${id}`), item);
+    return status;
+  },
+  async remove(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getInnovationFiltersUrl(`/${id}`));
     return status === 200;
   },
 };

@@ -6,7 +6,7 @@ import {
   getConsultingUrl,
   getCooperationsUrl,
   getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl,
-  getFeedBackUrl,
+  getFeedBackUrl, getInnovationFiltersUrl,
   getInnovationsUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
@@ -38,6 +38,8 @@ import { IAssociations } from "@/types/Associations";
 import { IAgreements } from "@/types/Agreements";
 import {IPublicInformation} from "@/types/PublicInformation";
 import {IDocumentsTemplates} from "@/types/DocumentsTemplates";
+import {IInnovationFilter} from "@/types/InnovationFilter";
+
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
     const searchParams = new URLSearchParams({
@@ -216,6 +218,30 @@ export const InnovationService = {
       return getEmptyResponse<IInnovation>();
     }
   },
+  async getAllClient(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string, filter:string[]) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
+    try {
+      const res = await $api.get(`${getInnovationsUrl(`?${searchParams.toString()}`)}`, {
+        params: {
+          filter: filter,
+        }
+      });
+
+      if (!res.status) throw new Error("Failed to fetch data");
+
+      const data: IResponseMeta<IInnovation[]> = await res.data;
+
+      return data;
+    } catch (e) {
+      return getEmptyResponse<IInnovation>();
+    }
+  },
   async get(id: string) {
     try {
       const res = await fetch(`${LOCAL_API_URL}${getInnovationsUrl(`/${id}`)}`, {
@@ -234,6 +260,36 @@ export const InnovationService = {
       return data;
     } catch (e) {
       return null;
+    }
+  },
+};
+
+export const InnovationFilters = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      // page: page.toString(),
+      // limit: limit.toString(),
+      // column,
+      // order,
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getInnovationFiltersUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["directions-filter"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IInnovationFilter[] = await res.json();
+
+      return data;
+    } catch (e) {
+      return [];
     }
   },
 };

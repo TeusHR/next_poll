@@ -5,14 +5,18 @@ import { IInnovation, IUpdateInnovation, IUpdateInnovationForm } from "@/types/I
 import { useSession } from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { FileToFileList } from "@/utils/FIleToFileList";
-import { InnovationsService } from "@/services/CMS.service";
+import {InnovationsFilters, InnovationsService} from "@/services/CMS.service";
 import { toast } from "react-toastify";
-import { Button, Input } from "@nextui-org/react";
+import {Button, Input, useDisclosure} from "@nextui-org/react";
 import DNDUpload from "@/components/DNDFiles";
 import PreviewUpload from "@/components/DNDFiles/previewUpload";
 import EditorWrapper from "@/components/EditorWrapper";
 import { FileService } from "@/services/file.service";
 import revalidateFetch from "@/services/revalidateFetch";
+import {IInnovationFilter} from "@/types/InnovationFilter";
+import Select from "@/components/CMS/Select";
+import {useLocale} from "next-intl";
+import InnovationFilterModal from "@/components/CMS/InnovationFilterModal";
 
 type Props = {
   innovationsId: string;
@@ -26,12 +30,26 @@ export type uploadType = {
   url: string;
 };
 
+export const SelectIdFilters = (filters: IInnovationFilter[]): Set<string> => {
+  if (filters && filters.length > 0) {
+    const set = new Set<string>()
+    filters.forEach(item => {
+      set.add(item.id.toString())
+    })
+    return set
+  } else {
+    return new Set();
+  }
+}
+
+
 const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
   const { handleSubmit, control, formState, setValue, setError } = useForm<IUpdateInnovationForm>({
     mode: "all",
     defaultValues: {
       title: "",
       text: "",
+      filter:new Set<string>
     },
   });
 
@@ -41,6 +59,19 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
   const [innovations, setInnovations] = useState<IInnovation>();
   const [files, setFiles] = useState<uploadType[]>([]);
   const [filesImage, setFilesImage] = useState<uploadType[]>([]);
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [innovationFilters, setInnovationFilters] = useState<IInnovationFilter[]>([])
+  const language = useLocale();
+
+  const handlerFetchFilters = useCallback(() => {
+    InnovationsFilters.getAll($apiAuth, language.toUpperCase()).then(res => {
+      setInnovationFilters(res.sort((a, b) => a.name.localeCompare(b.name)))
+    })
+  }, [$apiAuth, language])
+
+  useEffect(() => {
+    handlerFetchFilters()
+  }, [handlerFetchFilters]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -64,6 +95,7 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
     if (innovations) {
       setValue("title", innovations.title);
       setValue("text", innovations.text);
+      setValue('filter', SelectIdFilters(innovations.filter))
       setEditorContent(innovations.text);
       const serverFiles: uploadType[] = innovations.files.map((url) => ({
         name: renderName(url),
@@ -113,12 +145,14 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
       const existingUrlDocs = files.filter((file) => file.typeUpload === "server").map((file) => file.url);
 
       const existingUrlImages = filesImage.filter((file) => file.typeUpload === "server").map((file) => file.url);
+      const filters = Array.from(dataForm.filter)
 
       const dataProduct: IUpdateInnovation = {
         title: dataForm.title,
         text: dataForm.text,
         files: [...existingUrlDocs, ...urlsDocs],
         images: [...existingUrlImages, ...urlsImages],
+        filter:filters,
       };
 
       const status = await InnovationsService.updateInnovation(dataProduct, innovationsId, $apiAuth);
@@ -171,8 +205,14 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
     setter((currentFiles) => currentFiles.filter((_, fileIndex) => index !== fileIndex));
   }, []);
 
+  const handlerOpenChangeModal = () => {
+    handlerFetchFilters()
+    onOpenChange()
+  }
+
   return (
     <div className="flex flex-col gap-8 w-full">
+      <InnovationFilterModal isOpen={isOpen} onOpenChange={handlerOpenChangeModal} onOpen={onOpen}/>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-12 max-2xl:gap-4 flex-col">
           <div className="flex flex-row max-md:flex-col gap-8 max-lg:gap-4 justify-between">
@@ -211,6 +251,37 @@ const InnovationsEdit: FC<Props> = ({ innovationsId }) => {
                         />
                       )}
                     />
+                    <div className="flex w-1/2">
+                      <Controller
+                          name="filter"
+                          control={control}
+                          render={({field}) => (
+                              <div className="w-full">
+                                <div className={`flex justify-between items-end text-brand-gray-200 max-xl:!text-sm ${formState.errors.filter?.message ? "text-red-600" : ""}`}>
+                                  Напрямок
+                                  <span onClick={onOpen} className={"text-xs text-gray-600 underline decoration-dashed cursor-pointer"}>
+                                                                Створити
+                                                            </span>
+                                </div>
+                                <Select options={innovationFilters.map(item => ({
+                                  value: item.id.toString(),
+                                  label: item.name
+                                }))}
+                                        selectionMode={'multiple'}
+                                        placeholder={'Фільтр'}
+                                        selected={field.value}
+                                        isSearchable
+                                        justify
+                                        disabled={innovationFilters.length === 0}
+                                        onChange={field.onChange}/>
+                                {formState.errors.filter?.message && (
+                                    <div
+                                        className="text-red-600 text-sm">{formState.errors.filter.message}</div>
+                                )}
+                              </div>
+                          )}
+                      />
+                    </div>
                     <div className="flex flex-col gap-4 w-full relative justify-end">
                       <Controller
                         name="files"

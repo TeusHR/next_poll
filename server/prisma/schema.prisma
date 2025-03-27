@@ -99,6 +99,20 @@ model Innovation {
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  filter DirectionFilter[]
+}
+
+// Напрямки розробки
+model DirectionFilter {
+  id       String   @id @default(uuid())
+  name     String   @unique
+  language Language @default(UA)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  innovation Innovation[]
 }
 
 // Студентська наука

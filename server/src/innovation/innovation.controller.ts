@@ -19,7 +19,6 @@ export class InnovationController {
   constructor(private readonly innovationService: InnovationService) {}
 
   @Post()
-  @Auth()
   create(@Body() createInnovationDto: CreateInnovationDto) {
     return this.innovationService.create(createInnovationDto);
   }
@@ -31,13 +30,16 @@ export class InnovationController {
     @Query("page") page?: string,
     @Query("column") column?: string,
     @Query("order") order?: string,
+    @Query("filter") filter?: string[],
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
+    console.log(filter);
     return this.innovationService.findAll({
       language,
       perPage: +limit || undefined,
       page: +page || 1,
       orderBy,
+      filter,
     });
   }
 

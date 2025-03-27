@@ -34,6 +34,8 @@ export const getPublicInformationUrl = (str: string) => `/public-information${st
 
 export const getDocumentsTemplateUrl = (str: string) => `/documents-templates${str}`
 
+export const getInnovationFiltersUrl = (str: string) => `/direction-filter${str}`
+
 export const getConferencesFileUrl = (str: string) => `/conference-file${str}`
 
 export const getActivitiesUrl = (str: string) => `/activities${str}`

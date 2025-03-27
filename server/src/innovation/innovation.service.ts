@@ -11,8 +11,15 @@ export class InnovationService {
   constructor(private prismaService: PrismaService) {}
 
   create(createInnovationDto: CreateInnovationDto) {
+    const { filter, ...data } = createInnovationDto;
     return this.prismaService.innovation.create({
-      data: createInnovationDto,
+      data: {
+        ...data,
+        filter: { connect: filter.map((item) => ({ id: item })) },
+      },
+      include: {
+        filter: true,
+      },
     });
   }
 
@@ -21,17 +28,27 @@ export class InnovationService {
     perPage,
     orderBy,
     language,
+    filter,
   }: {
     language: Language;
     orderBy?: Prisma.InnovationOrderByWithRelationInput;
     page?: number;
     perPage?: number;
+    filter?: string[];
   }): Promise<PaginatorTypes.PaginatedResult<Innovation>> {
     return paginate(
       this.prismaService.innovation,
       {
         orderBy,
-        where: { language },
+        where: {
+          language,
+          ...(filter && filter.length > 0
+            ? { filter: { some: { id: { in: filter } } } }
+            : {}),
+        },
+        include: {
+          filter: true,
+        },
       },
       {
         page,
@@ -43,6 +60,9 @@ export class InnovationService {
   async findOne(id: string) {
     const innovation = await this.prismaService.innovation.findUnique({
       where: { id },
+      include: {
+        filter: true,
+      },
     });
 
     if (!innovation) throw new NotFoundException();
@@ -50,6 +70,8 @@ export class InnovationService {
   }
 
   async update(id: string, updateInnovationDto: UpdateInnovationDto) {
+    const { filter, ...data } = updateInnovationDto;
+    const filterIDs = filter.map((item) => ({ id: item }));
     const innovation = await this.findOne(id);
 
     await deleteFilePack(innovation.files, updateInnovationDto.files);
@@ -57,7 +79,15 @@ export class InnovationService {
 
     return this.prismaService.innovation.update({
       where: { id },
-      data: updateInnovationDto,
+      data: {
+        ...data,
+        filter: {
+          set: filterIDs,
+        },
+      },
+      include: {
+        filter: true,
+      },
     });
   }
 

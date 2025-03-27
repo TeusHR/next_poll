@@ -23,7 +23,7 @@ const CountryCoop: FC<Props> = ({foreignUniversities, title}) => {
                         <div key={country}
                              className="flex flex-row max-sm:flex-col gap-40 max-lg:gap-16 max-md:gap-8 max-sm:gap-6">
                             <div
-                                className="text-6xl  max-md:text-5xl max-te:text-4xl max-sm:text-6xl min-w-[330px] max-lg:min-w-[250px] font-mono font-bold text-white"
+                                className="text-6xl w-min max-md:text-5xl max-te:text-4xl max-sm:text-6xl min-w-[330px] max-lg:min-w-[250px] font-mono font-bold text-white"
                                 style={{WebkitTextStroke: "2px black", WebkitTextFillColor: "transparent"}}>
                                 {country}
                             </div>

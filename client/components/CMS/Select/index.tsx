@@ -18,6 +18,7 @@ type Props = {
     selectAll?: boolean
     isClearable?: boolean
     justify?: boolean
+    classNameList?: string,
 }
 
 const Select = ({
@@ -32,7 +33,8 @@ const Select = ({
                     placeholder,
                     justify = false,
                     isClearable = true,
-                    disallowEmptySelection = false
+                    disallowEmptySelection = false,
+                    classNameList = '',
                 }: Props) => {
     const [searchValue, setSearchValue] = useState('')
     const [filteredOptions, setFilteredOptions] = useState<{ label: string, value: string }[]>([])
@@ -119,15 +121,16 @@ const Select = ({
                               items={filteredOptions}
                               emptyContent={<div>Нічого не знайдено</div>}
                               variant="solid" classNames={{
-                    list: 'overflow-y-auto scrollbar-hide scroll-py-6 max-h-64 w-full',
+                    list: `overflow-y-auto scrollbar-hide scroll-py-6 max-h-64 w-full ${classNameList}`,
                 }} selectionMode={selectionMode} topContent={
                     isSearchable ? <div className="relative">
-                        <Input className={`border-brand-gray-200 rounded-[10px] border-primary-500 ${selectAll ? 'w-[90%] !pr-8' : ''}`}
-                               type="text"
-                               placeholder="Пошук..." value={searchValue}
-                               onChange={(e) => setSearchValue(e.target.value)}/>
+                        <Input
+                            className={`border-brand-gray-200 rounded-[10px] border-primary-500 ${selectAll ? 'w-[90%] !pr-8' : ''}`}
+                            type="text"
+                            placeholder="Пошук..." value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}/>
                         {selectAll && <svg viewBox="0 0 24 24" onClick={() => changeHandler("all")}
-                              className="absolute top-3 right-1 w-[20px] h-[20px] cursor-pointer transition-colors hover:fill-primary-400">
+                                           className="absolute top-3 right-1 w-[20px] h-[20px] cursor-pointer transition-colors hover:fill-primary-400">
                             <path
                                 d="M11.602 13.7599L13.014 15.1719L21.4795 6.7063L22.8938 8.12051L13.014 18.0003L6.65 11.6363L8.06421 10.2221L10.189 12.3469L11.6025 13.7594L11.602 13.7599ZM11.6037 10.9322L16.5563 5.97949L17.9666 7.38977L13.014 12.3424L11.6037 10.9322ZM8.77698 16.5873L7.36396 18.0003L1 11.6363L2.41421 10.2221L3.82723 11.6352L3.82604 11.6363L8.77698 16.5873Z"/>
                         </svg>}

@@ -51,7 +51,6 @@ const NewsItem = ({
                       lightBoxImage,
                   }: Props) => {
 
-
     const imageSrc = imageObj.image ? encodeURI(imageObj.image) : '/image/noImage.jpg';
 
     const lightBoxImages = lightBoxImage?.images.length ? lightBoxImage.images : ['/image/noImage.jpg'];

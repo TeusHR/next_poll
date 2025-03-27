@@ -31,6 +31,7 @@ import { PrismaService } from "./prisma.service";
 import { ConferenceFileModule } from './conference-file/conference-file.module';
 import { PublicInformationModule } from './public-information/public-information.module';
 import { DocumentsTemplatesModule } from './documents-templates/documents-templates.module';
+import { DirectionFilterModule } from './direction-filter/direction-filter.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { DocumentsTemplatesModule } from './documents-templates/documents-templa
     ConferenceFileModule,
     PublicInformationModule,
     DocumentsTemplatesModule,
+    DirectionFilterModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, JwtService],
