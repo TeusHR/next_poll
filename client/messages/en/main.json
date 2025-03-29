@@ -27,6 +27,15 @@
       "associationsMemberships": "Associations and Memberships",
       "readMore": "Read more"
     },
+    "cartsScience": {
+      "automation": "Automation of technological and business processes",
+      "economics": "Economics of the food industry",
+      "grain": "Grain products and compound feeds",
+      "scientific": "Scientific works",
+      "geometric": "Proceedings of the International Geometric Center",
+      "foodScience": "Food science and technology",
+      "refrigeration": "Refrigeration equipment and technology"
+    },
     "form": {
       "feedback": "Feedback",
       "name": "Name",
