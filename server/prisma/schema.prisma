@@ -31,6 +31,23 @@ model Conference {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
+// Наукові конкурси
+model ScienceCompetition {
+  id        String         @id @default(uuid())
+  date      DateTime       @db.Timestamptz(3)
+  toDate    DateTime?      @db.Timestamptz(3)
+  type      ConferenceType @default(COMPETITION)
+  country   String
+  title     String
+  text      String
+  files     String[]       @default([])
+  language  Language       @default(UA)
+  isStudent Boolean        @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
 // Файлы Конференції
 model ConferenceFile {
   id       String   @id @default(uuid())

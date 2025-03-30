@@ -34,6 +34,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/conference',
     },
     {
+        title: 'Наукові конкурси',
+        path: '/cms/science-competition',
+    },
+    {
         title: 'Напрямки для співпраці',
         path: '/cms/cooperation',
     },

@@ -9,7 +9,7 @@ import {
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
   getLaboratoryUrl, getPublicInformationUrl,
-  getResearchWorksUrl,
+  getResearchWorksUrl, getScienceCompetitionUrl,
   getScienceSchoolsUrl,
   getStudentUrl,
   getTrainingUrl
@@ -46,6 +46,12 @@ import {
 } from "@/types/PublicInformation";
 import {ICreateDocumentsTemplates, IDocumentsTemplates} from "@/types/DocumentsTemplates";
 import {ICreateInnovationFilterForm, IInnovationFilter} from "@/types/InnovationFilter";
+import {
+  ICreateScienceCompetition,
+  IGroupScienceCompetition,
+  IScienceCompetition,
+  IUpdateScienceCompetition
+} from "@/types/ScienceCompetition";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -74,6 +80,29 @@ export const ConferencesService = {
   },
   async removeConferences(id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.delete(getConferencesUrl(`/${id}`));
+    return status === 200;
+  },
+};
+
+export const ScienceCompetitionService = {
+  async getAll(authAxios: AxiosInstance) {
+    const { data } = await authAxios.get<IGroupScienceCompetition[]>(getScienceCompetitionUrl(""));
+    return data;
+  },
+  async get(id: string) {
+    const { data } = await $api.get<IScienceCompetition>(getScienceCompetitionUrl(`/${id}`));
+    return data;
+  },
+  async post(item: ICreateScienceCompetition, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateScienceCompetition>(getScienceCompetitionUrl(""), item);
+    return status;
+  },
+  async update(item: IUpdateScienceCompetition, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<IUpdateScienceCompetition>(getScienceCompetitionUrl(`/${id}`), item);
+    return status;
+  },
+  async remove(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getScienceCompetitionUrl(`/${id}`));
     return status === 200;
   },
 };

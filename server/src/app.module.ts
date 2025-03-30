@@ -32,6 +32,8 @@ import { ConferenceFileModule } from './conference-file/conference-file.module';
 import { PublicInformationModule } from './public-information/public-information.module';
 import { DocumentsTemplatesModule } from './documents-templates/documents-templates.module';
 import { DirectionFilterModule } from './direction-filter/direction-filter.module';
+import { ScienceCompetitionService } from './science-competition/science-competition.service';
+import { ScienceCompetitionModule } from './science-competition/science-competition.module';
 
 @Module({
   imports: [
@@ -92,8 +94,9 @@ import { DirectionFilterModule } from './direction-filter/direction-filter.modul
     PublicInformationModule,
     DocumentsTemplatesModule,
     DirectionFilterModule,
+    ScienceCompetitionModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, JwtService],
+  providers: [AppService, PrismaService, JwtService, ScienceCompetitionService],
 })
 export class AppModule {}

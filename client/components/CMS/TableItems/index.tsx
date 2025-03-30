@@ -23,10 +23,10 @@ import {AxiosInstance} from 'axios';
 import {StringConferenceType} from '@/utils/ConferenceType';
 import {
     ActivityService,
-    ConferencesService, CooperationService,
+    ScienceCompetitionService, CooperationService,
     DocumentsService, DocumentTemplates,
     InnovationsService, InternationalService, LaboratoryService, PublicInformation,
-    ResearchService, ScienceService
+    ResearchService, ScienceService, ConferencesService
 } from "@/services/CMS.service";
 import {toast} from 'react-toastify';
 import {IConsulting} from '@/types/Consulting';
@@ -224,7 +224,7 @@ const TableItems = <T extends ValidDataTypes>(
             default:
                 return <>{String(cellValue)}</>;
         }
-    }, [$apiAuth, typeProduct, deleteMessage, redirectItem, tableType]);
+    }, [typeProduct, language, $apiAuth, deleteMessage, redirectItem, tableType]);
 
     const changeHandler = useCallback((keys: 'all' | Set<Key>) => {
         if (onSelectKeys && selectedKeys && selectionMode === 'multiple') {
@@ -345,6 +345,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
             } else if (typeProduct === 'documents-templates') {
                 await DocumentTemplates.remove(idItem, apiAuth);
                 await revalidateFetch('documents-templates');
+            } else if (typeProduct === 'science-competition') {
+                await ScienceCompetitionService.remove(idItem, apiAuth);
+                await revalidateFetch('science-competition');
             }
 
             toast.success('Запис видалено');
