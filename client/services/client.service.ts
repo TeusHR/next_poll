@@ -11,7 +11,7 @@ import {
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
   getLaboratoryUrl, getPublicInformationUrl,
-  getResearchWorksUrl,
+  getResearchWorksUrl, getScienceCompetitionUrl,
   getScienceSchoolsUrl,
   getStudentUrl,
   getTrainingUrl
@@ -39,6 +39,7 @@ import { IAgreements } from "@/types/Agreements";
 import {IPublicInformation} from "@/types/PublicInformation";
 import {IDocumentsTemplates} from "@/types/DocumentsTemplates";
 import {IInnovationFilter} from "@/types/InnovationFilter";
+import {IScienceCompetition} from "@/types/ScienceCompetition";
 
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
@@ -538,6 +539,52 @@ export const ConferencesService = {
       if (!res.ok) throw new Error("Failed to fetch data");
 
       const data: IConferences = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
+
+export const ScienceCompetitionService = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getScienceCompetitionUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["science-competition"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: { items: IScienceCompetition[]; month: string }[] = await res.json();
+
+      return data;
+    } catch (e) {
+      return [];
+    }
+  },
+  async get(id: string) {
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getScienceCompetitionUrl(`/${id}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["science-competition"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IScienceCompetition = await res.json();
 
       return data;
     } catch (e) {
