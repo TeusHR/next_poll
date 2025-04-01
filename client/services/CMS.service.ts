@@ -5,7 +5,7 @@ import {
   getConsultingUrl,
   getCooperationsUrl,
   getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl, getInnovationFiltersUrl,
-  getInnovationsUrl,
+  getInnovationsUrl, getInternationalPracticeUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
   getLaboratoryUrl, getPublicInformationUrl,
@@ -52,6 +52,7 @@ import {
   IScienceCompetition,
   IUpdateScienceCompetition
 } from "@/types/ScienceCompetition";
+import {ICreateInternationalPractice, IInternationalPractice} from "@/types/InternationalPractice";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -371,6 +372,31 @@ export const InternationalService = {
   },
   async removeInternational(id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.delete(getInternationalUrl(`/${id}`));
+    return status === 200;
+  },
+};
+
+export const InternationalPracticeService = {
+  async getAll(authAxios: AxiosInstance, page: number, limit: number) {
+    const { data } = await authAxios.get<IResponseMeta<IInternationalPractice[]>>(
+        getInternationalPracticeUrl(`?page=${page}&limit=${limit}`),
+    );
+    return data;
+  },
+  async get(id: string) {
+    const { data } = await $api.get<IInternationalPractice>(getInternationalPracticeUrl(`/${id}`));
+    return data;
+  },
+  async post(item: ICreateCooperation, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateInternationalPractice>(getInternationalPracticeUrl(""), item);
+    return status;
+  },
+  async update(item: IUpdateInternational, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<ICreateInternationalPractice>(getInternationalPracticeUrl(`/${id}`), item);
+    return status;
+  },
+  async remove(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getInternationalPracticeUrl(`/${id}`));
     return status === 200;
   },
 };

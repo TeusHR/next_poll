@@ -26,7 +26,7 @@ import {
     ScienceCompetitionService, CooperationService,
     DocumentsService, DocumentTemplates,
     InnovationsService, InternationalService, LaboratoryService, PublicInformation,
-    ResearchService, ScienceService, ConferencesService
+    ResearchService, ScienceService, ConferencesService, InternationalPracticeService
 } from "@/services/CMS.service";
 import {toast} from 'react-toastify';
 import {IConsulting} from '@/types/Consulting';
@@ -348,6 +348,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
             } else if (typeProduct === 'science-competition') {
                 await ScienceCompetitionService.remove(idItem, apiAuth);
                 await revalidateFetch('science-competition');
+            } else if (typeProduct === 'international-practice') {
+                await InternationalPracticeService.remove(idItem, apiAuth);
+                await revalidateFetch('international-practice');
             }
 
             toast.success('Запис видалено');

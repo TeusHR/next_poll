@@ -28,6 +28,8 @@ export const getAssociationsUrl = (str: string) => `/associations${str}`
 
 export const getInternationalUrl = (str: string) => `/international-projects${str}`
 
+export const getInternationalPracticeUrl = (str: string) => `/international-practice${str}`
+
 export const getConferencesUrl = (str: string) => `/conferences${str}`
 
 export const getScienceCompetitionUrl = (str: string) => `/science-competition${str}`
