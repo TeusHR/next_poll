@@ -7,7 +7,7 @@ import {
   getCooperationsUrl,
   getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl,
   getFeedBackUrl, getInnovationFiltersUrl,
-  getInnovationsUrl,
+  getInnovationsUrl, getInternationalPracticeUrl,
   getInternationalUrl,
   getLaboratoryDevelopmentsUrl,
   getLaboratoryUrl, getPublicInformationUrl,
@@ -40,6 +40,7 @@ import {IPublicInformation} from "@/types/PublicInformation";
 import {IDocumentsTemplates} from "@/types/DocumentsTemplates";
 import {IInnovationFilter} from "@/types/InnovationFilter";
 import {IScienceCompetition} from "@/types/ScienceCompetition";
+import {IInternationalPractice} from "@/types/InternationalPractice";
 
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
@@ -337,6 +338,56 @@ export const InternationalService = {
       if (!res.ok) throw new Error("Failed to fetch data");
 
       const data: IInternational = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
+
+export const InternationalPracticeService = {
+  async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      column,
+      order,
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getInternationalPracticeUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["international-practice"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IResponseMeta<IInternationalPractice[]> = await res.json();
+
+      return data;
+    } catch (e) {
+      return getEmptyResponse<IInternationalPractice>();
+    }
+  },
+  async get(id: string) {
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getInternationalPracticeUrl(`/${id}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["international-practice"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IInternationalPractice = await res.json();
 
       return data;
     } catch (e) {
