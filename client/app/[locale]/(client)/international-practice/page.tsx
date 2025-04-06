@@ -12,7 +12,7 @@ export async function generateMetadata(
   const t = await getTranslations({locale:params.locale, namespace: 'Page'});
 
   return {
-    title: t('international-practice'),
+    title: t('internationalPractice'),
     openGraph: {
       url: "/international-practice/",
     },

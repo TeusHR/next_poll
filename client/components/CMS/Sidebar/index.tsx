@@ -86,6 +86,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/activity',
     },
     {
+        title: 'Заходи',
+        path: '/cms/events',
+    },
+    {
         title: 'Науково-дослідні лабораторії',
         path: '/cms/laboratory',
     },

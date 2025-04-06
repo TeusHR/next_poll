@@ -207,6 +207,22 @@ model LaboratoryDevelopment {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
+// Заходи
+model Events {
+  id         String   @id @default(uuid())
+  title      String
+  roomNumber String
+  text       String
+  link       String
+  supervisor String[]
+
+  language  Language  @default(UA)
+  date      DateTime  @db.Timestamptz(3)
+  toDate    DateTime? @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @db.Timestamptz(3)
+}
+
 // Публічна інформація
 model PublicInformation {
   id    String   @id @default(uuid())

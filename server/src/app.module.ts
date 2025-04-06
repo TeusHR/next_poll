@@ -34,6 +34,7 @@ import { DocumentsTemplatesModule } from './documents-templates/documents-templa
 import { DirectionFilterModule } from './direction-filter/direction-filter.module';
 import { ScienceCompetitionModule } from './science-competition/science-competition.module';
 import { InternationalPracticeModule } from './international-practice/international-practice.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -96,6 +97,7 @@ import { InternationalPracticeModule } from './international-practice/internatio
     DirectionFilterModule,
     ScienceCompetitionModule,
     InternationalPracticeModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, JwtService],

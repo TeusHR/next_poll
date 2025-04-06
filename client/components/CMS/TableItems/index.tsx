@@ -26,7 +26,7 @@ import {
     ScienceCompetitionService, CooperationService,
     DocumentsService, DocumentTemplates,
     InnovationsService, InternationalService, LaboratoryService, PublicInformation,
-    ResearchService, ScienceService, ConferencesService, InternationalPracticeService
+    ResearchService, ScienceService, ConferencesService, InternationalPracticeService, EventsService
 } from "@/services/CMS.service";
 import {toast} from 'react-toastify';
 import {IConsulting} from '@/types/Consulting';
@@ -182,7 +182,7 @@ const TableItems = <T extends ValidDataTypes>(
                 if (typeProduct === 'conference') { // @ts-ignore
                     return <div>{String(cellValue)} {item['toDate'] ? ` - ${String(item['toDate'])}` : ''}</div>;
                 }
-                return <div>{String(cellValue)}</div>;
+                return <div>{moment(String(cellValue)).locale(language).format('YYYY-MM-DD kk:mm')}</div>;
             case 'month':
                 return <div>{String(cellValue)}</div>;
             case 'type':
@@ -351,6 +351,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
             } else if (typeProduct === 'international-practice') {
                 await InternationalPracticeService.remove(idItem, apiAuth);
                 await revalidateFetch('international-practice');
+            } else if (typeProduct === 'events') {
+                await EventsService.remove(idItem, apiAuth);
+                await revalidateFetch('events');
             }
 
             toast.success('Запис видалено');
