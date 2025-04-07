@@ -24,6 +24,7 @@ const EventsCreateForm: FC<Props> = ({language}) => {
             link: "",
             roomNumber: "",
             date: "",
+            supervisor:[],
             toDate: "",
             text: "",
         },
@@ -42,7 +43,7 @@ const EventsCreateForm: FC<Props> = ({language}) => {
 
         setIsLoading(true);
         try {
-
+            console.log(dataForm)
             const dataProduct: ICreateEvents = {
                 title: dataForm.title,
                 text: dataForm.text,

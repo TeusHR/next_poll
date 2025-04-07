@@ -5,7 +5,7 @@ import {
   getConferencesUrl,
   getConsultingUrl,
   getCooperationsUrl,
-  getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl,
+  getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl, getEventsUrl,
   getFeedBackUrl, getInnovationFiltersUrl,
   getInnovationsUrl, getInternationalPracticeUrl,
   getInternationalUrl,
@@ -41,6 +41,7 @@ import {IDocumentsTemplates} from "@/types/DocumentsTemplates";
 import {IInnovationFilter} from "@/types/InnovationFilter";
 import {IScienceCompetition} from "@/types/ScienceCompetition";
 import {IInternationalPractice} from "@/types/InternationalPractice";
+import {IEvents} from "@/types/Events";
 
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
@@ -636,6 +637,54 @@ export const ScienceCompetitionService = {
       if (!res.ok) throw new Error("Failed to fetch data");
 
       const data: IScienceCompetition = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
+
+export const EventsService = {
+  async getAll(column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
+    const searchParams = new URLSearchParams({
+      column,
+      order,
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getEventsUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["events"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IEvents[] = await res.json();
+
+      return data;
+    } catch (e) {
+      return [];
+    }
+  },
+  async get(id: string) {
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getEventsUrl(`/${id}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["events"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IEvents = await res.json();
 
       return data;
     } catch (e) {

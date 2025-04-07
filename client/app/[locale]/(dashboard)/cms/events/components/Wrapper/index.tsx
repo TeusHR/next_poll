@@ -28,7 +28,7 @@ const EventsTabs = () => {
     useEffect(() => {
         if (status === 'authenticated') {
             EventsService.getAll($apiAuth).then(res => {
-                setInitialData(res.data)
+                setInitialData(res)
             })
         }
     }, [$apiAuth, searchParams, status]);

@@ -111,7 +111,7 @@ export const ScienceCompetitionService = {
 
 export const EventsService = {
   async getAll(authAxios: AxiosInstance) {
-    const { data } = await authAxios.get<IResponseMeta<IEvents[]>>(getEventsUrl(""));
+    const { data } = await authAxios.get<IEvents[]>(getEventsUrl(""));
     return data;
   },
   async get(id: string) {

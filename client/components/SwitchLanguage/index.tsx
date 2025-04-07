@@ -26,6 +26,7 @@ const SwitchLanguage:FC<Props> = ({selectLanguage}) => {
       classNames={{
         base: "min-w-[9rem]"
       }}
+      disallowEmptySelection={true}
       aria-label={"switch language"}
       onChange={handlerOnChange}
       startContent={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24}

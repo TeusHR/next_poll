@@ -15,6 +15,7 @@ export default getRequestConfig(async ({requestLocale}) => {
   let messages = {
     ...(await import(`/messages/${locale}/pageTitle.json`)).default,
     ...(await import(`/messages/${locale}/main.json`)).default,
+    ...(await import(`/messages/${locale}/utilities.json`)).default,
   }
   try {
     // const apis = await FileService.downloadFile('translation.json')

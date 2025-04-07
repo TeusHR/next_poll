@@ -23,6 +23,7 @@ const EventsEdit: FC<Props> = ({idItem}) => {
             title: "",
             link: "",
             roomNumber: "",
+            supervisor:[],
             date: "",
             toDate: "",
             text: "",

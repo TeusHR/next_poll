@@ -27,16 +27,12 @@ export class EventsController {
   @Get()
   findAll(
     @Query("language") language: Language,
-    @Query("limit") limit?: string,
-    @Query("page") page?: string,
     @Query("column") column?: string,
     @Query("order") order?: string,
   ) {
     const orderBy = { [column || "updatedAt"]: order || "desc" };
     return this.eventsService.findAll({
       language,
-      perPage: +limit || undefined,
-      page: +page || 1,
       orderBy,
     });
   }

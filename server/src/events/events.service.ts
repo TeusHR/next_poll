@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { paginate, PrismaService } from "../prisma.service";
-import { Events, Prisma, Language } from "@prisma/client";
-import { PaginatorTypes } from "@nodeteam/nestjs-prisma-pagination";
+import { PrismaService } from "../prisma.service";
+import { Language, Prisma } from "@prisma/client";
 import { CreateEventsDto } from "./dto/create-events.dto";
 import { UpdateEventsDto } from "./dto/update-events.dto";
 
@@ -16,27 +15,16 @@ export class EventsService {
   }
 
   async findAll({
-    page,
-    perPage,
     orderBy,
     language,
   }: {
     language: Language;
     orderBy?: Prisma.EventsOrderByWithRelationInput;
-    page?: number;
-    perPage?: number;
-  }): Promise<PaginatorTypes.PaginatedResult<Events>> {
-    return paginate(
-      this.prismaService.events,
-      {
-        orderBy,
-        where: { language },
-      },
-      {
-        page,
-        perPage,
-      },
-    );
+  }) {
+    return this.prismaService.events.findMany({
+      where: { language },
+      orderBy,
+    });
   }
 
   async findOne(id: string) {
