@@ -35,6 +35,7 @@ import { DirectionFilterModule } from './direction-filter/direction-filter.modul
 import { ScienceCompetitionModule } from './science-competition/science-competition.module';
 import { InternationalPracticeModule } from './international-practice/international-practice.module';
 import { EventsModule } from './events/events.module';
+import { AcademicCouncilModule } from './academic-council/academic-council.module';
 
 @Module({
   imports: [
@@ -98,6 +99,7 @@ import { EventsModule } from './events/events.module';
     ScienceCompetitionModule,
     InternationalPracticeModule,
     EventsModule,
+    AcademicCouncilModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, JwtService],

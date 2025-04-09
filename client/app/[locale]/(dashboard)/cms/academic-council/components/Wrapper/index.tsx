@@ -3,24 +3,21 @@ import React, {useEffect, useState} from 'react'
 import {useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
-import {ScienceCompetitionService} from "@/services/CMS.service";
-import {ILiftGroupConference} from "@/types/Conference";
+import {AcademicCouncilService} from "@/services/CMS.service";
 import TitleBack from "@/components/CMS/TitleBack";
-import ScienceCompetitionTable from "../Table";
-import {LiftGroupConference} from "@/utils/ConferenceType";
+import AcademicCouncilTable from "../Table";
+import {IAcademicCouncil} from "@/types/AcademicCouncil";
 
 const tableColumn: { title: string, key: string }[] = [
     {title: 'id', key: 'id'},
     {title: 'Назва', key: 'title'},
-    {title: 'Місяць', key: 'month'},
-    {title: 'Дата', key: 'dateISO'},
-    {title: 'Країна', key: 'country'},
+    {title: 'Дата створення', key: 'createdAt'},
     {title: 'Дії', key: 'action'}
 ]
 
-const ScienceCompetitionTabs = () => {
+const AcademicCouncilTabs = () => {
 
-    const [initialData, setInitialData] = useState<ILiftGroupConference[]>([])
+    const [initialData, setInitialData] = useState<IAcademicCouncil[]>([])
 
     const searchParams = useSearchParams()
     const {status} = useSession()
@@ -28,8 +25,8 @@ const ScienceCompetitionTabs = () => {
 
     useEffect(() => {
         if (status === 'authenticated') {
-            ScienceCompetitionService.getAll($apiAuth).then(res => {
-                setInitialData(LiftGroupConference(res))
+            AcademicCouncilService.getAll($apiAuth).then(res => {
+                setInitialData(res)
             })
         }
     }, [$apiAuth, searchParams, status]);
@@ -38,11 +35,11 @@ const ScienceCompetitionTabs = () => {
     return (
         <div className="flex flex-col px-10 max-md:px-2 py-10 min-h-[calc(100vh_-_82px)]">
             <div className="flex items-center justify-between">
-                <TitleBack title="Наукові конкурси" isBack={false}/>
+                <TitleBack title="Робота спеціалізованих вчених рад" isBack={false}/>
             </div>
-            <ScienceCompetitionTable tableColumn={tableColumn} data={initialData} showAdd/>
+            <AcademicCouncilTable tableColumn={tableColumn} data={initialData} showAdd/>
         </div>
     )
 }
 
-export default ScienceCompetitionTabs;
+export default AcademicCouncilTabs;

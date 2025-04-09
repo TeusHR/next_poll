@@ -34,6 +34,8 @@ export const getConferencesUrl = (str: string) => `/conferences${str}`
 
 export const getScienceCompetitionUrl = (str: string) => `/science-competition${str}`
 
+export const getAcademicCouncilUrl = (str: string) => `/academic-council${str}`
+
 export const getEventsUrl = (str: string) => `/events${str}`
 
 export const getPublicInformationUrl = (str: string) => `/public-information${str}`

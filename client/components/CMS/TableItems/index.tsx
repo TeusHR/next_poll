@@ -23,10 +23,20 @@ import {AxiosInstance} from 'axios';
 import {StringConferenceType} from '@/utils/ConferenceType';
 import {
     ActivityService,
-    ScienceCompetitionService, CooperationService,
-    DocumentsService, DocumentTemplates,
-    InnovationsService, InternationalService, LaboratoryService, PublicInformation,
-    ResearchService, ScienceService, ConferencesService, InternationalPracticeService, EventsService
+    ScienceCompetitionService,
+    CooperationService,
+    DocumentsService,
+    DocumentTemplates,
+    InnovationsService,
+    InternationalService,
+    LaboratoryService,
+    PublicInformation,
+    ResearchService,
+    ScienceService,
+    ConferencesService,
+    InternationalPracticeService,
+    EventsService,
+    AcademicCouncilService
 } from "@/services/CMS.service";
 import {toast} from 'react-toastify';
 import {IConsulting} from '@/types/Consulting';
@@ -182,6 +192,8 @@ const TableItems = <T extends ValidDataTypes>(
                 if (typeProduct === 'conference') { // @ts-ignore
                     return <div>{String(cellValue)} {item['toDate'] ? ` - ${String(item['toDate'])}` : ''}</div>;
                 }
+                return <div>{moment(String(cellValue)).locale(language).format('YYYY-MM-DD kk:mm')}</div>;
+            case 'dateISO':
                 return <div>{moment(String(cellValue)).locale(language).format('YYYY-MM-DD kk:mm')}</div>;
             case 'month':
                 return <div>{String(cellValue)}</div>;
@@ -354,6 +366,9 @@ const PopoverDeleteItem = <T extends ValidDataTypes>({
             } else if (typeProduct === 'events') {
                 await EventsService.remove(idItem, apiAuth);
                 await revalidateFetch('events');
+            } else if (typeProduct === 'academic-council') {
+                await AcademicCouncilService.remove(idItem, apiAuth);
+                await revalidateFetch('academic-council');
             }
 
             toast.success('Запис видалено');

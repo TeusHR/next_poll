@@ -265,6 +265,16 @@ model Page {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
+// Робота спеціалізованих вчених рад
+model AcademicCouncil {
+  id        String   @id @default(uuid())
+  title     String
+  text      String
+  language  Language @default(UA)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
 // Відділ міжнародних грантів та академічної мобільності (Department of International Grants and Academic Mobility)
 model DIGAM {
   id                  String   @id @default(uuid())

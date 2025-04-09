@@ -1,5 +1,6 @@
 import { AxiosInstance } from "axios";
 import {
+  getAcademicCouncilUrl,
   getActivitiesUrl, getAgreementsUrl, getAssociationsUrl, getConferencesFileUrl,
   getConferencesUrl,
   getConsultingUrl,
@@ -54,6 +55,7 @@ import {
 } from "@/types/ScienceCompetition";
 import {ICreateInternationalPractice, IInternationalPractice} from "@/types/InternationalPractice";
 import {ICreateEvents, IEvents, IUpdateEvents} from "@/types/Events";
+import {IAcademicCouncil, ICreateAcademicCouncil, IUpdateAcademicCouncil} from "@/types/AcademicCouncil";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -105,6 +107,29 @@ export const ScienceCompetitionService = {
   },
   async remove(id: string, authAxios: AxiosInstance) {
     const { status } = await authAxios.delete(getScienceCompetitionUrl(`/${id}`));
+    return status === 200;
+  },
+};
+
+export const AcademicCouncilService = {
+  async getAll(authAxios: AxiosInstance) {
+    const { data } = await authAxios.get<IAcademicCouncil[]>(getAcademicCouncilUrl(""));
+    return data;
+  },
+  async get(id: string) {
+    const { data } = await $api.get<IAcademicCouncil>(getAcademicCouncilUrl(`/${id}`));
+    return data;
+  },
+  async post(item: ICreateAcademicCouncil, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateAcademicCouncil>(getAcademicCouncilUrl(""), item);
+    return status;
+  },
+  async update(item: IUpdateAcademicCouncil, id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.patch<IUpdateAcademicCouncil>(getAcademicCouncilUrl(`/${id}`), item);
+    return status;
+  },
+  async remove(id: string, authAxios: AxiosInstance) {
+    const { status } = await authAxios.delete(getAcademicCouncilUrl(`/${id}`));
     return status === 200;
   },
 };

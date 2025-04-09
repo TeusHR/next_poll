@@ -16,11 +16,15 @@ const EventsItem: FC<Props> = ({linkAvailable, event}) => {
     const utilities = useTranslations("Utilities");
     const locale = useLocale();
 
-    const EventsStart = (dateStr: string):boolean => {
-        return moment(dateStr).locale(locale).isSame(new Date(), 'day');
+    const EventsStart = (startStr: string, endStr?: string | null): boolean => {
+        const today = moment().startOf('day');
+        const start = moment(startStr).startOf('day');
+        const end = endStr ? moment(endStr).endOf('day') : start;
+
+        return today.isBetween(start, end, undefined, '[]');
     };
 
-    const eventStart = EventsStart(event.date)
+    const eventStart = EventsStart(event.date, event.toDate)
 
     const formatEventTime = (dateStr: string) => {
         return moment(dateStr).locale(locale).format('HH:mm');
