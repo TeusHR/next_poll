@@ -23,10 +23,10 @@ const TabsPage: FC<Props> = ({tabs}) => {
     return (
         <div className="flex w-full flex-col">
             <Tabs aria-label="Options" size={"lg"} classNames={{
-                tabList: "gap-8 bg-transparent px-3 pl-0 flex-wrap",
-                tab: `${RalewaySlab.className} uppercase data-[selected=true]:font-semibold px-0 max-w-max text-3xl`,
+                tabList: "gap-8 bg-transparent px-3 pl-0 flex-wrap justify-center",
+                tab: `${RalewaySlab.className} uppercase data-[selected=true]:font-semibold px-0 max-w-max text-3xl h-auto`,
                 cursor: 'shadow-none bg-transparent rounded-none',
-                tabContent: 'text-[#2E2C39]'
+                tabContent: 'text-[#2E2C39] whitespace-normal'
             }} selectedKey={selected} onSelectionChange={(key: Key) => setSelected(key.toString())}>
                 {tabs.map((tab, idx) => (
                     <Tab key={tab.key} title={

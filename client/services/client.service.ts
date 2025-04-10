@@ -1,6 +1,7 @@
 import { AxiosInstance } from "axios";
 import {IConferences, IConferencesFile, IResponseMeta} from "@/types/Conference";
 import {
+  getAcademicCouncilUrl,
   getActivitiesUrl, getAgreementsUrl, getAssociationsUrl, getConferencesFileUrl,
   getConferencesUrl,
   getConsultingUrl,
@@ -42,6 +43,7 @@ import {IInnovationFilter} from "@/types/InnovationFilter";
 import {IScienceCompetition} from "@/types/ScienceCompetition";
 import {IInternationalPractice} from "@/types/InternationalPractice";
 import {IEvents} from "@/types/Events";
+import {IAcademicCouncil} from "@/types/AcademicCouncil";
 
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
@@ -129,6 +131,36 @@ export const DocumentsService = {
       return data;
     } catch (e) {
       return getEmptyResponse<IDocuments>();
+    }
+  },
+};
+
+export const AcademicCouncilService = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      // page: page.toString(),
+      // limit: limit.toString(),
+      // column,
+      // order,
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getAcademicCouncilUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["academic-council"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: IAcademicCouncil[] = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
     }
   },
 };
