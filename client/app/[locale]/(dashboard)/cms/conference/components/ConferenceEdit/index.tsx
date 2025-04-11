@@ -92,6 +92,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                 title: dataForm.title,
                 text: dataForm.text,
                 isStudent:dataForm.isStudent,
+                isLogo:dataForm.isLogo,
                 files: allFilesUrls,
             };
             const status = await ConferencesService.updateConferences(dataProduct, conferenceId, $apiAuth);
@@ -136,6 +137,7 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
             setValue("country", new Set([conference.country]));
             setValue("type", new Set([conference.type]));
             setValue("isStudent", conference.isStudent)
+            setValue("isLogo", conference.isLogo)
             if (conference.dateISO) setValue("date", moment(conference.dateISO).format("YYYY-MM-DD"));
             if (conference.toDateISO) setValue("toDate", moment(conference.toDateISO).format("YYYY-MM-DD"));
             setValue("text", conference.text);
@@ -371,6 +373,25 @@ const ConferenceEdit: FC<Props> = ({conferenceId}) => {
                                                           }}
                                                           onValueChange={field.onChange}>
                                                     Студентське?
+                                                </Checkbox>
+                                                {formState.errors.type?.message && (
+                                                    <div
+                                                        className="text-red-600 text-sm">{formState.errors.type.message}</div>
+                                                )}
+                                            </div>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="isLogo"
+                                        control={control}
+                                        render={({field}) => (
+                                            <div className="w-full">
+                                                <Checkbox isSelected={field.value}
+                                                          classNames={{
+                                                              label: "text-lg"
+                                                          }}
+                                                          onValueChange={field.onChange}>
+                                                    Логотип?
                                                 </Checkbox>
                                                 {formState.errors.type?.message && (
                                                     <div

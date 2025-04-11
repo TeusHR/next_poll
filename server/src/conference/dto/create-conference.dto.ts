@@ -46,6 +46,10 @@ export class CreateConferenceDto {
   @IsBoolean()
   isStudent: boolean;
 
+  @IsOptional()
+  @IsBoolean()
+  isLogo: boolean;
+
   @IsEnum(Language)
   language: Language;
 }

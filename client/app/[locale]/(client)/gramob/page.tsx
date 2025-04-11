@@ -2,6 +2,7 @@ import React, {FC} from "react";
 import Title from "@/UI/Title";
 import {Metadata} from "next";
 import {getTranslations} from "next-intl/server";
+import Link from "next/link";
 
 type Props = {
     params: {
@@ -40,7 +41,7 @@ const Gramob: FC<Props> = async ({params: {locale}}) => {
                     text={titlePage('gramob')}
                     style="text-[#111318] text-5xl max-xl:text-3xl max-sm:text-2xl font-semibold"
                 />
-                <div className="flex gap-4 max-sm:gap-3 text-xl">
+                <Link href={"https://inter.ontu.edu.ua/"} className="flex gap-4 max-sm:gap-3 text-xl">
                     <span>{utilities('site')}</span>
                     <span className="bg-[#2E2C39] rounded-full">
                                 <svg width="33" height="33" viewBox="0 0 33 33" fill="none"
@@ -50,7 +51,7 @@ const Gramob: FC<Props> = async ({params: {locale}}) => {
                                         fill="#FDFDFD"/>
                                 </svg>
                     </span>
-                </div>
+                </Link>
             </div>
         </div>
     );

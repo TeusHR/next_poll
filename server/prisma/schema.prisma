@@ -26,6 +26,7 @@ model Conference {
   files     String[]       @default([])
   language  Language       @default(UA)
   isStudent Boolean        @default(false)
+  isLogo    Boolean        @default(false)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)

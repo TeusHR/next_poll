@@ -33,6 +33,7 @@ const ConferenceCreateForm: FC<Props> = ({language}) => {
             toDate: "",
             text: "",
             isStudent: false,
+            isLogo: false,
             type: new Set<string>(["SEMINAR"]),
         },
     });
@@ -67,7 +68,8 @@ const ConferenceCreateForm: FC<Props> = ({language}) => {
                 title: dataForm.title,
                 text: dataForm.text,
                 files: urlsFiles,
-                isStudent:dataForm.isStudent,
+                isStudent: dataForm.isStudent,
+                isLogo: dataForm.isLogo,
                 language,
             };
 
@@ -292,8 +294,7 @@ const ConferenceCreateForm: FC<Props> = ({language}) => {
                                             )}
                                         />
                                     </div>
-                                    <div
-                                        className="flex flex-row max-sm:flex-col gap-4 relative justify-between">
+                                    <div className="flex flex-row max-sm:flex-col gap-4 relative justify-between">
                                         <Controller
                                             name="isStudent"
                                             control={control}
@@ -301,10 +302,29 @@ const ConferenceCreateForm: FC<Props> = ({language}) => {
                                                 <div className="w-full">
                                                     <Checkbox isSelected={field.value}
                                                               classNames={{
-                                                                  label:"text-lg"
+                                                                  label: "text-lg"
                                                               }}
                                                               onValueChange={field.onChange}>
                                                         Студентське?
+                                                    </Checkbox>
+                                                    {formState.errors.type?.message && (
+                                                        <div
+                                                            className="text-red-600 text-sm">{formState.errors.type.message}</div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        />
+                                        <Controller
+                                            name="isLogo"
+                                            control={control}
+                                            render={({field}) => (
+                                                <div className="w-full">
+                                                    <Checkbox isSelected={field.value}
+                                                              classNames={{
+                                                                  label: "text-lg"
+                                                              }}
+                                                              onValueChange={field.onChange}>
+                                                        Логотип?
                                                     </Checkbox>
                                                     {formState.errors.type?.message && (
                                                         <div

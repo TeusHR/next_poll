@@ -12,7 +12,7 @@ const cellItemsRow: ICellItem[] = [
     {
         text: 'blackScience',
         image: '/image/manCell.png',
-        link: '/'
+        link: 'http://isc.ontu.edu.ua/'
     },
     {
         text: 'conferencesCompetitions',
