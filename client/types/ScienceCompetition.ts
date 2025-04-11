@@ -9,6 +9,7 @@ export interface ICreateScienceCompetition {
     files: string[];
     toDate?: string;
     isStudent:boolean;
+    isLogo:boolean;
     language: Language;
 }
 
@@ -20,6 +21,7 @@ export interface IUpdateScienceCompetition {
     text: string;
     files: string[];
     isStudent:boolean;
+    isLogo:boolean;
     toDate?: string;
 }
 
@@ -35,6 +37,7 @@ export interface IScienceCompetition {
     text: string;
     files: string[];
     isStudent:boolean;
+    isLogo:boolean;
     createdAt: string;
     updatedAt: string;
 }
@@ -47,6 +50,7 @@ export type CreateScienceCompetitionForm = {
     title: string;
     text: string;
     isStudent:boolean;
+    isLogo:boolean;
     files: FileList;
 };
 
@@ -58,6 +62,7 @@ export type UpdateScienceCompetitionForm = {
     title: string;
     text: string;
     isStudent:boolean;
+    isLogo:boolean;
     files: FileList;
 };
 

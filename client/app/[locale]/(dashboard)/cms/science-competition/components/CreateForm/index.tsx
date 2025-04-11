@@ -33,6 +33,7 @@ const ScienceCompetitionCreateForm: FC<Props> = ({language}) => {
             toDate: "",
             text: "",
             isStudent: false,
+            isLogo: false,
             type: new Set<string>(["COMPETITION"]),
         },
     });
@@ -68,6 +69,7 @@ const ScienceCompetitionCreateForm: FC<Props> = ({language}) => {
                 text: dataForm.text,
                 files: urlsFiles,
                 isStudent:dataForm.isStudent,
+                isLogo:dataForm.isLogo,
                 language,
             };
 
@@ -305,6 +307,25 @@ const ScienceCompetitionCreateForm: FC<Props> = ({language}) => {
                                                               }}
                                                               onValueChange={field.onChange}>
                                                         Студентське?
+                                                    </Checkbox>
+                                                    {formState.errors.type?.message && (
+                                                        <div
+                                                            className="text-red-600 text-sm">{formState.errors.type.message}</div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        />
+                                        <Controller
+                                            name="isLogo"
+                                            control={control}
+                                            render={({field}) => (
+                                                <div className="w-full">
+                                                    <Checkbox isSelected={field.value}
+                                                              classNames={{
+                                                                  label:"text-lg"
+                                                              }}
+                                                              onValueChange={field.onChange}>
+                                                        Логотоип?
                                                     </Checkbox>
                                                     {formState.errors.type?.message && (
                                                         <div
