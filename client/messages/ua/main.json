@@ -4,7 +4,10 @@
       "scientificWork": "НАУКОВА РОБОТА",
       "scientificInstitute": "НАУКОВО-ДОСЛІДНИЙ ІНСТИТУТ",
       "consultingCenter": "КОНСАЛТИНГОВИЙ ЦЕНТР",
-      "scientificLaboratories": "ЛАБОРАТОРІЇ",
+      "scientificLaboratories": "НАУКОВО-ДОСЛІДНІ ЛАБОРАТОРІЇ",
+      "cys": "Рада молодих вчених",
+      "academicCouncil": "Робота спеціалізованих вчених рад",
+      "scienceCompetition": "Наукові конкурси",
       "scientificSchools": "НАУКОВІ ШКОЛИ",
       "studentScience": "СТУДЕНТСЬКА НАУКА",
       "innovativeCenter": "ІННОВАЦІЙНІ РОЗРОБКИ"
@@ -16,6 +19,7 @@
       "linguisticCenter": "ЦЕНТР ЛІНГВІСТИЧНОЇ ПІДГОТОВКИ",
       "internationalFrenchCooperation": "ЦЕНТР УКРАЇНО-ФРАНЦУЗЬКОГО СПІВРОБІТНИЦТВА",
       "internationalTurkishCooperation": "ЦЕНТР УКРАЇНО-ТУРЕЦЬКОГО СПІВРОБІТНИЦТВА",
+      "internationalPractice": "Міжнародна практика",
       "internationalProjects": "МІЖНАРОДНІ ПРОЄКТИ"
     },
     "carts": {
@@ -23,8 +27,10 @@
       "conferencesCompetitions": "Конференції, семінари та конкурси",
       "directionsCooperation": "Напрямки для співпраці",
       "cooperationAgreements": "Договори про співпрацю",
+      "events": "Заходи",
       "documentTemplates": "Шаблони документів",
       "associationsMemberships": "Асоціації та членства",
+      "publicInformation": "Публічна інформація",
       "readMore": "Читати далі"
     },
     "cartsScience": {

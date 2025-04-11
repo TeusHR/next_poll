@@ -39,6 +39,6 @@ export class AcademicCouncilService {
   }
 
   async remove(id: string) {
-    return this.prismaService.documentsTemplates.delete({ where: { id } });
+    return this.prismaService.academicCouncil.delete({ where: { id } });
   }
 }

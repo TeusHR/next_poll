@@ -5,7 +5,7 @@ import {
   getActivitiesUrl, getAgreementsUrl, getAssociationsUrl, getConferencesFileUrl,
   getConferencesUrl,
   getConsultingUrl,
-  getCooperationsUrl,
+  getCooperationsUrl, getCYSUrl,
   getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl, getEventsUrl,
   getFeedBackUrl, getInnovationFiltersUrl,
   getInnovationsUrl, getInternationalPracticeUrl,
@@ -44,6 +44,7 @@ import {IScienceCompetition} from "@/types/ScienceCompetition";
 import {IInternationalPractice} from "@/types/InternationalPractice";
 import {IEvents} from "@/types/Events";
 import {IAcademicCouncil} from "@/types/AcademicCouncil";
+import {ICys} from "@/types/CYS";
 
 export const ResearchWorkService = {
   async getAll(page: number, limit: number, column = "createdAt", order: "asc" | "desc" = "desc", language: string) {
@@ -867,6 +868,32 @@ export const AgreementsService = {
       if (!res.ok) throw new Error("Failed to fetch data");
 
       const data: IAgreements = await res.json();
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
+
+export const CysService = {
+  async getAll(language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    try {
+      const res = await fetch(`${LOCAL_API_URL}${getCYSUrl(`?${searchParams.toString()}`)}`, {
+        method: "GET",
+        headers: getContentType(),
+        next: {
+          tags: ["cys"],
+        },
+        cache: "force-cache",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch data");
+
+      const data: ICys = await res.json();
 
       return data;
     } catch (e) {

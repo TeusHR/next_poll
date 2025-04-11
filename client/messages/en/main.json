@@ -5,6 +5,9 @@
       "scientificInstitute": "SCIENTIFIC AND RESEARCH INSTITUTE",
       "consultingCenter": "CONSULTING CENTER",
       "scientificLaboratories": "SCIENTIFIC AND RESEARCH LABORATORIES",
+      "cys": "Council of young scientists",
+      "academicCouncil": "Work of specialized academic councils",
+      "scienceCompetition": "Science competitions",
       "scientificSchools": "SCIENTIFIC SCHOOLS",
       "studentScience": "STUDENT SCIENCE",
       "innovativeCenter": "INNOVATIVE DEVELOPMENTS"
@@ -16,6 +19,7 @@
       "linguisticCenter": "LINGUISTIC TRAINING CENTER",
       "internationalFrenchCooperation": "INTERNATIONAL CENTER OF UKRAINIAN-FRENCH COOPERATION",
       "internationalTurkishCooperation": "INTERNATIONAL CENTER OF UKRAINIAN-TURKISH COOPERATION",
+      "internationalPractice": "International Practice",
       "internationalProjects": "INTERNATIONAL PROJECTS"
     },
     "carts": {
@@ -23,8 +27,10 @@
       "conferencesCompetitions": "CONFERENCES, SEMINARS AND COMPETITIONS",
       "directionsCooperation": "DIRECTIONS FOR COOPERATION",
       "cooperationAgreements": "Cooperation Agreements",
+      "events": "Events",
       "documentTemplates": "Document Templates",
       "associationsMemberships": "Associations and Memberships",
+      "publicInformation": "Public information",
       "readMore": "Read more"
     },
     "cartsScience": {

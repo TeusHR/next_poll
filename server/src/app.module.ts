@@ -36,6 +36,7 @@ import { ScienceCompetitionModule } from './science-competition/science-competit
 import { InternationalPracticeModule } from './international-practice/international-practice.module';
 import { EventsModule } from './events/events.module';
 import { AcademicCouncilModule } from './academic-council/academic-council.module';
+import { CysModule } from './cys/cys.module';
 
 @Module({
   imports: [
@@ -100,6 +101,7 @@ import { AcademicCouncilModule } from './academic-council/academic-council.modul
     InternationalPracticeModule,
     EventsModule,
     AcademicCouncilModule,
+    CysModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, JwtService],

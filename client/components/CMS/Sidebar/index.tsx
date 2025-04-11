@@ -62,6 +62,10 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
         path: '/cms/academic-council',
     },
     {
+        title: 'Рада молодих вчених',
+        path: '/cms/cys',
+    },
+    {
         title: 'Інноваційні розробки',
         path: '/cms/innovations',
     },

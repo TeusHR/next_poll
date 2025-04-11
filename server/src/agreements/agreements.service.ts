@@ -30,7 +30,6 @@ export class AgreementsService {
       where: { language },
     });
     if (!agreements) throw new NotFoundException();
-    console.log(agreements);
     return {
       ...agreements,
       foreignUniversities: agreements.foreignUniversities.reduce(

@@ -20,6 +20,11 @@ const cellItemsRow: ICellItem[] = [
         link: '/conference'
     },
     {
+        text: 'events',
+        image: '/image/manTwoCell.png',
+        link: '/events'
+    },
+    {
         text: 'directionsCooperation',
         image: '/image/wmCell.png',
         link: '/cooperation'
@@ -38,6 +43,10 @@ const cellItemsRowTwo = [
     {
         text: 'associationsMemberships',
         link: '/associations'
+    },
+    {
+        text: 'publicInformation',
+        link: '/public-information'
     }
 ]
 
@@ -64,7 +73,7 @@ export default function Home({params: {locale}}: Props) {
             </div>
             <div className="flex flex-col gap-12 w-full">
                 <div
-                    className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 max-sm:grid-rows-3 px-24 max-2xl:px-12 max-xl:px-8 mt-20 gap-12">
+                    className="xl:container mx-auto grid grid-cols-2 max-sm:grid-cols-1 max-sm:grid-rows-3 gap-x-10 justify-items-center px-10 max-xl:px-8 mt-20 gap-12">
                     {cellItemsRow.map((item, index) =>
                         <CellItem key={index}
                                   text={t(`carts.${item.text}`)}
@@ -72,12 +81,13 @@ export default function Home({params: {locale}}: Props) {
                                   wrapperTextClassName={'pr-40 max-2xl:pr-20 max-sm:pr-28'}
                                   image={item.image}
                                   link={item.link}
+                                  linkClassName={"max-w-[550px] w-full flex-1 flex"}
                                   wrapperStyle={`h-full ${index === cellItemsRow.length - 1 ? 'w-[250px]' : 'w-[180px]'} !max-w-full`}/>
                     )}
                 </div>
                 <div
-                    className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 max-sm:grid-rows-3 px-24 max-2xl:px-12 max-xl:px-8 gap-12">
-                    {cellItemsRowTwo.map((item, index) => <Link key={`${index}-${item.text}`} href={item.link}>
+                    className="xl:container w-full mx-auto grid grid-cols-2 max-sm:grid-cols-1 max-sm:grid-rows-3 gap-x-10 justify-items-center px-10 max-xl:px-8 mt-5 gap-12">
+                    {cellItemsRowTwo.map((item, index) => <Link key={`${index}-${item.text}`} style={{maxWidth:'550px', width:"100%"}} href={item.link}>
                             <div className="min-h-[100px] h-full bg-[#2E2C39] rounded-2xl">
                                 <div className="flex items-center justify-between h-full text-2xl max-xl:text-xl px-8">
                     <span className="text-white">

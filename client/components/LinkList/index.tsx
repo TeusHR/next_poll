@@ -39,6 +39,21 @@ const ILinkListItemLeft: ILinkListItemLeft[] = [
     link: "/innovations",
     external: false,
   },
+  {
+    text: "cys",
+    link: "/cys",
+    external: false,
+  },
+  {
+    text: "academicCouncil",
+    link: "/academic-council",
+    external: false,
+  },
+  {
+    text: "scienceCompetition",
+    link: "/science-competition",
+    external: false,
+  },
 ];
 
 const ILinkListItemRight: ILinkListItemLeft[] = [
@@ -53,8 +68,13 @@ const ILinkListItemRight: ILinkListItemLeft[] = [
     external: false,
   },
   {
-    text: "linguisticCenter",
-    link: "/language-success",
+    text: "internationalProjects",
+    link: "/international",
+    external: false,
+  },
+  {
+    text: "internationalPractice",
+    link: "/international-practice",
     external: false,
   },
   {
@@ -68,8 +88,8 @@ const ILinkListItemRight: ILinkListItemLeft[] = [
     external: true,
   },
   {
-    text: "internationalProjects",
-    link: "/international",
+    text: "linguisticCenter",
+    link: "/language-success",
     external: false,
   },
 ];

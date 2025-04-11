@@ -275,6 +275,15 @@ model AcademicCouncil {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
+// Рада молодих вчених
+model CYS {
+  id        String   @id @default(uuid())
+  text      String
+  language  Language @default(UA)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
 // Відділ міжнародних грантів та академічної мобільності (Department of International Grants and Academic Mobility)
 model DIGAM {
   id                  String   @id @default(uuid())

@@ -4,7 +4,7 @@ import {
   getActivitiesUrl, getAgreementsUrl, getAssociationsUrl, getConferencesFileUrl,
   getConferencesUrl,
   getConsultingUrl,
-  getCooperationsUrl,
+  getCooperationsUrl, getCYSUrl,
   getDigamUrl, getDocumentsTemplateUrl, getDocumentsUrl, getEventsUrl, getInnovationFiltersUrl,
   getInnovationsUrl, getInternationalPracticeUrl,
   getInternationalUrl,
@@ -56,6 +56,7 @@ import {
 import {ICreateInternationalPractice, IInternationalPractice} from "@/types/InternationalPractice";
 import {ICreateEvents, IEvents, IUpdateEvents} from "@/types/Events";
 import {IAcademicCouncil, ICreateAcademicCouncil, IUpdateAcademicCouncil} from "@/types/AcademicCouncil";
+import {ICreateCys, ICys} from "@/types/CYS";
 
 export const ConferencesService = {
   async getAllConference(authAxios: AxiosInstance) {
@@ -132,6 +133,36 @@ export const AcademicCouncilService = {
     const { status } = await authAxios.delete(getAcademicCouncilUrl(`/${id}`));
     return status === 200;
   },
+};
+
+export const CysService = {
+  // async getAll(authAxios: AxiosInstance) {
+  //   const { data } = await authAxios.get<ICys[]>(getCYSUrl(""));
+  //   return data;
+  // },
+  async get(authAxios: AxiosInstance, language: string) {
+    const searchParams = new URLSearchParams({
+      language,
+    });
+    try {
+      const { data } = await authAxios.get<ICys>(getCYSUrl(`?${searchParams.toString()}`));
+      return data;
+    } catch (_) {
+      return null;
+    }
+  },
+  async post(item: ICreateCys, authAxios: AxiosInstance) {
+    const { status } = await authAxios.post<ICreateCys>(getCYSUrl(""), item);
+    return status;
+  },
+  // async update(item: IUpdateCys, id: string, authAxios: AxiosInstance) {
+  //   const { status } = await authAxios.patch<IUpdateCys>(getCYSUrl(`/${id}`), item);
+  //   return status;
+  // },
+  // async remove(id: string, authAxios: AxiosInstance) {
+  //   const { status } = await authAxios.delete(getCYSUrl(`/${id}`));
+  //   return status === 200;
+  // },
 };
 
 export const EventsService = {
