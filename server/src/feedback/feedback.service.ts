@@ -59,23 +59,23 @@ export class FeedbackService {
       from: "onboarding@resend.dev",
       to: "sennqq7@gmail.com",
       subject: "Форма зворотного зв'язку",
-      react: this.generateHtml(
+      html: this.generateHtml(
         feedback,
         descriptionsWithValue,
         questionsFormatted,
       ),
     });
 
-    await this.resendService.send({
-      from: "workemailtemp7@gmail.com",
-      to: "sennqq7@gmail.com",
-      subject: "Форма зворотного зв'язку",
-      react: this.generateHtml(
-        feedback,
-        descriptionsWithValue,
-        questionsFormatted,
-      ),
-    });
+    // await this.resendService.send({
+    //   from: "workemailtemp7@gmail.com",
+    //   to: "sennqq7@gmail.com",
+    //   subject: "Форма зворотного зв'язку",
+    //   react: this.generateHtml(
+    //     feedback,
+    //     descriptionsWithValue,
+    //     questionsFormatted,
+    //   ),
+    // });
 
     // this.mailerService
     //   .sendMail({
