@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CreateFeedbackDto } from "./dto/create-feedback.dto";
 import { MailerService } from "@nestjs-modules/mailer";
+import { Resend } from "resend";
 
 @Injectable()
 export class FeedbackService {
@@ -51,22 +52,31 @@ export class FeedbackService {
       };
     });
 
-    this.mailerService
-      .sendMail({
-        to: process.env.ROOT_EMAIL,
-        from: process.env.SMTP_USER,
-        subject: "Форма зворотного зв'язку",
-        template: "feedback",
-        context: {
-          ...feedback,
-          descriptionsWithValue,
-          questionsFormatted,
-        },
-      })
-      .catch((err) => {
-        this.logger.error("CONTACTS EMAIL ERROR", err);
-        console.log("CONTACTS EMAIL ERROR", err, new Date().toLocaleString());
-      });
+    const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
+
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: "workemailtemp7@gmail.com",
+      subject: "Hello World",
+      html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
+    });
+
+    // this.mailerService
+    //   .sendMail({
+    //     to: process.env.ROOT_EMAIL,
+    //     from: process.env.SMTP_USER,
+    //     subject: "Форма зворотного зв'язку",
+    //     template: "feedback",
+    //     context: {
+    //       ...feedback,
+    //       descriptionsWithValue,
+    //       questionsFormatted,
+    //     },
+    //   })
+    //   .catch((err) => {
+    //     this.logger.error("CONTACTS EMAIL ERROR", err);
+    //     console.log("CONTACTS EMAIL ERROR", err, new Date().toLocaleString());
+    //   });
 
     return feedback;
   }
