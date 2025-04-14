@@ -68,7 +68,7 @@ export class FeedbackService {
 
     await resend.emails.send({
       from: "onboarding@resend.dev",
-      to: "workemailtemp7@gmail.com",
+      to: "sennqq7@gmail.com",
       subject: "Hello World",
       html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
     });
