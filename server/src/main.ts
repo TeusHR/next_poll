@@ -14,7 +14,11 @@ async function bootstrap() {
     }),
   );
 
-  const whitelist = [process.env.NEXTAUTH_URL, "http://front:3000"];
+  const whitelist = [
+    process.env.NEXTAUTH_URL,
+    "http://front:3000",
+    "https://willowy-naiad-c968f3.netlify.app",
+  ];
 
   app.enableCors({
     credentials: true,
