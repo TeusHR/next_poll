@@ -55,15 +55,22 @@ export class FeedbackService {
 
     const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
 
+    // await resend.emails.send({
+    //   from: "Acme <onboarding@resend.dev>",
+    //   to: "sennqq7@gmail.com",
+    //   subject: "Форма зворотного зв'язку",
+    //   html: this.generateHtml(
+    //     feedback,
+    //     descriptionsWithValue,
+    //     questionsFormatted,
+    //   ),
+    // });
+
     await resend.emails.send({
       from: "onboarding@resend.dev",
-      to: "sennqq7@gmail.com",
-      subject: "Форма зворотного зв'язку",
-      html: this.generateHtml(
-        feedback,
-        descriptionsWithValue,
-        questionsFormatted,
-      ),
+      to: "workemailtemp7@gmail.com",
+      subject: "Hello World",
+      html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
     });
 
     // await this.resendService.send({
