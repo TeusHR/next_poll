@@ -11,6 +11,7 @@ import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handleba
 import { AuthModule } from "./auth/auth.module";
 import { JwtService } from "@nestjs/jwt";
 import { FeedbackModule } from "./feedback/feedback.module";
+import { ResendModule } from 'nestjs-resend';
 
 @Module({
   imports: [
@@ -24,6 +25,9 @@ import { FeedbackModule } from "./feedback/feedback.module";
       serveStaticOptions: { fallthrough: false, maxAge: 1000 * 3600 * 24 },
     }),
     ScheduleModule.forRoot(),
+    ResendModule.forRoot({
+      apiKey: 're_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd',
+    }),
     MailerModule.forRoot({
       transport: {
         host: process.env.SMTP_HOST,

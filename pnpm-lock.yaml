@@ -154,6 +154,9 @@ importers:
       moment:
         specifier: ^2.30.1
         version: 2.30.1
+      nestjs-resend:
+        specifier: ^1.0.1
+        version: 1.0.1(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rxjs@7.8.1)
       nodemailer:
         specifier: ^6.9.11
         version: 6.9.13
@@ -4760,6 +4763,12 @@ packages:
 
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
+
+  nestjs-resend@1.0.1:
+    resolution: {integrity: sha512-EItn3pGEYl0zbxgGqz/weS1odxL9UUB+stXljVABEypXTCamxpPA9bOL/EKzIfxWb7SRVO7rGLbPAb0+kiLq9A==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0
+      rxjs: ^7.8.1
 
   next-auth@4.24.7:
     resolution: {integrity: sha512-iChjE8ov/1K/z98gdKbn2Jw+2vLgJtVV39X+rCP5SGnVQuco7QOr19FRNGMIrD8d3LYhHWV9j9sKLzq1aDWWQQ==}
@@ -12694,6 +12703,15 @@ snapshots:
   negotiator@0.6.3: {}
 
   neo-async@2.6.2: {}
+
+  nestjs-resend@1.0.1(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rxjs@7.8.1):
+    dependencies:
+      '@nestjs/common': 10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
+      resend: 4.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      rxjs: 7.8.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   next-auth@4.24.7(next@14.1.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.75.0))(nodemailer@6.9.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
