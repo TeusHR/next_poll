@@ -14,6 +14,11 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: true, // разрешить любой origin для теста
+    credentials: true,
+  });
+
   const whitelist = [
     process.env.NEXTAUTH_URL,
     "http://front:3000",
@@ -23,6 +28,7 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     origin: function (origin, callback) {
+      console.log("Origin:", origin);
       if (process.env.NODE_ENV !== "production") return callback(null, true);
       if (!origin || whitelist.includes(origin)) return callback(null, true);
       return callback(new Error("Not allowed by CORS"));
