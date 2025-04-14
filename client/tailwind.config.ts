@@ -1,5 +1,6 @@
-import { nextui } from "@nextui-org/react";
+
 import { Config } from "tailwindcss";
+import {heroui} from "@heroui/react";
 
 // import withMT from "@material-tailwind/react/utils/withMT";
 
@@ -10,7 +11,7 @@ const tailwindConfig: Config = {
     content: [
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
         "./components/**/*.{js,ts,jsx,tsx,mdx}",
-        "../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+        "../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         extend: {
@@ -20,7 +21,7 @@ const tailwindConfig: Config = {
                 'xsm': '480px'
             },
             colors: {
-                fd:'#ffd70d'
+                fd:'#FEC938'
             },
             grayscale: {
               75:'75%'
@@ -29,7 +30,7 @@ const tailwindConfig: Config = {
     },
     darkMode: "class",
     plugins: [
-        nextui({
+        heroui({
             defaultTheme: 'light',
             themes: {
                 light: {
@@ -47,6 +48,7 @@ const tailwindConfig: Config = {
                             '800': '#CAC3CE',
                             '900': '#CFC7D2',
                         },
+                        warning:'#FEC938',
                     },
                     layout: {
                         fontSize: {

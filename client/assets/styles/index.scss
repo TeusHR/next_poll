@@ -4,12 +4,17 @@
 
 body {
   position: relative;
+  font-family: 'Poppins', sans-serif;
 }
 
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
   background-color: #dae1e8;
+}
+
+main {
+  background-color: #F1F2F3;
 }
 
 ::-webkit-scrollbar-thumb {

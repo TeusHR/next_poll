@@ -1,6 +1,6 @@
 'use client'
 import React, {ReactNode} from 'react'
-import {Tooltip} from "@nextui-org/react";
+import {Tooltip} from "@heroui/react";
 
 
 type Props = {

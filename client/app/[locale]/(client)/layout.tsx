@@ -1,24 +1,20 @@
 import React, {ReactNode} from "react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { GetTranslationsForJson } from "@/utils/getTranslationKeys";
-import mainJson from "@/messages/ua/main.json";
-import { MainTranslation } from "./page";
 
 export default function LocaleLayout({children, params}: {
     children: ReactNode,
   params: { locale: string }
 }) {
 
-  const mainPage = GetTranslationsForJson<MainTranslation>('Main', mainJson)
-
     return (
-        <div className="bg-white w-full text-primary flex flex-col min-h-screen">
-            <Header params={params}/>
+        <div>
+            <Header />
             <main className="flex-auto">
+                <video loop muted autoPlay className="fixed top-[-5%]" controls={false}>
+                    <source src={"/image/video.mp4"} type="video/mp4" />
+                </video>
                 {children}
             </main>
-            <Footer translation={mainPage.Main['footer']}/>
         </div>
     );
 }

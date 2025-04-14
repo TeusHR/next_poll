@@ -44,15 +44,24 @@
 </head>
 <body>
 <div class="container">
-    <div class="flex">
-        <img src="{{logo}}" alt="SCINT ONTU logo" width="100" height="140"/>
-    </div>
     <h2>Зворотній зв'язок вiд {{name}}</h2>
-    <label for="email">Почта:</label>
-    <p>{{email}}</p>
+    <label for="email">Почта: <span>{{email}}</span></label>
+    <h4>Вік: <span>{{age}}</span></h4>
+    <h4>Стать: <span>{{gender}}</span></h4>
+    <div class="result-values">{{#each descriptionsWithValue}}
+        <p><strong>{{number}}.</strong> {{text}} - {{value}}%</p>
+    {{/each}}</div>
 
-    <label for="message">Текст звернення:</label>
-    <p>{{text}}</p>
+    <h3>Результати по питаннях:</h3>
+    {{#each questionsFormatted}}
+        <p><strong>Питання - {{number}}</strong></p>
+        <ul style="margin-top: 0; margin-bottom: 0.5rem;">
+            {{#each answers}}
+                <li>{{letter}} {{value}}</li>
+            {{/each}}
+        </ul>
+    {{/each}}
 </div>
 </body>
+
 </html>

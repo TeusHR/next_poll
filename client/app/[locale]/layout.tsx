@@ -8,14 +8,13 @@ import {redirect} from "next/navigation";
 import Providers from "../../providers";
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
-import {Roboto_Slab} from 'next/font/google';
+import {Montserrat} from 'next/font/google';
 
 export function generateStaticParams() {
     return LOCALES.map((locale) => ({locale}));
 }
 
-// const inter = Inter({subsets: ["latin"]});
-const RobotoSlab = Roboto_Slab({subsets: ['latin', 'cyrillic']});
+// const montserrat = Montserrat({ subsets: ["latin", 'cyrillic'] });
 
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -58,7 +57,7 @@ export default async function RootLayout({children, params: {locale}}: {
 
     return (
         <html lang={locale}>
-        <body className={RobotoSlab.className}>
+        <body >
         <NextIntlClientProvider messages={messages}>
             <Providers>
                 {children}

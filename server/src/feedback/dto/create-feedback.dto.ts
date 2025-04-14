@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { Transform } from "class-transformer";
 
 export class CreateFeedbackDto {
@@ -12,8 +12,19 @@ export class CreateFeedbackDto {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @Transform(({ value }) => value?.toString().trim())
+  @IsArray()
   @IsNotEmpty()
-  text: string;
+  value: number;
+
+  @IsArray()
+  @IsNotEmpty()
+  question: object[];
+
+  @IsString()
+  @IsNotEmpty()
+  gender: string;
+
+  @IsString()
+  @IsNotEmpty()
+  age: string;
 }

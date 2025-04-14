@@ -10,33 +10,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { AuthModule } from "./auth/auth.module";
 import { JwtService } from "@nestjs/jwt";
-import { ConferenceModule } from "./conference/conference.module";
-import { ScienceSchoolModule } from "./science-school/science-school.module";
-import { CooperationModule } from "./cooperation/cooperation.module";
-import { ResearchWorkModule } from "./research-work/research-work.module";
-import { ActivityModule } from "./activity/activity.module";
-import { InnovationModule } from "./innovation/innovation.module";
-import { StudentScienceModule } from "./student-science/student-science.module";
-import { InternationalProjectModule } from "./international-project/international-project.module";
 import { FeedbackModule } from "./feedback/feedback.module";
-import { LaboratoryModule } from "./laboratory/laboratory.module";
-import { LaboratoryDevelopmentModule } from "./laboratory-development/laboratory-development.module";
-import { DIGAMModule } from "./digam/digam.module";
-import { ConsultingModule } from "./consulting/consulting.module";
-import { TrainingModule } from "./training/training.module";
-import { DocumentsModule } from "./documents/documents.module";
-import { AssociationsModule } from "./associations/associations.module";
-import { AgreementsModule } from "./agreements/agreements.module";
-import { PrismaService } from "./prisma.service";
-import { ConferenceFileModule } from './conference-file/conference-file.module';
-import { PublicInformationModule } from './public-information/public-information.module';
-import { DocumentsTemplatesModule } from './documents-templates/documents-templates.module';
-import { DirectionFilterModule } from './direction-filter/direction-filter.module';
-import { ScienceCompetitionModule } from './science-competition/science-competition.module';
-import { InternationalPracticeModule } from './international-practice/international-practice.module';
-import { EventsModule } from './events/events.module';
-import { AcademicCouncilModule } from './academic-council/academic-council.module';
-import { CysModule } from './cys/cys.module';
 
 @Module({
   imports: [
@@ -76,34 +50,9 @@ import { CysModule } from './cys/cys.module';
       },
     }),
     AuthModule,
-    ConferenceModule,
-    ScienceSchoolModule,
-    CooperationModule,
-    DocumentsModule,
-    ResearchWorkModule,
-    ActivityModule,
-    InnovationModule,
-    StudentScienceModule,
-    InternationalProjectModule,
     FeedbackModule,
-    LaboratoryModule,
-    LaboratoryDevelopmentModule,
-    DIGAMModule,
-    AssociationsModule,
-    ConsultingModule,
-    AgreementsModule,
-    TrainingModule,
-    ConferenceFileModule,
-    PublicInformationModule,
-    DocumentsTemplatesModule,
-    DirectionFilterModule,
-    ScienceCompetitionModule,
-    InternationalPracticeModule,
-    EventsModule,
-    AcademicCouncilModule,
-    CysModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, JwtService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {}

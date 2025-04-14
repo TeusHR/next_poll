@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {Button} from '@nextui-org/react';
+import {Button} from "@heroui/react";
 import { Link } from "@/routing/*";
 
 type Props = {

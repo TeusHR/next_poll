@@ -1,63 +1,34 @@
 import React from 'react'
-import {Image} from "@nextui-org/react";
+import {Button, Image} from "@heroui/react";
 import NextImage from "next/image";
 import {Link} from "@/routing/*";
-import Search from "@/components/Search";
-import SwitchLanguage from "@/components/SwitchLanguage";
-import MargueeComponent from "@/components/Marguee";
-import {useTranslations} from "next-intl";
 
-type Props = {
-    params: { locale: string }
-}
-
-const logos: Record<string, string> = {
-    en: "/image/logoText-en.svg",
-    ua: "/image/logoText-ua.svg",
-};
-
-const Header = ({params: {locale}}: Props) => {
-
-    const t = useTranslations('Page');
+const Header = () => {
 
     return (
-        <div className="flex flex-col">
-            <div className="w-full h-[50px] bg-[#2E2C39] wrapper">
-                <div
-                    className="w-full flex flex-row gap-4 h-full items-center justify-center uppercase font-base animated-text-strip">
-                    <MargueeComponent translate={t('technicalWork')}/>
-                </div>
-            </div>
-            <header
-                className="flex flex-row h-[178px] max-sm:h-auto max-sm:flex-col gap-4 justify-between items-center p-4 my-4 xl:container xl:mx-auto">
-                <div className="flex flex-row max-sm:flex-col justify-start gap-4 w-full">
+        <div className="flex flex-col relative z-10 py-6">
+            <header className="flex flex-row h-[78px] bg-[rgba(0,_0,_0,_0.65)] max-sm:h-auto max-sm:flex-col gap-4 justify-between items-center p-4 xl:container xl:mx-auto">
+                <div className="flex flex-row max-sm:flex-col gap-4 w-full items-center justify-between px-12">
                     <Link href="/" className="w-auto h-full flex justify-center">
-                        <Image src={"/image/logo.png"}
+                        <Image src={"/image/Teus_free_1000-1000_PNG.png"}
                                alt={"ONTU логотип"}
                                className={"object-contain"}
+                               classNames={{
+                                   wrapper:"!max-w-none w-[75px] h-[75px]"
+                               }}
                                as={NextImage}
-                               width={120}
-                               height={180}
+                               fill
                                fetchPriority={"high"}
                         />
                     </Link>
-                    <Link href="/" className="w-auto flex justify-center">
-                        <div
-                            className="flex flex-col justify-center w-full gap-4 text-primary max-sm:text-center max-sm:items-center max-sm:h-[70px]">
-                            <Image src={logos[locale] || logos.en}
-                                   alt={'ONTU логотип'}
-                                   className={"object-contain"}
-                                   classNames={{wrapper: 'h-full w-[270px] max-sm:w-full !max-w-full'}}
-                                   as={NextImage}
-                                   fill
-                                   fetchPriority={"high"}
-                            />
-                        </div>
+                    <Link href="/poll" className="w-auto h-full flex justify-center">
+                        <Button className="border-fd bg-transparent border-2 text-white font-bold px-6 text-base rounded-full data-[hover=true]:bg-fd data-[hover=true]:!opacity-100">
+                            Почати
+                            <span className="w-[14px] h-[14px]">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.99974 13.0001L1.9996 11.0002L18.1715 11.0002L14.2218 7.05044L15.636 5.63623L22 12.0002L15.636 18.3642L14.2218 16.9499L18.1716 13.0002L1.99974 13.0001Z"></path></svg>
+                            </span>
+                        </Button>
                     </Link>
-                </div>
-                <div className="flex flex-row gap-4 items-center">
-                    <SwitchLanguage selectLanguage={locale}/>
-                    <Search/>
                 </div>
             </header>
         </div>

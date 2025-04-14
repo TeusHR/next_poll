@@ -1,7 +1,5 @@
 import {
   applyDecorators,
-  createParamDecorator,
-  ExecutionContext,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -9,7 +7,6 @@ import {
   JwtGuard,
   NotRequiredJwtGuard,
 } from "../../auth/guards/jwt.guard";
-import { User as IUser } from "@prisma/client";
 
 export function Auth(isRequire = true) {
   if (isRequire === false)
@@ -20,15 +17,3 @@ export function Auth(isRequire = true) {
 export function IsAdmin() {
   return applyDecorators(UseGuards(AdminJwtGuard));
 }
-
-type TypeData = keyof IUser;
-export const User = createParamDecorator(
-  (data: TypeData, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
-    const user = request.user;
-
-    if (!user) return undefined;
-
-    return data ? user[data] : user;
-  },
-);
