@@ -15,7 +15,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: true, // разрешить любой origin для теста
+    origin: "*", // разрешить любой origin для теста
     credentials: true,
   });
 
