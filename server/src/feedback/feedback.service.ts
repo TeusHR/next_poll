@@ -56,7 +56,7 @@ export class FeedbackService {
     const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
 
     await resend.emails.send({
-      from: "workemailtemp7@gmail.com",
+      from: "onboarding@resend.dev",
       to: "sennqq7@gmail.com",
       subject: "Форма зворотного зв'язку",
       react: this.generateHtml(
