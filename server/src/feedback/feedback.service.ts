@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { CreateFeedbackDto } from "./dto/create-feedback.dto";
 import { Resend } from "resend";
 import { MailerService } from "@nestjs-modules/mailer";
+import Mailgun from "mailgun.js";
 
 @Injectable()
 export class FeedbackService {
@@ -53,7 +54,28 @@ export class FeedbackService {
       };
     });
 
-    const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
+    const mailgun = new Mailgun(FormData);
+    const mg = mailgun.client({
+      username: "api",
+      key: process.env.API_KEY,
+    });
+    try {
+      const data = await mg.messages.create(
+        "sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org",
+        {
+          from: "Mailgun Sandbox <postmaster@sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org>",
+          to: ["Alex <sennqq7@gmail.com>"],
+          subject: "Hello Alex",
+          text: "Congratulations Alex, you just sent an email with Mailgun! You are truly awesome!",
+        },
+      );
+
+      console.log(data); // logs response data
+    } catch (error) {
+      console.log(error); //logs any error
+    }
+
+    // const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
 
     // await resend.emails.send({
     //   from: "Acme <onboarding@resend.dev>",
@@ -66,12 +88,12 @@ export class FeedbackService {
     //   ),
     // });
 
-    await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: "sennqq7@gmail.com",
-      subject: "Hello World",
-      html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
-    });
+    // await resend.emails.send({
+    //   from: "onboarding@resend.dev",
+    //   to: "sennqq7@gmail.com",
+    //   subject: "Hello World",
+    //   html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
+    // });
 
     // await this.resendService.send({
     //   from: "workemailtemp7@gmail.com",
