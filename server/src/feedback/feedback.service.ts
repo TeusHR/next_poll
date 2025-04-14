@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CreateFeedbackDto } from "./dto/create-feedback.dto";
 // import { Resend } from "resend";
-import { ResendService } from "nestjs-resend";
+import { Resend, ResendService } from "nestjs-resend";
 
 @Injectable()
 export class FeedbackService {
@@ -53,14 +53,18 @@ export class FeedbackService {
       };
     });
 
-    // const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
+    const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
 
-    // await resend.emails.send({
-    //   from: "workemailtemp7@gmail.com",
-    //   to: "sennqq7@gmail.com",
-    //   subject: "Hello World",
-    //   html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
-    // });
+    await resend.emails.send({
+      from: "workemailtemp7@gmail.com",
+      to: "sennqq7@gmail.com",
+      subject: "Форма зворотного зв'язку",
+      react: this.generateHtml(
+        feedback,
+        descriptionsWithValue,
+        questionsFormatted,
+      ),
+    });
 
     await this.resendService.send({
       from: "workemailtemp7@gmail.com",
