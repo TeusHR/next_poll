@@ -20,9 +20,9 @@ async function bootstrap() {
   });
 
   const whitelist = [
+    "https://willowy-naiad-c968f3.netlify.app",
     process.env.NEXTAUTH_URL,
     "http://front:3000",
-    "https://willowy-naiad-c968f3.netlify.app",
   ];
 
   app.enableCors({
