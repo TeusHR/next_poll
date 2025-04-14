@@ -1,14 +1,14 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CreateFeedbackDto } from "./dto/create-feedback.dto";
-// import { Resend } from "resend";
-import { Resend, ResendService } from "nestjs-resend";
+import { Resend } from "resend";
+import { MailerService } from "@nestjs-modules/mailer";
 
 @Injectable()
 export class FeedbackService {
   private readonly logger = new Logger(FeedbackService.name);
 
-  // constructor(private mailerService: MailerService) {}
-  constructor(private readonly resendService: ResendService) {}
+  constructor(private mailerService: MailerService) {}
+  // constructor(private readonly resendService: ResendService) {}
 
   async create(createFeedbackDto: CreateFeedbackDto) {
     const feedback: any = {
