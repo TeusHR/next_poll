@@ -39,10 +39,7 @@ import { FeedbackModule } from "./feedback/feedback.module";
         from: process.env.SMTP_USER,
       },
       template: {
-        dir:
-          process.env.NODE_ENV === "production"
-            ? join(path, "templates")
-            : join(path, "server", "templates"),
+        dir: path + '/templates',
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
