@@ -66,7 +66,7 @@ export class FeedbackService {
           from: "Mailgun Sandbox <postmaster@sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org>",
           to: ["workemailtemp7@gmail.com"],
           subject: "Hello Alex",
-          text: this.generateHtml(
+          html: this.generateHtml(
             feedback,
             descriptionsWithValue,
             questionsFormatted,
