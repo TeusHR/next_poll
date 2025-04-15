@@ -1,16 +1,14 @@
-import React, {FC, Fragment, useCallback, useEffect} from 'react';
+import React, {FC} from 'react';
 import Title from "@/UI/Title";
 import {
     Control,
     Controller,
-    ErrorOption, FieldArrayWithId,
+    FieldArrayWithId,
     FieldPath,
     FormState,
-    useFormContext, UseFormSetError,
-    useFormState,
-    useWatch
+    UseFormSetError,
 } from "react-hook-form";
-import {Calc, IPoll} from "@/components/Poll";
+import {IPoll} from "@/components/Poll";
 import {questions} from "@/utils/TableMapping";
 import {NumberInput} from "@heroui/react";
 
@@ -40,8 +38,8 @@ const Questions: FC<Props> = ({index, control, formState, item, clearErrors, set
             <Title text={questions[index].label} style="font-black text-xl max-bg:text-base"/>
             <div className="space-y-2" key={`${item.id}`}>
                 {questions[index].items.map((itemQuest, idxQues) => (
-                    <div key={`${item.id}-${idxQues}`} className="flex flex-row items-center gap-4 justify-between">
-                        <span className="text-bold max-w-[750px] w-full">{itemQuest.key}. {itemQuest.text}</span>
+                    <div key={`${item.id}-${idxQues}`} className="flex items-center gap-4 justify-between max-xsm:items-start max-xsm:flex-col">
+                        <span className="text-bold">{itemQuest.key}. {itemQuest.text}</span>
                         <Controller
                             name={`question.${index}.${itemQuest.key}` as const}
                             control={control}
