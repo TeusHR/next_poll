@@ -1,28 +1,19 @@
 'use server';
-import nodemailer, {Transporter} from 'nodemailer';
-import SMTPPool from "nodemailer/lib/smtp-pool";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-import SendmailTransport from "nodemailer/lib/sendmail-transport";
-import JSONTransport from "nodemailer/lib/json-transport";
+import nodemailer from 'nodemailer';
 const SMTP_SERVER_HOST = process.env.SMTP_HOST;
 const SMTP_SERVER_PORT = process.env.SMTP_PORT;
 const SMTP_SERVER_USERNAME = process.env.SMTP_USER;
 const SMTP_SERVER_PASSWORD = process.env.SMTP_PASSWORD;
 const SITE_MAIL_RECIEVER = process.env.ROOT_EMAIL;
 
-type test =  SMTPPool.Options
-
 const transporter = nodemailer.createTransport({
-    // service: "gmail",
     host: SMTP_SERVER_HOST,
     auth: {
         user: SMTP_SERVER_USERNAME,
         pass: SMTP_SERVER_PASSWORD,
     },
-    // ignoreTLS: false,
     secure: true,
-    port: 587,
-
+    port: 465,
 });
 
 export async function sendMail({

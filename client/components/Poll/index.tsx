@@ -304,19 +304,12 @@ const Poll = () => {
                     questionsFormatted,)
             });
 
-
             if (response?.messageId) {
-                toast.success('Application Submitted Successfully.');
+                toast.success("Успішно");
             } else {
                 toast.error('Failed To send application.');
             }
 
-
-            // const status = await FeedbackService.post(dataProduct);
-            // if (status === 201) {
-            //     // reset();
-            //     toast.success("Успішно");
-            // }
         } catch (error) {
             console.log(error);
             toast.error("Щось пішло не так");
