@@ -1,17 +1,13 @@
 'use client'
-import React, {FC, useCallback, useEffect, useRef, useState} from "react";
+import React, {useState} from "react";
 import {Controller, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
-import {useSession} from "next-auth/react";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {toast} from "react-toastify";
-import moment from "moment";
-import Questions, {IQuestion} from "@/components/PollQuestions";
-import {Button, Checkbox, CheckboxGroup, Image, Input, Radio, RadioGroup} from "@heroui/react";
-import tableMapping, {questions} from "@/utils/TableMapping";
+import Questions from "@/components/PollQuestions";
+import {Button, Input, Radio, RadioGroup} from "@heroui/react";
+import tableMapping from "@/utils/TableMapping";
 import {FeedbackService} from "@/services/client.service";
 import {IFeedbackForm} from "@/types/Feedback";
-import NextImage from "next/image";
-import {data} from "autoprefixer";
+import {sendMail} from "../../lib/send-mail";
 
 export type IPoll = {
     question: Calc[]
@@ -250,17 +246,77 @@ const Poll = () => {
             const dataProduct: IFeedbackForm = {
                 name: dataForm.name,
                 email: dataForm.email,
-                gender:dataForm.gender,
-                age:dataForm.age,
-                question:dataForm.question,
+                gender: dataForm.gender,
+                age: dataForm.age,
+                question: dataForm.question,
                 value: totalPercentage
             };
+            const feedback: any = {
+                name: dataProduct.name,
+                email: dataProduct.email,
+                value: dataProduct.value,
+                gender: dataProduct.gender === "male" ? "чоловік" : "жінка",
+                age: dataProduct.age,
+            };
 
-            const status = await FeedbackService.post(dataProduct);
-            if (status === 201) {
-                // reset();
-                toast.success("Успішно");
+            const descriptions = [
+                "Рівень розвитку потреби у високій заробітної плати та матеріальну винагороду. Бажання мати роботу з гарним набором пільг та надбавок.",
+                "Рівень розвитку потреби у добрих умовах роботита комфортній навколишній обстановці.",
+                "Рівень розвитку потреби у структуруванні роботи, наявності зворотного зв'язку та інформації, що дозволяє судити про результати своєї роботи, потребу в зниженні невизначеності та встановлення правил та директив виконання роботи.",
+                "Рівень розвитку потреби в соціальних контактах: спілкування з широким колом людей, легкий ступінь довірливості та зв'язків із колегами.",
+                "Рівень розвитку потреби у формуванні та підтримцідовгострокових, стабільних взаємин,мале число колег по роботі, значний ступінь близькості взаємин, довірливості.",
+                "Рівень розвитку потреби у завоюванні ппізнання з боку інших людейу тому, щоб оточуючі цінували заслуги, досягнення та успіхи індивідуума.",
+                "Рівень розвитку потреби впостановці для себе сміливих, складних цілей та їх досягненні, дотримання поставлених цілей і бути самим мотивованим.",
+                "Рівень розвитку потреби у впливовості та владі: прагнення керувати іншими, наполегливе прагнення конкуренції та впливовості.",
+                "Рівень розвитку потреби в різноманітності та змінах , прагнення уникати рутини, нудьги.",
+                "Рівень розвитку потреби в креативності: потреба бути аналізуючим, думаючим працівником, відкритим для нових ідей.",
+                "Рівень розвитку потреби у самовдосконаленні, зростанні та розвитку як особистості.",
+                "Рівень розвитку потреби в цікавій суспільно корисній роботі:потреба у роботі наповненій змістом, з елементом суспільної корисності.",
+            ];
+
+            const value = [75, 60, 50, 80, 40, 70, 65, 55, 45, 90, 85, 95];
+
+            const descriptionsWithValue = descriptions.map((desc, i) => ({
+                number: i + 1,
+                text: desc,
+                value: value[i],
+            }));
+            const questionAnswers = dataProduct.question || [];
+
+            const questionsFormatted = questionAnswers.map((q, i) => {
+                return {
+                    number: i + 1,
+                    answers: Object.entries(q).map(([key, value]) => ({
+                        letter: key.toUpperCase(),
+                        value,
+                    })),
+                };
+            });
+
+
+            const response = await sendMail({
+                email: "workemailtemp7@gmail.com",
+                subject: "Форма зворотного зв'язку",
+                sendTo: "sennqq7@gmail.com",
+                text: 'test',
+                html: generateHtml(feedback,
+                    descriptionsWithValue,
+                    questionsFormatted,)
+            });
+
+
+            if (response?.messageId) {
+                toast.success('Application Submitted Successfully.');
+            } else {
+                toast.error('Failed To send application.');
             }
+
+
+            // const status = await FeedbackService.post(dataProduct);
+            // if (status === 201) {
+            //     // reset();
+            //     toast.success("Успішно");
+            // }
         } catch (error) {
             console.log(error);
             toast.error("Щось пішло не так");
@@ -268,6 +324,43 @@ const Poll = () => {
             setIsLoading(false);
         }
     };
+
+    const generateHtml = (
+        feedback: any,
+        descriptionsWithValue: { number: number; text: string; value: number }[],
+        questionsFormatted: {
+            number: number;
+            answers: { letter: string; value: number }[];
+        }[],
+    ): string => {
+        const descHtml = descriptionsWithValue
+            .map(
+                (d) => `<p><strong>${d.number}.</strong> ${d.text} - ${d.value}%</p>`,
+            )
+            .join("");
+
+        const questionsHtml = questionsFormatted
+            .map(
+                (q) =>
+                    `<p><strong>Питання - ${q.number}</strong></p>
+       <ul style="margin-top: 0; margin-bottom: 0.5rem;">
+         ${q.answers.map((a) => `<li>${a.letter} ${a.value}</li>`).join("")}
+       </ul>`,
+            )
+            .join("");
+
+        return `
+     <div style="max-width: 600px; margin: 20px auto; padding: 20px; font-family: Roboto, sans-serif; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px;">
+       <h2>Зворотній зв'язок від ${feedback.name}</h2>
+       <label>Пошта: <span>${feedback.email}</span></label>
+       <h4>Вік: <span>${feedback.age}</span></h4>
+       <h4>Стать: <span>${feedback.gender}</span></h4>
+       <div class="result-values">${descHtml}</div>
+       <h3>Результати по питаннях:</h3>
+       ${questionsHtml}
+     </div>
+   `;
+    }
 
     const calculatePersonalityDistribution = (answers: Calc[]): number[] => {
         const typeScores = Array(12).fill(0);
@@ -291,7 +384,8 @@ const Poll = () => {
                 <div className="xl:container mx-auto py-10 flex gap-12 max-2xl:gap-4 flex-col items-center">
                     <div className="bg-white max-w-[400px] rounded-xl flex h-full flex-col">
                         <div className="pt-14 w-full min-h-[500px] text-primary">
-                            <div className="text-3xl max-sm:text-center text-center sm:text-4xl xl:text-2xl md:text-xl relative text-white">
+                            <div
+                                className="text-3xl max-sm:text-center text-center sm:text-4xl xl:text-2xl md:text-xl relative text-white">
                                 <span className="font-semibold">Заповніть форму</span>
                             </div>
                             <div className="flex flex-col mt-4 gap-4">
