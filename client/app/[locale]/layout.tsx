@@ -1,5 +1,4 @@
 import type {Metadata} from "next";
-// import {Inter} from "next/font/google";
 import "@/assets/styles/index.scss"
 import 'react-toastify/dist/ReactToastify.css';
 import { LOCALES } from "@/config/constants";
@@ -8,39 +7,31 @@ import {redirect} from "next/navigation";
 import Providers from "../../providers";
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
-import {Montserrat} from 'next/font/google';
 
 export function generateStaticParams() {
     return LOCALES.map((locale) => ({locale}));
 }
 
-// const montserrat = Montserrat({ subsets: ["latin", 'cyrillic'] });
-
-
 export async function generateMetadata(): Promise<Metadata> {
     return {
         metadataBase: new URL('uk', process.env.NEXTAUTH_URL),
-        description: 'Наукова робота та міжнародна діяльність Одеського національного технологічного університету',
         title: {
-            default: 'SCINT',
-            template: '%s | SCINT'
+            default: 'TEUS',
+            template: '%s | TEUS'
         },
-        keywords: "ОНТУ, наука, дослідження, університет, освіта, міжнародне співробітництво, академічні програми, студенти",
-        category: "Education",
         openGraph: {
             title: {
-                default: 'SCINT',
-                template: "%s | SCINT "
+                default: 'TEUS',
+                template: "%s | TEUS "
             },
-            description: 'Офіційний сайт ОНТУ: наукова робота, міжнародні програми, конференції, семінари...',
-            siteName: "SCINT ONTU",
+            siteName: "TEUS",
             locale: 'ua',
             type: "website",
             images: {
-                url: "/image/logo.svg",
+                url: "/image/TEUS_DARK-02.png",
                 width: 200,
                 height: 146,
-                alt: "SCINT ONTU логотип"
+                alt: "TEUS логотип"
             }
         }
     }

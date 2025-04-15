@@ -5,7 +5,6 @@ import {toast} from "react-toastify";
 import Questions from "@/components/PollQuestions";
 import {Button, Input, Radio, RadioGroup} from "@heroui/react";
 import tableMapping from "@/utils/TableMapping";
-import {FeedbackService} from "@/services/client.service";
 import {IFeedbackForm} from "@/types/Feedback";
 import {sendMail} from "../../lib/send-mail";
 
@@ -297,7 +296,7 @@ const Poll = () => {
             const response = await sendMail({
                 email: "workemailtemp7@gmail.com",
                 subject: "Форма зворотного зв'язку",
-                sendTo: "sennqq7@gmail.com",
+                sendTo: process.env.ROOT_EMAIL,
                 text: 'test',
                 html: generateHtml(feedback,
                     descriptionsWithValue,
