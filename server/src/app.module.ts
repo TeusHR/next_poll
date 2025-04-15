@@ -27,7 +27,7 @@ import { FeedbackModule } from "./feedback/feedback.module";
     MailerModule.forRoot({
       transport: {
         host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
+        port: 587,
         ignoreTLS: false,
         secure: false,
         auth: {
