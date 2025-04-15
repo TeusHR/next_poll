@@ -34,8 +34,8 @@ type Props = {
 const Questions: FC<Props> = ({index, control, formState, item, clearErrors, setError}) => {
 
     return (
-        <div className="flex flex-col gap-2 p-4 bg-[rgba(43,42,40,0.85)] text-white rounded-xl">
-            <Title text={questions[index].label} style="font-black text-xl max-bg:text-base"/>
+        <div className="flex flex-col gap-2 p-4 test-black bg-white rounded-xl">
+            <Title text={`${index+1}. ${questions[index].label}`} style="font-black text-xl max-bg:text-base"/>
             <div className="space-y-2" key={`${item.id}`}>
                 {questions[index].items.map((itemQuest, idxQues) => (
                     <div key={`${item.id}-${idxQues}`} className="flex items-center gap-4 justify-between max-xsm:items-start max-xsm:flex-col">

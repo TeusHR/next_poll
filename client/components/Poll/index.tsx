@@ -37,6 +37,12 @@ const Poll = () => {
                     b: 0,
                     c: 0,
                     d: 0,
+
+                }, {
+                    a: 0,
+                    b: 0,
+                    c: 0,
+                    d: 0,
                 }, {
                     a: 0,
                     b: 0,
@@ -373,7 +379,8 @@ const Poll = () => {
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="xl:container mx-auto py-10 flex gap-12 max-2xl:gap-4 flex-col items-center w-full px-6 ">
+                <div
+                    className="xl:container mx-auto py-10 flex gap-12 max-2xl:gap-4 flex-col items-center w-full px-6 ">
                     <div className="max-w-[400px] rounded-xl flex h-full flex-col">
                         <div className="pt-14 w-full min-h-[500px] text-primary px-4 rounded-xl">
                             <div
@@ -524,7 +531,8 @@ const Poll = () => {
                     <div className="flex gap-12 max-2xl:gap-4 flex-col items-center w-full">
                         {!formHidden && (
                             <>
-                                <div className="py-6 rounded-xl text-white relative px-16 max-xsm:px-4 bg-[rgba(43,42,40,0.85)]">
+                                <div
+                                    className="py-6 rounded-xl test-black bg-white relative px-16 max-xsm:px-4 ">
                                     <span>Вам потрібно розподілити 11 балів між чотирма варіантами кожного із тверджень, про позначені літерами (а), (b), (с) та (d). Усього тверджень 33, отже, виходить загалом 363 бали. Якщо вам здається, що один із факторів найбільш важливий для вас, оцініть його в 11 балів; якщо ж ви вважаєте його зовсім не суттєвим, не присуджуйте йому жодного бала; в інших випадках постарайтеся на власний розсуд розподілити всі 11 балів між чотирма запропонованими у кожному затвердженні факторами. Слідкуйте за тим, щоб було присуджено всі 11 балів. Як приклад розберемо таке твердження:</span>
                                     <br/>
                                     <br/>
@@ -542,7 +550,8 @@ const Poll = () => {
                                         Якщо ви вважаєте найбільш важливими для себе твердження (а) та (b), то можете присудити їм, скажімо, 6 і 5 балів відповідно, нічого не залишаючи для оцінки інших двох варіантів – (с) та (d). Цілком неважливо, яким чином ви розподілятимете 11 балів між чотирма варіантами, найголовніше, щоб оцінки важливості кожного варіанту затвердження в сумі становили б 11 балів. Бали, що присуджуються вами кожному фактору, слід вказати безпосередньо у вікні навпроти кожного затвердження.
                                     </span>
                                 </div>
-                                <div className="grid grid-cols-1 max-w-[950px] relative gap-10 max-sm:gap-6 justify-center w-full">
+                                <div
+                                    className="grid grid-cols-1 max-w-[950px] relative gap-10 max-sm:gap-6 justify-center w-full">
                                     {fields.map((item, index) => (
                                         <Questions key={item.id}
                                                    control={control}
