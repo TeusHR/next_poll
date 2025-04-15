@@ -4,37 +4,37 @@ const tableMapping: (('a' | 'b' | 'c' | 'd' | null)[])[] = [
     //1  //2   //3    //4  //5   //6   //7   //8  //9   //10  //11  //12
     ['a', null, null, null, 'b', null, null, 'c', null, null, 'd', null],  //1
     [null, 'd', 'a', null, null, 'b', null, null, null, null, null, 'c'],  //2
-    // [null, null, 'c', 'b', 'd', null, null, null, 'd', null, null, null],  //3
-    // [null, null, 'c', 'a', null, 'b', null, null, 'd', null, null, null],  //4
-    // ['c', 'b', 'a', null, null, null, null, null, null, null, 'd', null], //5
-    // ['b', 'a', null, null, null, 'd', null, null, null, null, null, 'c'], //6
-    // [null, null, 'a', null, 'b', 'd', null, null, null, null, null, 'c'], //7
-    // [null, null, null, null, null, null, null, null, 'a', 'd', 'b', 'c'], //8
-    // [null, null, null, null, null, 'a', null, 'd', 'c', null, 'b', null], //9
-    // ['b', null, null, 'a', 'c', null, null, null, null, null, 'd', null], //10
-    // [null, 'a', 'b', null, null, 'd', null, null, null, null, null, 'c'], //11
-    // [null, 'd', null, null, null, 'c', 'a', null, null, null, 'b', null], //12
-    // [null, 'd', null, null, 'a', null, 'b', null, null, 'c', null, null], //13
-    // ['d', null, null, 'c', null, null, null, null, null, 'b', 'a', null], //14
-    // [null, null, 'd', null, null, 'c', null, 'a', 'b', null, null, null], //15
-    // ['c', null, 'b', null, null, null, 'a', 'd', null, null, null, null], //16
-    // [null, null, 'a', null, 'b', null, 'c', 'd', null, null, null, null], //17
-    // [null, null, null, 'b', null, null, null, 'd', null, 'a', 'c', null], //18
-    // ['c', null, null, null, null, 'a', null, 'b', null, 'd', null, null], //19
-    // ['c', 'd', null, null, null, null, null, 'b', 'a', null, null, null], //20
-    // [null, null, 'a', 'c', null, null, null, null, null, 'b', null, 'd'], //21
-    // ['a', 'b', null, null, null, null, null, 'c', null, 'd', null, null], //22
-    // ['d', null, null, 'a', null, null, 'b', 'c', null, null, null, null], //23
-    // [null, 'a', null, null, null, null, 'c', 'b', null, 'd', null, null], //24
-    // [null, 'a', null, 'd', null, null, null, null, 'c', null, 'b', null], //25
-    // [null, 'a', null, 'b', null, null, null, null, 'd', null, null, 'c'], //26
-    // [null, null, null, null, 'd', 'a', 'c', null, null, null, 'b', null], //27
-    // [null, null, null, null, 'c', null, 'd', null, 'b', null, null, 'a'], //28
-    // [null, null, null, 'c', 'b', null, null, 'd', null, null, null, 'a'], //29
-    // [null, null, null, 'a', 'c', 'b', null, null, 'd', null, null, null], //30
-    // ['a', null, 'b', null, null, null, 'c', null, null, 'd', null, null], //31
-    // [null, null, null, null, null, null, 'a', null, null, 'b', 'c', 'd'], //32
-    // [null, null, null, null, 'c', null, 'd', null, null, 'a', null, 'b'], //33
+    [null, null, 'c', 'b', 'd', null, null, null, 'd', null, null, null],  //3
+    [null, null, 'c', 'a', null, 'b', null, null, 'd', null, null, null],  //4
+    ['c', 'b', 'a', null, null, null, null, null, null, null, 'd', null], //5
+    ['b', 'a', null, null, null, 'd', null, null, null, null, null, 'c'], //6
+    [null, null, 'a', null, 'b', 'd', null, null, null, null, null, 'c'], //7
+    [null, null, null, null, null, null, null, null, 'a', 'd', 'b', 'c'], //8
+    [null, null, null, null, null, 'a', null, 'd', 'c', null, 'b', null], //9
+    ['b', null, null, 'a', 'c', null, null, null, null, null, 'd', null], //10
+    [null, 'a', 'b', null, null, 'd', null, null, null, null, null, 'c'], //11
+    [null, 'd', null, null, null, 'c', 'a', null, null, null, 'b', null], //12
+    [null, 'd', null, null, 'a', null, 'b', null, null, 'c', null, null], //13
+    ['d', null, null, 'c', null, null, null, null, null, 'b', 'a', null], //14
+    [null, null, 'd', null, null, 'c', null, 'a', 'b', null, null, null], //15
+    ['c', null, 'b', null, null, null, 'a', 'd', null, null, null, null], //16
+    [null, null, 'a', null, 'b', null, 'c', 'd', null, null, null, null], //17
+    [null, null, null, 'b', null, null, null, 'd', null, 'a', 'c', null], //18
+    ['c', null, null, null, null, 'a', null, 'b', null, 'd', null, null], //19
+    ['c', 'd', null, null, null, null, null, 'b', 'a', null, null, null], //20
+    [null, null, 'a', 'c', null, null, null, null, null, 'b', null, 'd'], //21
+    ['a', 'b', null, null, null, null, null, 'c', null, 'd', null, null], //22
+    ['d', null, null, 'a', null, null, 'b', 'c', null, null, null, null], //23
+    [null, 'a', null, null, null, null, 'c', 'b', null, 'd', null, null], //24
+    [null, 'a', null, 'd', null, null, null, null, 'c', null, 'b', null], //25
+    [null, 'a', null, 'b', null, null, null, null, 'd', null, null, 'c'], //26
+    [null, null, null, null, 'd', 'a', 'c', null, null, null, 'b', null], //27
+    [null, null, null, null, 'c', null, 'd', null, 'b', null, null, 'a'], //28
+    [null, null, null, 'c', 'b', null, null, 'd', null, null, null, 'a'], //29
+    [null, null, null, 'a', 'c', 'b', null, null, 'd', null, null, null], //30
+    ['a', null, 'b', null, null, null, 'c', null, null, 'd', null, null], //31
+    [null, null, null, null, null, null, 'a', null, null, 'b', 'c', 'd'], //32
+    [null, null, null, null, 'c', null, 'd', null, null, 'a', null, 'b'], //33
 ];
 export default tableMapping;
 
