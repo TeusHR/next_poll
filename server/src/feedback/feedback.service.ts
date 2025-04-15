@@ -1,15 +1,12 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CreateFeedbackDto } from "./dto/create-feedback.dto";
-import { Resend } from "resend";
 import { MailerService } from "@nestjs-modules/mailer";
-import Mailgun from "mailgun.js";
 
 @Injectable()
 export class FeedbackService {
   private readonly logger = new Logger(FeedbackService.name);
 
   constructor(private mailerService: MailerService) {}
-  // constructor(private readonly resendService: ResendService) {}
 
   async create(createFeedbackDto: CreateFeedbackDto) {
     const feedback: any = {
@@ -54,64 +51,6 @@ export class FeedbackService {
       };
     });
 
-    // const mailgun = new Mailgun(FormData);
-    // const mg = mailgun.client({
-    //   username: "api",
-    //   key: process.env.API_KEY,
-    // });
-    // try {
-    //   const data = await mg.messages.create(
-    //     "sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org",
-    //     {
-    //       from: "Mailgun Sandbox <postmaster@sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org>",
-    //       to: ["workemailtemp7@gmail.com"],
-    //       subject: "Hello Alex",
-    //       html: this.generateHtml(
-    //         feedback,
-    //         descriptionsWithValue,
-    //         questionsFormatted,
-    //       ),
-    //     },
-    //   );
-    //
-    //   console.log(data); // logs response data
-    // } catch (error) {
-    //   console.log(error); //logs any error
-    // }
-
-    // const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
-
-    // await resend.emails.send({
-    //   from: "Acme <onboarding@resend.dev>",
-    //   to: "sennqq7@gmail.com",
-    //   subject: "Форма зворотного зв'язку",
-    //   html: this.generateHtml(
-    //     feedback,
-    //     descriptionsWithValue,
-    //     questionsFormatted,
-    //   ),
-    // });
-
-    // await resend.emails.send({
-    //   from: "onboarding@resend.dev",
-    //   to: "sennqq7@gmail.com",
-    //   subject: "Hello World",
-    //   html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
-    // });
-
-    // await this.resendService.send({
-    //   from: "workemailtemp7@gmail.com",
-    //   to: "sennqq7@gmail.com",
-    //   subject: "Форма зворотного зв'язку",
-    //   react: this.generateHtml(
-    //     feedback,
-    //     descriptionsWithValue,
-    //     questionsFormatted,
-    //   ),
-    // });
-
-
-
     await this.mailerService
       .sendMail({
         to: process.env.ROOT_EMAIL,
@@ -130,42 +69,5 @@ export class FeedbackService {
       });
 
     return feedback;
-  }
-
-  generateHtml(
-    feedback: any,
-    descriptionsWithValue: { number: number; text: string; value: number }[],
-    questionsFormatted: {
-      number: number;
-      answers: { letter: string; value: number }[];
-    }[],
-  ): string {
-    const descHtml = descriptionsWithValue
-      .map(
-        (d) => `<p><strong>${d.number}.</strong> ${d.text} - ${d.value}%</p>`,
-      )
-      .join("");
-
-    const questionsHtml = questionsFormatted
-      .map(
-        (q) =>
-          `<p><strong>Питання - ${q.number}</strong></p>
-      <ul style="margin-top: 0; margin-bottom: 0.5rem;">
-        ${q.answers.map((a) => `<li>${a.letter} ${a.value}</li>`).join("")}
-      </ul>`,
-      )
-      .join("");
-
-    return `
-    <div style="max-width: 600px; margin: 20px auto; padding: 20px; font-family: Roboto, sans-serif; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px;">
-      <h2>Зворотній зв'язок від ${feedback.name}</h2>
-      <label>Пошта: <span>${feedback.email}</span></label>
-      <h4>Вік: <span>${feedback.age}</span></h4>
-      <h4>Стать: <span>${feedback.gender}</span></h4>
-      <div class="result-values">${descHtml}</div>
-      <h3>Результати по питаннях:</h3>
-      ${questionsHtml}
-    </div>
-  `;
   }
 }
