@@ -27,7 +27,7 @@
                     alt="Static Image"
                     className="hidden max-sm:block fixed top-0 left-0 w-full h-full object-cover z-[-1] rounded-none"
                 />
-                <div className="absolute h-full w-full top-0 z-10">
+                <div className="relative z-10">
                     {children}
                 </div>
             </div>
