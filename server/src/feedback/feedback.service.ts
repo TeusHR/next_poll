@@ -54,30 +54,30 @@ export class FeedbackService {
       };
     });
 
-    const mailgun = new Mailgun(FormData);
-    const mg = mailgun.client({
-      username: "api",
-      key: process.env.API_KEY,
-    });
-    try {
-      const data = await mg.messages.create(
-        "sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org",
-        {
-          from: "Mailgun Sandbox <postmaster@sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org>",
-          to: ["workemailtemp7@gmail.com"],
-          subject: "Hello Alex",
-          html: this.generateHtml(
-            feedback,
-            descriptionsWithValue,
-            questionsFormatted,
-          ),
-        },
-      );
-
-      console.log(data); // logs response data
-    } catch (error) {
-      console.log(error); //logs any error
-    }
+    // const mailgun = new Mailgun(FormData);
+    // const mg = mailgun.client({
+    //   username: "api",
+    //   key: process.env.API_KEY,
+    // });
+    // try {
+    //   const data = await mg.messages.create(
+    //     "sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org",
+    //     {
+    //       from: "Mailgun Sandbox <postmaster@sandbox47f0f0e887bf4713b541edd4a43618a7.mailgun.org>",
+    //       to: ["workemailtemp7@gmail.com"],
+    //       subject: "Hello Alex",
+    //       html: this.generateHtml(
+    //         feedback,
+    //         descriptionsWithValue,
+    //         questionsFormatted,
+    //       ),
+    //     },
+    //   );
+    //
+    //   console.log(data); // logs response data
+    // } catch (error) {
+    //   console.log(error); //logs any error
+    // }
 
     // const resend = new Resend("re_2o7Zm4Gv_E9o2UXNkTaPGLem5JdtC21cd");
 
@@ -110,22 +110,24 @@ export class FeedbackService {
     //   ),
     // });
 
-    // this.mailerService
-    //   .sendMail({
-    //     to: process.env.ROOT_EMAIL,
-    //     from: process.env.SMTP_USER,
-    //     subject: "Форма зворотного зв'язку",
-    //     template: "feedback",
-    //     context: {
-    //       ...feedback,
-    //       descriptionsWithValue,
-    //       questionsFormatted,
-    //     },
-    //   })
-    //   .catch((err) => {
-    //     this.logger.error("CONTACTS EMAIL ERROR", err);
-    //     console.log("CONTACTS EMAIL ERROR", err, new Date().toLocaleString());
-    //   });
+
+
+    await this.mailerService
+      .sendMail({
+        to: process.env.ROOT_EMAIL,
+        from: process.env.SMTP_USER,
+        subject: "Форма зворотного зв'язку",
+        template: "feedback",
+        context: {
+          ...feedback,
+          descriptionsWithValue,
+          questionsFormatted,
+        },
+      })
+      .catch((err) => {
+        this.logger.error("CONTACTS EMAIL ERROR", err);
+        console.log("CONTACTS EMAIL ERROR", err, new Date().toLocaleString());
+      });
 
     return feedback;
   }
