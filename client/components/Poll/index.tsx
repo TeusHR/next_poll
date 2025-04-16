@@ -1,12 +1,15 @@
 'use client'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Controller, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
 import {toast} from "react-toastify";
 import Questions from "@/components/PollQuestions";
 import {Button, Input, Radio, RadioGroup} from "@heroui/react";
-import tableMapping from "@/utils/TableMapping";
 import {IFeedbackForm} from "@/types/Feedback";
 import {sendMail} from "../../lib/send-mail";
+import {
+    calculatePersonalityDistribution,
+} from "@/utils/calculatePersonalityDistribution";
+import {generateHtml} from "@/utils/generateHtml";
 
 export type IPoll = {
     question: Calc[]
@@ -25,8 +28,9 @@ export type Calc = {
 
 
 const Poll = () => {
-    const {handleSubmit, control, formState, reset, watch, setError, clearErrors} = useForm<IPoll>({
-        mode: "all",
+    const {handleSubmit, control, formState: {errors, dirtyFields}, setError, clearErrors, setFocus} = useForm<IPoll>({
+        mode: "onSubmit",
+        shouldFocusError:true,
         defaultValues: {
             name: "",
             email: "",
@@ -236,14 +240,18 @@ const Poll = () => {
     const {fields} = useFieldArray({control, name: "question"});
     const [formHidden, setFormHidden] = useState<boolean>(true)
 
+    useEffect(() => {
+        const firstError = Object.keys(errors).find((field) => !!errors[field as keyof typeof errors]);
+        if (firstError) {
+            setFocus(firstError as keyof IPoll);
+        }
+    }, [errors, setFocus]);
+
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit: SubmitHandler<IPoll> = async (dataForm) => {
-
-        console.log(dataForm)
-        const typeScores = calculatePersonalityDistribution(dataForm.question)
-        console.log(calculatePersonalityDistribution(dataForm.question))
         setIsLoading(true);
+        const typeScores = calculatePersonalityDistribution(dataForm.question)
         try {
 
             const total = typeScores.reduce((sum, val) => sum + val, 0);
@@ -264,28 +272,6 @@ const Poll = () => {
                 age: dataProduct.age,
             };
 
-            const descriptions = [
-                "Рівень розвитку потреби у високій заробітної плати та матеріальну винагороду. Бажання мати роботу з гарним набором пільг та надбавок.",
-                "Рівень розвитку потреби у добрих умовах роботита комфортній навколишній обстановці.",
-                "Рівень розвитку потреби у структуруванні роботи, наявності зворотного зв'язку та інформації, що дозволяє судити про результати своєї роботи, потребу в зниженні невизначеності та встановлення правил та директив виконання роботи.",
-                "Рівень розвитку потреби в соціальних контактах: спілкування з широким колом людей, легкий ступінь довірливості та зв'язків із колегами.",
-                "Рівень розвитку потреби у формуванні та підтримцідовгострокових, стабільних взаємин,мале число колег по роботі, значний ступінь близькості взаємин, довірливості.",
-                "Рівень розвитку потреби у завоюванні ппізнання з боку інших людейу тому, щоб оточуючі цінували заслуги, досягнення та успіхи індивідуума.",
-                "Рівень розвитку потреби впостановці для себе сміливих, складних цілей та їх досягненні, дотримання поставлених цілей і бути самим мотивованим.",
-                "Рівень розвитку потреби у впливовості та владі: прагнення керувати іншими, наполегливе прагнення конкуренції та впливовості.",
-                "Рівень розвитку потреби в різноманітності та змінах , прагнення уникати рутини, нудьги.",
-                "Рівень розвитку потреби в креативності: потреба бути аналізуючим, думаючим працівником, відкритим для нових ідей.",
-                "Рівень розвитку потреби у самовдосконаленні, зростанні та розвитку як особистості.",
-                "Рівень розвитку потреби в цікавій суспільно корисній роботі:потреба у роботі наповненій змістом, з елементом суспільної корисності.",
-            ];
-
-            const value = [75, 60, 50, 80, 40, 70, 65, 55, 45, 90, 85, 95];
-
-            const descriptionsWithValue = descriptions.map((desc, i) => ({
-                number: i + 1,
-                text: desc,
-                value: value[i],
-            }));
             const questionAnswers = dataProduct.question || [];
 
             const questionsFormatted = questionAnswers.map((q, i) => {
@@ -298,15 +284,14 @@ const Poll = () => {
                 };
             });
 
+            const html = generateHtml(feedback, dataProduct.value, questionsFormatted);
 
             const response = await sendMail({
                 email: "workemailtemp7@gmail.com",
                 subject: "Форма зворотного зв'язку",
                 sendTo: process.env.ROOT_EMAIL,
                 text: 'test',
-                html: generateHtml(feedback,
-                    descriptionsWithValue,
-                    questionsFormatted,)
+                html:html,
             });
 
             if (response?.messageId) {
@@ -323,59 +308,19 @@ const Poll = () => {
         }
     };
 
-    const generateHtml = (
-        feedback: any,
-        descriptionsWithValue: { number: number; text: string; value: number }[],
-        questionsFormatted: {
-            number: number;
-            answers: { letter: string; value: number }[];
-        }[],
-    ): string => {
-        const descHtml = descriptionsWithValue
-            .map(
-                (d) => `<p><strong>${d.number}.</strong> ${d.text} - ${d.value}%</p>`,
-            )
-            .join("");
-
-        const questionsHtml = questionsFormatted
-            .map(
-                (q) =>
-                    `<p><strong>Питання - ${q.number}</strong></p>
-       <ul style="margin-top: 0; margin-bottom: 0.5rem;">
-         ${q.answers.map((a) => `<li>${a.letter} ${a.value}</li>`).join("")}
-       </ul>`,
-            )
-            .join("");
-
-        return `
-     <div style="max-width: 600px; margin: 20px auto; padding: 20px; font-family: Roboto, sans-serif; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px;">
-       <h2>Зворотній зв'язок від ${feedback.name}</h2>
-       <label>Пошта: <span>${feedback.email}</span></label>
-       <h4>Вік: <span>${feedback.age}</span></h4>
-       <h4>Стать: <span>${feedback.gender}</span></h4>
-       <div class="result-values">${descHtml}</div>
-       <h3>Результати по питаннях:</h3>
-       ${questionsHtml}
-     </div>
-   `;
-    }
-
-    const calculatePersonalityDistribution = (answers: Calc[]): number[] => {
-        const typeScores = Array(12).fill(0);
-
-        answers.forEach((answer, questionIndex) => {
-            for (let typeIndex = 0; typeIndex < 12; typeIndex++) {
-                const relevantLetter = tableMapping[questionIndex][typeIndex]; // 'a' | 'b' | 'c' | 'd' | null
-                if (relevantLetter && answer[relevantLetter] !== undefined) {
-                    typeScores[typeIndex] += Number(answer[relevantLetter]);
-
-                }
-            }
-        });
-
-        return typeScores;
-    };
-
+    // const questionsContent = useMemo(() => (
+    //     fields.map((item, index) => (
+    //         <Questions key={item.id}
+    //                    control={control}
+    //                    item={item}
+    //                    index={index}
+    //                    setError={setError}
+    //                    clearErrors={clearErrors}
+    //                    dirtyFields={formState.dirtyFields?.question?.[index]}
+    //         />
+    //     ))
+    // ), [clearErrors, control, fields, formState.dirtyFields?.question, setError]);
+    
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -402,6 +347,7 @@ const Poll = () => {
                                             type="text"
                                             value={field.value}
                                             onValueChange={field.onChange}
+                                            ref={field.ref}
                                             key="name"
                                             classNames={{
                                                 input: "focus:outline-none text-xl text-primary",
@@ -415,8 +361,8 @@ const Poll = () => {
                                             label={"Прізвище та Імʼя"}
                                             labelPlacement={"inside"}
                                             autoComplete="off"
-                                            isInvalid={!!formState.errors.name?.message}
-                                            errorMessage={formState.errors.name?.message}
+                                            isInvalid={!!errors.name?.message}
+                                            errorMessage={errors.name?.message}
                                         />
                                     )}
                                 />
@@ -442,6 +388,7 @@ const Poll = () => {
                                                 label: "text-lg text-primary",
                                                 errorMessage: "text-red-600 text-base",
                                             }}
+                                            ref={field.ref}
                                             variant="bordered"
                                             key="gmail"
                                             max="50"
@@ -449,8 +396,8 @@ const Poll = () => {
                                             label={"Пошта"}
                                             labelPlacement={"inside"}
                                             autoComplete="off"
-                                            isInvalid={!!formState.errors.email?.message}
-                                            errorMessage={formState.errors.email?.message}
+                                            isInvalid={!!errors.email?.message}
+                                            errorMessage={errors.email?.message}
                                         />
                                     )}
                                 />
@@ -472,6 +419,7 @@ const Poll = () => {
                                                 label: "text-lg text-primary",
                                                 errorMessage: "text-red-600 text-base",
                                             }}
+                                            ref={field.ref}
                                             variant="bordered"
                                             key="age"
                                             max="50"
@@ -479,8 +427,8 @@ const Poll = () => {
                                             label={"Ваш вік:"}
                                             labelPlacement={"inside"}
                                             autoComplete="off"
-                                            isInvalid={!!formState.errors.age?.message}
-                                            errorMessage={formState.errors.age?.message}
+                                            isInvalid={!!errors.age?.message}
+                                            errorMessage={errors.age?.message}
                                         />
                                     )}
                                 />
@@ -494,6 +442,7 @@ const Poll = () => {
                                         <div className="w-full">
                                             <RadioGroup label="Стать:"
                                                         value={field.value}
+                                                        ref={field.ref}
                                                         color={"warning"}
                                                         classNames={{
                                                             base: "flex flex-row items-center",
@@ -514,9 +463,9 @@ const Poll = () => {
                                                     Жінка
                                                 </Radio>
                                             </RadioGroup>
-                                            {formState.errors.gender?.message && (
+                                            {errors.gender?.message && (
                                                 <div
-                                                    className="text-red-600 text-sm relative">{formState.errors.gender.message}</div>
+                                                    className="text-red-600 text-sm relative">{errors.gender.message}</div>
                                             )}
                                         </div>
                                     )}
@@ -528,9 +477,7 @@ const Poll = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex gap-12 max-2xl:gap-4 flex-col items-center w-full">
-                        {!formHidden && (
-                            <>
+                    <div className={`flex gap-12 max-2xl:gap-4 flex-col items-center w-full ${!formHidden ? 'block' : 'hidden' }`}>
                                 <div
                                     className="py-6 rounded-xl test-black bg-white relative px-16 max-xsm:px-4 ">
                                     <span>Вам потрібно розподілити 11 балів між чотирма варіантами кожного із тверджень, про позначені літерами (а), (b), (с) та (d). Усього тверджень 33, отже, виходить загалом 363 бали. Якщо вам здається, що один із факторів найбільш важливий для вас, оцініть його в 11 балів; якщо ж ви вважаєте його зовсім не суттєвим, не присуджуйте йому жодного бала; в інших випадках постарайтеся на власний розсуд розподілити всі 11 балів між чотирма запропонованими у кожному затвердженні факторами. Слідкуйте за тим, щоб було присуджено всі 11 балів. Як приклад розберемо таке твердження:</span>
@@ -559,7 +506,9 @@ const Poll = () => {
                                                    index={index}
                                                    setError={setError}
                                                    clearErrors={clearErrors}
-                                                   formState={formState}/>))
+                                                   dirtyFields={dirtyFields?.question?.[index]}
+                                                   errors={errors?.question}
+                                                   />))
                                     }
                                 </div>
                                 <div className="flex justify-center relative items-center">
@@ -567,8 +516,6 @@ const Poll = () => {
                                         Відправити
                                     </Button>
                                 </div>
-                            </>
-                        )}
                     </div>
                 </div>
             </form>
